@@ -1,0 +1,54 @@
+package io.navpil.github.zenzen.dominos;
+
+import java.util.Objects;
+
+public class Domino implements IDomino {
+
+    private final int top;
+    private final int bottom;
+
+    public Domino(int top, int bottom) {
+        this.top = Math.max(top, bottom);
+        this.bottom = Math.min(top, bottom);
+    }
+
+    public boolean isCivil() {
+        return isDouble() || is(3, 1) || is(6, 5) || is(6,4) || is(1,6) || is(1,5);
+    }
+
+    public boolean isMilitary() {
+        return !isCivil();
+    }
+
+    public boolean is(int a, int b) {
+        return (a == top && b == bottom) || (a == bottom && b == top);
+    }
+
+    private boolean isDouble() {
+        return top == bottom;
+    }
+
+    public int[] getPips() {
+        return new int[]{top, bottom};
+    }
+
+    @Override
+    public String toString() {
+        return "[" + top + ':' + bottom + ']';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Domino that = (Domino) o;
+        return top == that.top &&
+                bottom == that.bottom;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(top, bottom);
+    }
+
+}
