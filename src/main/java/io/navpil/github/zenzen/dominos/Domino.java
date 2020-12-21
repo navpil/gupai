@@ -12,6 +12,10 @@ public class Domino implements IDomino {
         this.bottom = Math.min(top, bottom);
     }
 
+    public static Domino of(int i, int i1) {
+        return new Domino(i, i1);
+    }
+
     public boolean isCivil() {
         return isDouble() || is(3, 1) || is(6, 5) || is(6,4) || is(1,6) || is(1,5);
     }

@@ -3,20 +3,28 @@ package io.navpil.github.zenzen.jielong.player;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Dragon;
 import io.navpil.github.zenzen.jielong.Move;
+import io.navpil.github.zenzen.jielong.SuanZhangAwareness;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.BiFunction;
 
 public abstract class AbstractPlayerImpl implements Player {
 
     private final String name;
     private final List<Domino> dominos;
     private final Collection<Domino> putDown = new ArrayList<>();
+    private final SuanZhangAwareness suanZhangAwareness;
 
     public AbstractPlayerImpl(String name, List<Domino> dominos) {
+        this(name, dominos, null);
+    }
+
+    public AbstractPlayerImpl(String name, List<Domino> dominos, SuanZhangAwareness suanZhangAwareness) {
         this.name = name;
         this.dominos = new ArrayList<>(dominos);
+        this.suanZhangAwareness = suanZhangAwareness;
     }
 
     @Override
@@ -31,21 +39,14 @@ public abstract class AbstractPlayerImpl implements Player {
     @Override
     public Move extractMove(Dragon dragon) {
         List<Integer> openEnds = dragon.getOpenEnds();
-        int openEndIndex = 0;
 
-        List<Move> moves = new ArrayList<>();
 
-        for (Integer openEnd : openEnds) {
-            openEndIndex++;
-            for (Domino domino : dominos) {
-                Move move = canConnect(openEndIndex, domino, openEnd);
-                if (move != null) {
-                    moves.add(move);
-                }
-            }
-        }
+        List<Move> moves = MoveFinder.getAvailableMoves(openEnds, dominos);
         prioritizeMove(moves);
         if (!moves.isEmpty()) {
+            if (suanZhangAwareness != null) {
+                moves = suanZhangAwareness.prioritizeMoves(moves, dominos, putDown);
+            }
             final Move move = moves.get(0);
             dominos.remove(move.getDomino());
             return move;

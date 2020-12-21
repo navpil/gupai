@@ -3,12 +3,15 @@ package io.navpil.github.zenzen.jielong.player;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Dragon;
 import io.navpil.github.zenzen.jielong.Move;
+import io.navpil.github.zenzen.jielong.SuanZhang;
+import io.navpil.github.zenzen.jielong.SuanZhangMove;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class RealPlayer implements Player {
 
@@ -16,10 +19,16 @@ public class RealPlayer implements Player {
     private final List<Domino> down = new ArrayList<>();
     final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private final String name;
+    private SuanZhang suanZhang;
+
+    public RealPlayer(String name, List<Domino> dominoes, SuanZhang suanZhang) {
+        this.dominoes = dominoes;
+        this.name = name;
+        this.suanZhang = suanZhang;
+    }
 
     public RealPlayer(String name, List<Domino> dominoes) {
-        this.name = name;
-        this.dominoes = dominoes;
+        this(name, dominoes, null);
     }
 
     @Override
@@ -79,15 +88,15 @@ public class RealPlayer implements Player {
             try {
                 final int index = readInt() - 1;
                 if (index >= 0 && index < dominoes.size()) {
-                    final int move;
+                    final int shouldMove;
                     final List<Integer> matchingEnds = getMatchingEnds(dragon, index);
                     if (matchingEnds.isEmpty()) {
-                        move = 0;
+                        shouldMove = 0;
                     } else {
                         System.out.println("Put down [0] or move [1]?");
-                        move = readInt();
+                        shouldMove = readInt();
                     }
-                    if (move == 1) {
+                    if (shouldMove == 1) {
                         int side;
                         if (matchingEnds.size() > 1) {
                             System.out.println("Which side to put the " + dominoes.get(index) + "?");
@@ -96,11 +105,21 @@ public class RealPlayer implements Player {
                             side = matchingEnds.get(0);
                         }
                         if (side == 1 || side == 2) {
+                            List<Move> moves = MoveFinder.getAvailableMoves(dragon.getOpenEnds(), dominoes);
+                            final int suanZhangMovesSize = (int) moves.stream().filter(m -> suanZhang.willSuanZhang(m)).count();
+                            //SuanZhang only counts when user can choose between suanzhang and no suanzhang. IF he has no choice - SuanZhang won't count
+                            boolean maySuanZhang = !(suanZhangMovesSize == 0 || suanZhangMovesSize == moves.size());
                             final Domino remove = dominoes.remove(index);
+                            Move move;
                             if (dragon.getOpenEnds().get(side - 1) == remove.getPips()[0]) {
-                                return new Move(side, remove.getPips()[0], remove.getPips()[1]);
+                                move = new Move(side, remove.getPips()[0], remove.getPips()[1]);
                             } else {
-                                return new Move(side, remove.getPips()[1], remove.getPips()[0]);
+                                move = new Move(side, remove.getPips()[1], remove.getPips()[0]);
+                            }
+                            if (maySuanZhang && suanZhang.willSuanZhang(move)) {
+                                return new SuanZhangMove(move, true);
+                            } else {
+                                return move;
                             }
                         } else {
                             System.out.println("Illegal side");

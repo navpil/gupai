@@ -5,12 +5,14 @@ import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.player.CombiningStrategyPlayerImpl;
 import io.navpil.github.zenzen.jielong.player.MinMaxPlayerImpl;
 import io.navpil.github.zenzen.jielong.player.Player;
+import io.navpil.github.zenzen.jielong.player.RandomPlayerImpl;
 import io.navpil.github.zenzen.jielong.player.RarenessPlayerImpl;
 import io.navpil.github.zenzen.jielong.player.RealPlayer;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
@@ -20,14 +22,37 @@ public class DingNiuSimulation {
 
     public static void main(String[] args) {
 
+        //Ad hoc rules: Play 4 double whenever possible
+        //Or make some generalization - prefer doubles to tiles, but better keep them, if you're the only person holding them
+        //Make a MoveWithPriority and add to priority in various ways. Then sort by the priority and choose a move
+        //Use (List<Moves>, TableState or TableVisibleInformation(with dragon (probably containing SuanZhang helper class), who went first, who put down dominoes, how many tiles left per player), PlayerState (dominoes, putdown dominoes) for priority calculation
+        //Use Integers instead of names everywhere
+
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
         List<Function<List<Domino>, Player>> playerFactories = new ArrayList<>();
 
-        playerFactories.add(list -> new RealPlayer(names.get(0), list));
-        playerFactories.add(list -> new MinMaxPlayerImpl(names.get(1), list));
-        playerFactories.add(list -> new RarenessPlayerImpl(names.get(2), list));
-        playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(3), list));
+        final SuanZhang suanZhang = new SuanZhang();
+        final SuanZhangAwareness suanZhangAwareness = new SuanZhangAwarenessImpl(suanZhang, 7);
+        final boolean realPlayerGame = false;
+        if (realPlayerGame) {
+
+//        playerFactories.add(list -> new RealPlayer(names.get(0), list));
+            playerFactories.add(list -> new RealPlayer(names.get(0), list, suanZhang));
+//        playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(0), list, suanZhangAwareness));
+            playerFactories.add(list -> new MinMaxPlayerImpl(names.get(1), list, suanZhangAwareness));
+            playerFactories.add(list -> new RarenessPlayerImpl(names.get(2), list, suanZhangAwareness));
+            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(3), list, suanZhangAwareness));
+        } else {
+            //TODO: dmp 13.12.2020 Add DoublesAlwaysFirst
+//            playerFactories.add(list -> new RealPlayer(names.get(0), list, suanZhang));
+            //TODO: dmp 13.12.2020 Add SuanZhang depending on number of tiles left
+            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(0), list, new SuanZhangAwarenessImpl2(suanZhang, 4), true));
+            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(1), list, new SuanZhangAwarenessImpl2(suanZhang, 3), true));
+            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(2), list, new SuanZhangAwarenessImpl2(suanZhang, 3), false));
+            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(3), list, new SuanZhangAwarenessImpl2(suanZhang, 1),true));
+        }
+
 
         Map<String, Integer> indexes = new HashMap<>();//Map.of(names.get(0), 0, "MinMax", 1, "Rare", 2, "Combine", 3);
         for (int i = 0; i < names.size(); i++) {
@@ -35,10 +60,10 @@ public class DingNiuSimulation {
         }
 
         final int simCount = 1000;
-        int whoGoesFirst = 2;
+        int whoGoesFirst = 0;
         final List<Domino> set = getDingNiuShuffledSet();
 
-        Map<String, Integer> runningTotal = new HashMap<>();
+        Map<String, Integer> runningTotal = new LinkedHashMap<>();
         for (String name : names) {
             runningTotal.put(name, 0);
         }
@@ -56,7 +81,8 @@ public class DingNiuSimulation {
                 hands.add(playerFactory.apply(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer)));
             }
 
-            final Stats stats = runSimulation(Dragon.OpenArms.DOUBLE, hands, tilesPerPlayer, whoGoesFirst);
+            suanZhang.reset();
+            final Stats stats = runSimulation(Dragon.OpenArms.DOUBLE, hands, tilesPerPlayer, whoGoesFirst, suanZhang);
             final WinningStats winningStats = resolvePoints(stats, hands.stream().map(Player::getName).collect(Collectors.toList()), whoGoesFirst);
 
             whoGoesFirst = indexes.get(winningStats.winner);
@@ -66,7 +92,13 @@ public class DingNiuSimulation {
                 final Integer oldValue = runningTotal.get(name);
                 runningTotal.put(name, oldValue + entry.getValue());
             }
+            System.out.println("Game score: " + winningStats);
             System.out.println("Cumulative score: " + runningTotal);
+            if (stats.getSuanZhangPlayer() >= 0) {
+                System.out.println("Player who SuanZhang-ed: " + stats.getSuanZhangPlayer());
+            } else if (stats.getGameBlocked()) {
+                System.out.println("Game was blocked");
+            }
         }
 
         for (Map.Entry<String, Integer> total : runningTotal.entrySet()) {
@@ -74,8 +106,9 @@ public class DingNiuSimulation {
         }
     }
 
-    public static WinningStats resolvePoints(Stats stats, List<String> names, int whoGoesFirst) {
+    public static WinningStats resolvePoints(Stats stats, List<String> originalNameList, int whoGoesFirst) {
         Map<String, Integer> order = new HashMap<>();
+        List<String> names = new ArrayList<>(originalNameList);
         for (int i = 0, size = names.size(); i < size; i++) {
             int playerIndex = (whoGoesFirst + i) % size;
             order.put(names.get(playerIndex), i);
@@ -103,30 +136,49 @@ public class DingNiuSimulation {
         });
 
         names.add(0, winner);
+        int suanZhangMultiplier = 1;
+        if (stats.getSuanZhangPlayer() >= 0) {
+            final String suanZhangName = originalNameList.get(stats.getSuanZhangPlayer());
+            if (suanZhangName.equals(names.get(0))) {
+                suanZhangMultiplier = 2;
+            } else {
+                final HashMap<String, Integer> points = new HashMap<>();
+                for (String name : names) {
+                    points.put(name, 0);
+                }
+                points.put(suanZhangName, -12);
+                points.put(winner, 12);
+                return new WinningStats(points, winner);
+            }
+        }
 
         final HashMap<String, Integer> points = new HashMap<>();
         int counter = 0;
         for (String name : names) {
             switch (counter) {
-                case 0: points.put(name, 6);break;
-                case 1: points.put(name, -1);break;
-                case 2: points.put(name, -2);break;
-                case 3: points.put(name, -3);break;
+                case 0: points.put(name, 6 * suanZhangMultiplier);break;
+                case 1: points.put(name, -1 * suanZhangMultiplier);break;
+                case 2: points.put(name, -2 * suanZhangMultiplier);break;
+                case 3: points.put(name, -3 * suanZhangMultiplier);break;
             }
             counter++;
         }
         return new WinningStats(points, winner);
     }
 
-    private static Stats runSimulation(Dragon.OpenArms dragonType, ArrayList<Player> hands, int tilesPerPlayer, int whoGoesFirst) {
-
-        final Dragon dragon = new Dragon(hands.get(whoGoesFirst).firstMove(), dragonType);
+    public static Stats runSimulation(Dragon.OpenArms dragonType, ArrayList<Player> hands, int tilesPerPlayer, int whoGoesFirst, SuanZhang suanZhang) {
+        hands.forEach(System.out::println);
+        final Move firstMove = hands.get(whoGoesFirst).firstMove();
+        suanZhang.executeMove(firstMove);
+        final Dragon dragon = new Dragon(firstMove, dragonType);
 
         System.out.println(dragon);
         int downCounter = 0;
         int players = hands.size();
         //We add 1 anyway on the first iteration
         int playerNo = whoGoesFirst;
+        int suanZhangPlayer = -1;
+        boolean isGameBlocked = false;
         //Number of moves is exactly number of dominoes per player
         game_loop:
         for (int i = 1; i < players * tilesPerPlayer; i++) {
@@ -146,8 +198,36 @@ public class DingNiuSimulation {
                 downCounter = 0;
                 System.out.println("played " + move);
             }
+            boolean isSuanZhangMove = false;
+            if (move instanceof SuanZhangMove) {
+                isSuanZhangMove = ((SuanZhangMove)move).isSuanZhang();
+            }
+
+            final SuanZhang.Type type = suanZhang.executeMove(move);
             dragon.executeMove(move);
             System.out.println(dragon);
+
+            //If the move is suanZhang
+
+            if (isSuanZhangMove) {
+                System.out.println("SuanZhang! " + type);
+                if (suanZhangPlayer >= 0 ) {
+                    throw new IllegalStateException("Cannot have two SuanZhangs!");
+                }
+                suanZhangPlayer = playerNo;
+                //If CLASSIC, then continue playing
+                if (type == SuanZhang.Type.SMOTHERED) {
+                    System.out.println("Ending the game with immediate SuanZhang");
+                    break game_loop;
+                }
+            } else if (type != SuanZhang.Type.NONE) {
+                isGameBlocked = true;
+                System.out.println("---------- Looks like SuanZhang, but it's NOT -------- " + type);
+                if (type == SuanZhang.Type.SMOTHERED) {
+                    System.out.println("Ending game immediately");
+                    break game_loop;
+                }
+            }
         }
 
         final Stats stats = new Stats();
@@ -157,6 +237,11 @@ public class DingNiuSimulation {
             System.out.println(name + " has points: " + points);
             stats.add(name, points);
         }
+        //Only SuanZhang if poitns are more than 0, otherwise - no SuanZhang counted
+        if (suanZhangPlayer >= 0 && hands.get(suanZhangPlayer).getPoints() > 0) {
+            stats.setSuanZhangPlayer(suanZhangPlayer);
+        }
+        stats.setGameBlocked(isGameBlocked);
         return stats;
     }
 
@@ -182,16 +267,24 @@ public class DingNiuSimulation {
     }
 
     public static class WinningStats {
-        private HashMap<String, Integer> points;
+        private LinkedHashMap<String, Integer> points;
         private String winner;
 
         public WinningStats(HashMap<String, Integer> points, String winner) {
-            this.points = points;
+            this.points = new LinkedHashMap<>(points);
             this.winner = winner;
         }
 
         public HashMap<String, Integer> getPoints() {
             return points;
+        }
+
+        @Override
+        public String toString() {
+            return "WinningStats{" +
+                    "points=" + points +
+                    ", winner='" + winner + '\'' +
+                    '}';
         }
     }
 }

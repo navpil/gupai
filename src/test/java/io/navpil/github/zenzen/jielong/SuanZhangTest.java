@@ -7,7 +7,7 @@ public class SuanZhangTest {
 
     @Test
     public void testWillSuanZhang() {
-        final SuanZhang suanZhang = new SuanZhang();
+        final ClassicSuanZhang suanZhang = new ClassicSuanZhang();
         final Move sixFour = new Move(1, 6, 4);
         final Move sixFour2 = new Move(2, 6, 4);
 
@@ -16,7 +16,7 @@ public class SuanZhangTest {
         Assertions.assertThat(suanZhang.willSuanZhang(sixFour2)).isTrue();
         Assertions.assertThat(suanZhang.willSuanZhang(new Move(1, 4, 6))).isFalse();
         suanZhang.executeMove(sixFour2);
-        Assertions.assertThat(suanZhang.isSuanZhang()).isEqualTo(SuanZhang.Type.CLASSIC);
+        Assertions.assertThat(suanZhang.suanZhangType()).isEqualTo(4);
 
 
     }
