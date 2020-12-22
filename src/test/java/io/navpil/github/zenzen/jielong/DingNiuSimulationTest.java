@@ -2,10 +2,8 @@ package io.navpil.github.zenzen.jielong;
 
 import io.navpil.github.zenzen.DominoFactory;
 import io.navpil.github.zenzen.dominos.Domino;
-import io.navpil.github.zenzen.jielong.player.CombiningStrategyPlayerImpl;
-import io.navpil.github.zenzen.jielong.player.MinMaxPlayerImpl;
 import io.navpil.github.zenzen.jielong.player.Player;
-import io.navpil.github.zenzen.jielong.player.RarenessPlayerImpl;
+import io.navpil.github.zenzen.jielong.player.PlayerFactory;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
@@ -13,8 +11,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-
-import static org.junit.Assert.*;
 
 public class DingNiuSimulationTest {
 
@@ -110,26 +106,15 @@ public class DingNiuSimulationTest {
 
     @Test
     public void testWhyFails2() {
-        final SuanZhang suanZhang = new SuanZhang();
-        final SuanZhangAwareness suanZhangAwareness = new SuanZhangAwarenessImpl(suanZhang, 7);
-
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
-        List<Function<List<Domino>, Player>> playerFactories = new ArrayList<>();
-//        playerFactories.add(list -> new RealPlayer(names.get(0), list));
-//        playerFactories.add(list -> new RealPlayer(names.get(0), list, suanZhang));
-        playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(0), list, suanZhangAwareness));
-        playerFactories.add(list -> new MinMaxPlayerImpl(names.get(1), list, suanZhangAwareness));
-        playerFactories.add(list -> new RarenessPlayerImpl(names.get(2), list, suanZhangAwareness));
-        playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(3), list, suanZhangAwareness));
-
         final ArrayList<Player> players = new ArrayList<>();
-        players.add(new CombiningStrategyPlayerImpl(names.get(0), DominoFactory.parseList("[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]"), suanZhangAwareness));
-        players.add(new MinMaxPlayerImpl(names.get(1), DominoFactory.parseList("[6:4], [6:6], [6:1], [5:1], [4:4], [3:1]"), suanZhangAwareness));
-        players.add(new RarenessPlayerImpl(names.get(2), DominoFactory.parseList("[6:5], [6:4], [4:4], [5:1], [2:2], [3:3]"), suanZhangAwareness));
-        players.add(new CombiningStrategyPlayerImpl(names.get(3), DominoFactory.parseList("[6:2], [2:2], [5:5], [6:6], [1:1], [1:1]"), suanZhangAwareness));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoFactory.parseList("[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]")));
+        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoFactory.parseList("[6:4], [6:6], [6:1], [5:1], [4:4], [3:1]")));
+        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoFactory.parseList("[6:5], [6:4], [4:4], [5:1], [2:2], [3:3]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoFactory.parseList("[6:2], [2:2], [5:5], [6:6], [1:1], [1:1]")));
 
-        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0, suanZhang);
+        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0);
 
         /*
         AbstractPlayerImpl{name='Dima', dominos=[[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]], putDown=[]}
@@ -153,27 +138,36 @@ public class DingNiuSimulationTest {
     }
 
     @Test
-    public void testWhyFails() {
-        final SuanZhang suanZhang = new SuanZhang();
-        final SuanZhangAwareness suanZhangAwareness = new SuanZhangAwarenessImpl(suanZhang, 7);
+    public void testPlayersWillThinkAboutDoublesTwice() {
+        final List<Player> players = List.of(
+                PlayerFactory.createMinMaxPlayer("Dima   ", DominoFactory.parseList("[6:6][6:5][1:1][5:5][2:2][5:5]".replace("][", "], ["))),
+                PlayerFactory.createMinMaxPlayer("MinMax ", DominoFactory.parseList("[6:4][6:1][2:6][2:2][3:1][4:4]".replace("][", "], ["))),
+                PlayerFactory.createRarenessPlayer("Rare   ", DominoFactory.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["))),
+                PlayerFactory.createCombiningStrategyPlayer("Combine", DominoFactory.parseList("[4:6][6:6][1:5][5:6][3:3][3:1]".replace("][", "], ["))));
 
+        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0);
+
+    }
+
+    @Test
+    public void testWhyFails() {
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
         List<Function<List<Domino>, Player>> playerFactories = new ArrayList<>();
 //        playerFactories.add(list -> new RealPlayer(names.get(0), list));
 //        playerFactories.add(list -> new RealPlayer(names.get(0), list, suanZhang));
-        playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(0), list, suanZhangAwareness));
-        playerFactories.add(list -> new MinMaxPlayerImpl(names.get(1), list, suanZhangAwareness));
-        playerFactories.add(list -> new RarenessPlayerImpl(names.get(2), list, suanZhangAwareness));
-        playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(3), list, suanZhangAwareness));
+        playerFactories.add(list -> PlayerFactory.createCombiningStrategyPlayer(names.get(0), list));
+        playerFactories.add(list -> PlayerFactory.createMinMaxPlayer(names.get(1), list));
+        playerFactories.add(list -> PlayerFactory.createRarenessPlayer(names.get(2), list));
+        playerFactories.add(list -> PlayerFactory.createCombiningStrategyPlayer(names.get(3), list));
 
         final ArrayList<Player> players = new ArrayList<>();
-        players.add(new CombiningStrategyPlayerImpl(names.get(0), DominoFactory.parseList("[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]"), suanZhangAwareness));
-        players.add(new MinMaxPlayerImpl(names.get(1), DominoFactory.parseList("[6:6], [6:5], [6:2], [6:4], [5:1], [3:3]"), suanZhangAwareness));
-        players.add(new RarenessPlayerImpl(names.get(2), DominoFactory.parseList("[3:1], [5:5], [1:1], [6:4], [4:4], [2:2]"), suanZhangAwareness));
-        players.add(new CombiningStrategyPlayerImpl(names.get(3), DominoFactory.parseList("[6:6], [1:1], [6:5], [6:1], [5:5], [4:4]"), suanZhangAwareness));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoFactory.parseList("[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]")));
+        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoFactory.parseList("[6:6], [6:5], [6:2], [6:4], [5:1], [3:3]")));
+        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoFactory.parseList("[3:1], [5:5], [1:1], [6:4], [4:4], [2:2]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoFactory.parseList("[6:6], [1:1], [6:5], [6:1], [5:5], [4:4]")));
 
-        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0, suanZhang);
+        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0);
 
         /*
         AbstractPlayerImpl{name='Dima', dominos=[[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]], putDown=[]}

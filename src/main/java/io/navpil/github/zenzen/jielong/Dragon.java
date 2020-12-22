@@ -1,5 +1,6 @@
 package io.navpil.github.zenzen.jielong;
 
+import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -8,6 +9,8 @@ public class Dragon {
     private final LinkedList<Integer> dragon = new LinkedList<>();
     private final LinkedList<Pair> pairs = new LinkedList<Pair>();
     private final OpenArms openArms;
+    private final SuanZhang suanZhang;
+    private final PipTracker pipTracker = new PipTracker();
 
     private static class Pair {
         private final int left;
@@ -29,11 +32,23 @@ public class Dragon {
         SINGLE, DOUBLE;
     }
 
-    public Dragon(Move firstMove, OpenArms openArms) {
+    public Dragon(OpenArms openArms, SuanZhang suanZhang) {
+        this.openArms = openArms;
+        this.suanZhang = suanZhang;
+    }
+
+    public Dragon(Move firstMove, OpenArms openArms, SuanZhang suanZhang) {
         this.openArms = openArms;
         dragon.add(firstMove.getInwards());
         dragon.add(firstMove.getOutwards());
         pairs.add(new Pair(firstMove.getInwards(), firstMove.getOutwards()));
+        suanZhang.executeMove(firstMove);
+        pipTracker.diminish(firstMove);
+        this.suanZhang = suanZhang;
+    }
+
+    public Dragon(Move firstMove, OpenArms openArms) {
+        this(firstMove, openArms, new NoopSuanZhang());
     }
 
     /*
@@ -44,6 +59,9 @@ public class Dragon {
      *
      */
     public List<Integer> getOpenEnds() {
+        if (dragon.isEmpty()) {
+            return Collections.emptyList();
+        }
         if (openArms == OpenArms.SINGLE) {
             return List.of(dragon.getLast());
         } else {
@@ -52,6 +70,9 @@ public class Dragon {
     }
 
     public void executeMove(Move move) {
+        suanZhang.executeMove(move);
+        pipTracker.diminish(move);
+
         if (move.getSide() > 0) {
             if (move.getSide() == 1) {
                 checkValid(dragon.getLast(), move.getInwards());
@@ -65,6 +86,10 @@ public class Dragon {
                 dragon.addFirst(move.getOutwards());
                 pairs.addFirst(new Pair(move.getOutwards(), move.getInwards()));
             }
+        } else if (move.getSide() == 0){
+            dragon.add(move.getInwards());
+            dragon.add(move.getOutwards());
+            pairs.add(new Pair(move.getInwards(), move.getOutwards()));
         }
     }
 
@@ -78,6 +103,14 @@ public class Dragon {
         if (inwards != openEnd) {
             throw new IllegalStateException("Move is illegal! Can not put " + inwards + " to " + openEnd);
         }
+    }
+
+    public PipTracker getPipTracker() {
+        return pipTracker;
+    }
+
+    public SuanZhang suanZhang() {
+        return suanZhang;
     }
 
     @Override

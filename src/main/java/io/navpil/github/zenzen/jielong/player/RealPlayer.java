@@ -3,15 +3,12 @@ package io.navpil.github.zenzen.jielong.player;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Dragon;
 import io.navpil.github.zenzen.jielong.Move;
-import io.navpil.github.zenzen.jielong.SuanZhang;
-import io.navpil.github.zenzen.jielong.SuanZhangMove;
 
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class RealPlayer implements Player {
 
@@ -19,16 +16,10 @@ public class RealPlayer implements Player {
     private final List<Domino> down = new ArrayList<>();
     final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
     private final String name;
-    private SuanZhang suanZhang;
-
-    public RealPlayer(String name, List<Domino> dominoes, SuanZhang suanZhang) {
-        this.dominoes = dominoes;
-        this.name = name;
-        this.suanZhang = suanZhang;
-    }
 
     public RealPlayer(String name, List<Domino> dominoes) {
-        this(name, dominoes, null);
+        this.dominoes = dominoes;
+        this.name = name;
     }
 
     @Override
@@ -106,7 +97,7 @@ public class RealPlayer implements Player {
                         }
                         if (side == 1 || side == 2) {
                             List<Move> moves = MoveFinder.getAvailableMoves(dragon.getOpenEnds(), dominoes);
-                            final int suanZhangMovesSize = (int) moves.stream().filter(m -> suanZhang.willSuanZhang(m)).count();
+                            final int suanZhangMovesSize = (int) moves.stream().filter(m -> dragon.suanZhang().willSuanZhang(m)).count();
                             //SuanZhang only counts when user can choose between suanzhang and no suanzhang. IF he has no choice - SuanZhang won't count
                             boolean maySuanZhang = !(suanZhangMovesSize == 0 || suanZhangMovesSize == moves.size());
                             final Domino remove = dominoes.remove(index);
@@ -116,11 +107,10 @@ public class RealPlayer implements Player {
                             } else {
                                 move = new Move(side, remove.getPips()[1], remove.getPips()[0]);
                             }
-                            if (maySuanZhang && suanZhang.willSuanZhang(move)) {
-                                return new SuanZhangMove(move, true);
-                            } else {
-                                return move;
+                            if (maySuanZhang && dragon.suanZhang().willSuanZhang(move)) {
+                                move.setSuanZhang(true);
                             }
+                            return move;
                         } else {
                             System.out.println("Illegal side");
                         }

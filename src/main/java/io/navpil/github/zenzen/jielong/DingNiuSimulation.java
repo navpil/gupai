@@ -2,12 +2,14 @@ package io.navpil.github.zenzen.jielong;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
-import io.navpil.github.zenzen.jielong.player.CombiningStrategyPlayerImpl;
-import io.navpil.github.zenzen.jielong.player.MinMaxPlayerImpl;
+import io.navpil.github.zenzen.jielong.player.evaluators.CombiningMoveEvaluator;
+import io.navpil.github.zenzen.jielong.player.evaluators.MinMaxMoveEvaluator;
 import io.navpil.github.zenzen.jielong.player.Player;
-import io.navpil.github.zenzen.jielong.player.RandomPlayerImpl;
-import io.navpil.github.zenzen.jielong.player.RarenessPlayerImpl;
+import io.navpil.github.zenzen.jielong.player.PlayerFactory;
+import io.navpil.github.zenzen.jielong.player.PriorityPlayer;
+import io.navpil.github.zenzen.jielong.player.evaluators.RarenessMoveEvaluator;
 import io.navpil.github.zenzen.jielong.player.RealPlayer;
+import io.navpil.github.zenzen.jielong.player.evaluators.SuanZhangMoveEvaluator;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -22,36 +24,22 @@ public class DingNiuSimulation {
 
     public static void main(String[] args) {
 
-        //Ad hoc rules: Play 4 double whenever possible
-        //Or make some generalization - prefer doubles to tiles, but better keep them, if you're the only person holding them
-        //Make a MoveWithPriority and add to priority in various ways. Then sort by the priority and choose a move
-        //Use (List<Moves>, TableState or TableVisibleInformation(with dragon (probably containing SuanZhang helper class), who went first, who put down dominoes, how many tiles left per player), PlayerState (dominoes, putdown dominoes) for priority calculation
         //Use Integers instead of names everywhere
 
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
         List<Function<List<Domino>, Player>> playerFactories = new ArrayList<>();
 
-        final SuanZhang suanZhang = new SuanZhang();
-        final SuanZhangAwareness suanZhangAwareness = new SuanZhangAwarenessImpl(suanZhang, 7);
-        final boolean realPlayerGame = false;
+        final boolean realPlayerGame = true;
         if (realPlayerGame) {
-
-//        playerFactories.add(list -> new RealPlayer(names.get(0), list));
-            playerFactories.add(list -> new RealPlayer(names.get(0), list, suanZhang));
-//        playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(0), list, suanZhangAwareness));
-            playerFactories.add(list -> new MinMaxPlayerImpl(names.get(1), list, suanZhangAwareness));
-            playerFactories.add(list -> new RarenessPlayerImpl(names.get(2), list, suanZhangAwareness));
-            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(3), list, suanZhangAwareness));
+            playerFactories.add(list -> new RealPlayer(names.get(0), list));
         } else {
-            //TODO: dmp 13.12.2020 Add DoublesAlwaysFirst
-//            playerFactories.add(list -> new RealPlayer(names.get(0), list, suanZhang));
-            //TODO: dmp 13.12.2020 Add SuanZhang depending on number of tiles left
-            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(0), list, new SuanZhangAwarenessImpl2(suanZhang, 4), true));
-            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(1), list, new SuanZhangAwarenessImpl2(suanZhang, 3), true));
-            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(2), list, new SuanZhangAwarenessImpl2(suanZhang, 3), false));
-            playerFactories.add(list -> new CombiningStrategyPlayerImpl(names.get(3), list, new SuanZhangAwarenessImpl2(suanZhang, 1),true));
+            playerFactories.add(list -> PlayerFactory.createCombiningStrategyPlayer(names.get(0), list));
         }
+
+        playerFactories.add(list -> new PriorityPlayer(names.get(1), list, new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
+        playerFactories.add(list -> new PriorityPlayer(names.get(2), list, new CombiningMoveEvaluator().addEvaluator(new RarenessMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
+        playerFactories.add(list -> new PriorityPlayer(names.get(3), list, new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator()).addEvaluator(new RarenessMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
 
 
         Map<String, Integer> indexes = new HashMap<>();//Map.of(names.get(0), 0, "MinMax", 1, "Rare", 2, "Combine", 3);
@@ -59,7 +47,7 @@ public class DingNiuSimulation {
             indexes.put(names.get(i), i);
         }
 
-        final int simCount = 1000;
+        final int simCount = 1;
         int whoGoesFirst = 0;
         final List<Domino> set = getDingNiuShuffledSet();
 
@@ -81,8 +69,7 @@ public class DingNiuSimulation {
                 hands.add(playerFactory.apply(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer)));
             }
 
-            suanZhang.reset();
-            final Stats stats = runSimulation(Dragon.OpenArms.DOUBLE, hands, tilesPerPlayer, whoGoesFirst, suanZhang);
+            final Stats stats = runSimulation(Dragon.OpenArms.DOUBLE, hands, tilesPerPlayer, whoGoesFirst);
             final WinningStats winningStats = resolvePoints(stats, hands.stream().map(Player::getName).collect(Collectors.toList()), whoGoesFirst);
 
             whoGoesFirst = indexes.get(winningStats.winner);
@@ -166,11 +153,11 @@ public class DingNiuSimulation {
         return new WinningStats(points, winner);
     }
 
-    public static Stats runSimulation(Dragon.OpenArms dragonType, ArrayList<Player> hands, int tilesPerPlayer, int whoGoesFirst, SuanZhang suanZhang) {
+    public static Stats runSimulation(Dragon.OpenArms dragonType, List<Player> hands, int tilesPerPlayer, int whoGoesFirst) {
         hands.forEach(System.out::println);
+
         final Move firstMove = hands.get(whoGoesFirst).firstMove();
-        suanZhang.executeMove(firstMove);
-        final Dragon dragon = new Dragon(firstMove, dragonType);
+        final Dragon dragon = new Dragon(firstMove, dragonType, new SuanZhangImpl());
 
         System.out.println(dragon);
         int downCounter = 0;
@@ -198,17 +185,14 @@ public class DingNiuSimulation {
                 downCounter = 0;
                 System.out.println("played " + move);
             }
-            boolean isSuanZhangMove = false;
-            if (move instanceof SuanZhangMove) {
-                isSuanZhangMove = ((SuanZhangMove)move).isSuanZhang();
-            }
+            boolean isSuanZhangMove = move.isSuanZhang();
 
-            final SuanZhang.Type type = suanZhang.executeMove(move);
             dragon.executeMove(move);
             System.out.println(dragon);
 
             //If the move is suanZhang
 
+            final SuanZhang.Type type = dragon.suanZhang().suanZhangType();
             if (isSuanZhangMove) {
                 System.out.println("SuanZhang! " + type);
                 if (suanZhangPlayer >= 0 ) {

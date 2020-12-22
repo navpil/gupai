@@ -1,43 +1,14 @@
 package io.navpil.github.zenzen.jielong;
 
-public class SuanZhang {
+public interface SuanZhang {
 
-    private Type type = Type.NONE;
+    boolean willSuanZhang(Move move);
 
-    private GraphSuanZhang graphSuanZhang = new GraphSuanZhang();
-    private ClassicSuanZhang classicSuanZhang = new ClassicSuanZhang();
+    Type executeMove(Move move);
 
-    public void reset() {
-        classicSuanZhang.reset();
-        graphSuanZhang.reset();
-        type = Type.NONE;
-    }
+    Type suanZhangType();
 
-    public boolean willSuanZhang(Move move) {
-        if (classicSuanZhang.willSuanZhang(move)) {
-            return true;
-        }
-        return graphSuanZhang.willSuanZhang(move) != GraphSuanZhang.Type.NONE;
-    }
-
-    public Type executeMove(Move move) {
-        final int classicType = classicSuanZhang.executeMove(move);
-        final GraphSuanZhang.Type graphType = graphSuanZhang.executeMove(move);
-        if (classicType > 0) {
-            type = Type.CLASSIC;
-        } else if (graphType != GraphSuanZhang.Type.NONE) {
-            type = Type.SMOTHERED;
-        } else {
-            type = Type.NONE;
-        }
-        return this.type;
-    }
-
-    public Type suanZhangType() {
-        return type;
-    }
-
-    public enum Type {
+    enum Type {
         NONE, SMOTHERED, CLASSIC
     }
 }

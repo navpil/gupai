@@ -2,6 +2,13 @@
 
 ## Connecting games
 
+These games are the most similar to the European dominoes.
+Main game is JieLong.
+DingNiu is the most complex variation - therefore it is done separately.
+
+JieLong, CeDeng and Kkoriput-igi differ only in set composition, player number and points calculation.
+Only CeDeng point calculation is missing.
+
 ### JieLong
 
 Basic game.

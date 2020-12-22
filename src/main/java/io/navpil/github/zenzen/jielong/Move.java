@@ -7,6 +7,7 @@ public class Move {
     private final int side;
     private final int inwards;
     private final int outwards;
+    private boolean suanZhang;
 
     private Domino cacheDomino;
 
@@ -14,6 +15,14 @@ public class Move {
         this.side = side;
         this.inwards = inwards;
         this.outwards = outwards;
+    }
+
+    public boolean isSuanZhang() {
+        return suanZhang;
+    }
+
+    public void setSuanZhang(boolean suanZhang) {
+        this.suanZhang = suanZhang;
     }
 
     public Domino getDomino() {
@@ -25,6 +34,10 @@ public class Move {
 
     public static Move none(Domino dominoToPut) {
         return new Move(-1, dominoToPut.getPips()[0], dominoToPut.getPips()[1]);
+    }
+
+    public static Move lead(Domino dominoToPut) {
+        return new Move(0, dominoToPut.getPips()[0], dominoToPut.getPips()[1]);
     }
 
     public int getSide() {
