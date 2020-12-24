@@ -10,6 +10,20 @@ import java.util.List;
 
 public class ChineseDominoSet {
 
+    public static List<Domino> dingNiuSet() {
+        final List<Domino> dominos = create();
+        dominos.remove(Domino.of(5, 4));
+        dominos.remove(Domino.of(5, 3));
+
+        dominos.remove(Domino.of(5, 2));
+        dominos.remove(Domino.of(4, 3));
+        dominos.remove(Domino.of(4, 1));
+        dominos.remove(Domino.of(3, 2));
+        dominos.remove(Domino.of(4, 2));
+        dominos.remove(Domino.of(2, 1));
+        return dominos;
+    }
+
     public static List<Domino> create() {
 
         final ArrayList<Domino> result = new ArrayList<Domino>();

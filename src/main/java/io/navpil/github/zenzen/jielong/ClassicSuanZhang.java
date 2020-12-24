@@ -7,15 +7,7 @@ public class ClassicSuanZhang {
     private int side1 = -1;
     private int side2 = -1;
 
-    private PipTracker pipTracker = new PipTracker();
-
-    public void reset() {
-        pipTracker.reset();
-        type = 0;
-        side1 = -1;
-        side2 = -1;
-
-    }
+    private final PipTracker pipTracker = PipTracker.dingNiuPipTracker();
 
     public boolean willSuanZhang(Move move) {
         if (side1 == -1) {

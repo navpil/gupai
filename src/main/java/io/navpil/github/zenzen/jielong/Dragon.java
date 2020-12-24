@@ -1,5 +1,9 @@
 package io.navpil.github.zenzen.jielong;
 
+import io.navpil.github.zenzen.ChineseDominoSet;
+import io.navpil.github.zenzen.dominos.Domino;
+
+import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
@@ -10,7 +14,7 @@ public class Dragon {
     private final LinkedList<Pair> pairs = new LinkedList<Pair>();
     private final OpenArms openArms;
     private final SuanZhang suanZhang;
-    private final PipTracker pipTracker = new PipTracker();
+    private final PipTracker pipTracker;
 
     private static class Pair {
         private final int left;
@@ -32,23 +36,14 @@ public class Dragon {
         SINGLE, DOUBLE;
     }
 
-    public Dragon(OpenArms openArms, SuanZhang suanZhang) {
-        this.openArms = openArms;
-        this.suanZhang = suanZhang;
+    public static Dragon dingNiuDragon() {
+        return new Dragon(OpenArms.DOUBLE, ChineseDominoSet.dingNiuSet(), new SuanZhangImpl());
     }
 
-    public Dragon(Move firstMove, OpenArms openArms, SuanZhang suanZhang) {
+    public Dragon(OpenArms openArms, Collection<Domino> dominoSet, SuanZhang suanZhang) {
         this.openArms = openArms;
-        dragon.add(firstMove.getInwards());
-        dragon.add(firstMove.getOutwards());
-        pairs.add(new Pair(firstMove.getInwards(), firstMove.getOutwards()));
-        suanZhang.executeMove(firstMove);
-        pipTracker.diminish(firstMove);
         this.suanZhang = suanZhang;
-    }
-
-    public Dragon(Move firstMove, OpenArms openArms) {
-        this(firstMove, openArms, new NoopSuanZhang());
+        pipTracker = PipTracker.forSet(dominoSet);
     }
 
     /*

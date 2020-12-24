@@ -27,7 +27,8 @@ Variation - two arm game.
 Additional rules:
 
 Pass, 7-Head-8-Tail (alternatively 6-Head-7-Tail) double the score
-8 doubles in a hand - redeal (a very rare thing)
+8 doubles in a hand - automatic pass, other players pay the player double of their points (a very rare thing) 
+7 doubles in a hand - redeal 
 
 Is played strictly with 4 people.
 
@@ -399,7 +400,9 @@ Players can agree that finishing the game by a discarded tile is forbidden.
 
 ### Small Mahjong
 
-3-4 players.
+Described in a [HuaBaoLeiDa blog post](http://blog.sina.com.cn/s/blog_62969d840100ucdk.html).
+
+Game for 3-4 players.
 
 Aim of a game is to collect 2 triplets.
 

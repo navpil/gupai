@@ -1,5 +1,6 @@
 package io.navpil.github.zenzen.jielong.player;
 
+import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.DominoFactory;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Dragon;
@@ -37,7 +38,7 @@ Dragon [[1:6], [6:6], [6:4], [4:6]]
 Player Dima played Move{side=1, inwards=6, outwards=5}
          */
 
-        final Dragon dragon = new Dragon(Dragon.OpenArms.DOUBLE, new NoopSuanZhang());
+        final Dragon dragon = new Dragon(Dragon.OpenArms.DOUBLE, ChineseDominoSet.dingNiuSet(), new NoopSuanZhang());
         dragon.executeMove(Move.lead(Domino.of(6, 6)));
         dragon.executeMove(new Move(1, 6, 4));
 

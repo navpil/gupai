@@ -12,7 +12,7 @@ public class GraphSuanZhang {
 
     private Map<Integer, Collection<Connection>> connections;
     private Map<Domino, Connection> reverseMap;
-    private final PipTracker pipTracker = new PipTracker();
+    private final PipTracker pipTracker = PipTracker.dingNiuPipTracker();
 
 
     private int side1 = -1;

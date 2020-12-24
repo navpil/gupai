@@ -4,14 +4,8 @@ public class SuanZhangImpl implements SuanZhang {
 
     private Type type = Type.NONE;
 
-    private GraphSuanZhang graphSuanZhang = new GraphSuanZhang();
-    private ClassicSuanZhang classicSuanZhang = new ClassicSuanZhang();
-
-    public void reset() {
-        classicSuanZhang.reset();
-        graphSuanZhang.reset();
-        type = Type.NONE;
-    }
+    private final GraphSuanZhang graphSuanZhang = new GraphSuanZhang();
+    private final ClassicSuanZhang classicSuanZhang = new ClassicSuanZhang();
 
     public boolean willSuanZhang(Move move) {
         if (classicSuanZhang.willSuanZhang(move)) {

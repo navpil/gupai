@@ -84,7 +84,8 @@ public class JieLongSimulation {
                 hands.add(playerFactory.apply(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer)));
             }
             whoWentFirst.get(names.get(whoGoesFirst)).add(1);
-            final Stats stats = runSimulation(Dragon.OpenArms.SINGLE, hands, tilesPerPlayer, whoGoesFirst);
+
+            final Stats stats = runSimulation(new Dragon(Dragon.OpenArms.SINGLE, dominoSet, new NoopSuanZhang()), hands, tilesPerPlayer, whoGoesFirst);
             final PointsResolution.WinningStats winningStats = pointsResolution.resolvePoints(stats, hands.stream().map(Player::getName).collect(Collectors.toList()), whoGoesFirst);
 
             whoGoesFirst = indexes.get(winningStats.getWinner());
@@ -106,11 +107,11 @@ public class JieLongSimulation {
         }
     }
 
-    public static Stats runSimulation(Dragon.OpenArms dragonType, List<Player> hands, int tilesPerPlayer, int whoGoesFirst) {
+    public static Stats runSimulation(Dragon dragon, List<Player> hands, int tilesPerPlayer, int whoGoesFirst) {
         hands.forEach(System.out::println);
 
         final Move firstMove = hands.get(whoGoesFirst).firstMove();
-        final Dragon dragon = new Dragon(firstMove, dragonType, new SuanZhangImpl());
+        dragon.executeMove(firstMove);
 
         System.out.println(dragon);
         int downCounter = 0;

@@ -114,7 +114,7 @@ public class DingNiuSimulationTest {
         players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoFactory.parseList("[6:5], [6:4], [4:4], [5:1], [2:2], [3:3]")));
         players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoFactory.parseList("[6:2], [2:2], [5:5], [6:6], [1:1], [1:1]")));
 
-        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0);
+        DingNiuSimulation.runSimulation(players, 6, 0);
 
         /*
         AbstractPlayerImpl{name='Dima', dominos=[[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]], putDown=[]}
@@ -145,7 +145,7 @@ public class DingNiuSimulationTest {
                 PlayerFactory.createRarenessPlayer("Rare   ", DominoFactory.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["))),
                 PlayerFactory.createCombiningStrategyPlayer("Combine", DominoFactory.parseList("[4:6][6:6][1:5][5:6][3:3][3:1]".replace("][", "], ["))));
 
-        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0);
+        DingNiuSimulation.runSimulation(players, 6, 0);
 
     }
 
@@ -167,7 +167,7 @@ public class DingNiuSimulationTest {
         players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoFactory.parseList("[3:1], [5:5], [1:1], [6:4], [4:4], [2:2]")));
         players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoFactory.parseList("[6:6], [1:1], [6:5], [6:1], [5:5], [4:4]")));
 
-        DingNiuSimulation.runSimulation(Dragon.OpenArms.DOUBLE, players, 6, 0);
+        DingNiuSimulation.runSimulation(players, 6, 0);
 
         /*
         AbstractPlayerImpl{name='Dima', dominos=[[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]], putDown=[]}

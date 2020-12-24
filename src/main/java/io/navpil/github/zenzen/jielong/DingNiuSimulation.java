@@ -47,7 +47,7 @@ public class DingNiuSimulation {
             indexes.put(names.get(i), i);
         }
 
-        final int simCount = 1;
+        final int simCount = 100;
         int whoGoesFirst = 0;
         final List<Domino> set = getDingNiuShuffledSet();
 
@@ -69,7 +69,7 @@ public class DingNiuSimulation {
                 hands.add(playerFactory.apply(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer)));
             }
 
-            final Stats stats = runSimulation(Dragon.OpenArms.DOUBLE, hands, tilesPerPlayer, whoGoesFirst);
+            final Stats stats = runSimulation(hands, tilesPerPlayer, whoGoesFirst);
             final WinningStats winningStats = resolvePoints(stats, hands.stream().map(Player::getName).collect(Collectors.toList()), whoGoesFirst);
 
             whoGoesFirst = indexes.get(winningStats.winner);
@@ -153,11 +153,12 @@ public class DingNiuSimulation {
         return new WinningStats(points, winner);
     }
 
-    public static Stats runSimulation(Dragon.OpenArms dragonType, List<Player> hands, int tilesPerPlayer, int whoGoesFirst) {
+    public static Stats runSimulation(List<Player> hands, int tilesPerPlayer, int whoGoesFirst) {
         hands.forEach(System.out::println);
 
         final Move firstMove = hands.get(whoGoesFirst).firstMove();
-        final Dragon dragon = new Dragon(firstMove, dragonType, new SuanZhangImpl());
+        final Dragon dragon = Dragon.dingNiuDragon();
+        dragon.executeMove(firstMove);
 
         System.out.println(dragon);
         int downCounter = 0;
