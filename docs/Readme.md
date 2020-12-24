@@ -26,9 +26,9 @@ Variation - two arm game.
 
 Additional rules:
 
-Pass, 7-Head-8-Tail (alternatively 6-Head-7-Tail) double the score
-8 doubles in a hand - automatic pass, other players pay the player double of their points (a very rare thing) 
-7 doubles in a hand - redeal 
+Pass, 7-Head-8-Tail (alternatively 6-Head-7-Tail) double the score.
+8 doubles in a hand - automatic pass, other players pay the player double of their points (a very rare thing). 
+7 doubles in a hand - redeal.
 
 Is played strictly with 4 people.
 

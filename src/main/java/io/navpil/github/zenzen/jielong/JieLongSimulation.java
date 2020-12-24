@@ -56,7 +56,13 @@ public class JieLongSimulation {
      * @param dominoSet domino set to use
      * @param pointsResolution who to calculate the points after each game
      */
-    public static void runSeveralSimulations(List<String> names, List<Function<List<Domino>, Player>> playerFactories, int simCount, int whoGoesFirst, List<Domino> dominoSet, PointsResolution pointsResolution) {
+    public static void runSeveralSimulations(
+            List<String> names,
+            List<Function<List<Domino>, Player>> playerFactories,
+            int simCount,
+            int whoGoesFirst,
+            List<Domino> dominoSet,
+            PointsResolution pointsResolution) {
         Map<String, Integer> indexes = new HashMap<>();//Map.of(names.get(0), 0, "MinMax", 1, "Rare", 2, "Combine", 3);
         for (int i = 0; i < names.size(); i++) {
             indexes.put(names.get(i), i);

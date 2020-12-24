@@ -5,7 +5,6 @@ import io.navpil.github.zenzen.dominos.Domino;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -112,18 +111,9 @@ public class DaLingCalculation {
         return points.resolve();
     }
 
-    private static int mod10Points_old(Domino ... dominos) {
-        int sum = 0;
-        for (Domino domino : dominos) {
-            sum += domino.getPips()[0] + domino.getPips()[1];
-        }
-        sum = sum % 10;
-        return sum == 0 ? 10 : sum;
-    }
-
     private static class Points {
 
-        private static final Set<Domino> geeGoon = Set.of(Domino.of(4,2), Domino.of(2,1));
+        private static final Set<Domino> geeJoon = Set.of(Domino.of(4,2), Domino.of(2,1));
         private final List<Integer> sums;
 
         private Points(List<Integer> sums) {
@@ -139,7 +129,7 @@ public class DaLingCalculation {
         }
 
         private static List<Integer> getPoints(Domino domino) {
-            if (isGeeGoon(domino)) {
+            if (isGeeJoon(domino)) {
                 return List.of(3, 6);
             } else {
                 return List.of(domino.getPips()[0] + domino.getPips()[1]);
@@ -161,8 +151,8 @@ public class DaLingCalculation {
             return sums.stream().map(i -> i % 10).map(i -> i == 0 ? 10 : i).max(Integer::compareTo).orElseThrow();
         }
 
-        private static boolean isGeeGoon(Domino domino) {
-            return geeGoon.contains(domino);
+        private static boolean isGeeJoon(Domino domino) {
+            return geeJoon.contains(domino);
         }
 
     }
