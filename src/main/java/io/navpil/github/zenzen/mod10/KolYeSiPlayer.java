@@ -16,6 +16,10 @@ public interface KolYeSiPlayer {
         return getMoney() > 0;
     }
 
+    default boolean isBankrupt() {
+        return !stillHasMoney();
+    }
+
     int getMoney();
 
     String getName();

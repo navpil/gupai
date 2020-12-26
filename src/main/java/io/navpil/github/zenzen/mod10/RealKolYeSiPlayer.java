@@ -7,17 +7,12 @@ public class RealKolYeSiPlayer implements KolYeSiPlayer {
 
     private final ConsoleInput consoleInput;
     private final String name;
-    private final int order;
-    private final int initialMoney;
     private int money;
-    private int stake;
 
-    public RealKolYeSiPlayer(String name, int order, int money) {
+    public RealKolYeSiPlayer(String name, int money) {
         consoleInput = new ConsoleInput();
         this.name = name;
-        this.initialMoney = money;
         this.money = money;
-        this.order = order;
 
     }
 
@@ -25,11 +20,10 @@ public class RealKolYeSiPlayer implements KolYeSiPlayer {
         System.out.println("You've got: " + domino);
 
         int maxPossibleStake = Math.min(money, maxStake);
-        stake = consoleInput.readInt(
+        return consoleInput.readInt(
                 (s) -> s >= minStake && s <= maxPossibleStake,
                 "You have " + money + " left, what's your stake?",
                 "Invalid stake, min: " + minStake + ", max: " + maxPossibleStake);
-        return stake;
     }
 
     public int dominoCount(Domino d1, Domino d2) {

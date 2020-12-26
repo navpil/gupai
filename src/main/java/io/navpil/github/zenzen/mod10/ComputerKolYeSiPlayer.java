@@ -12,7 +12,7 @@ public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
     private int money;
     private Domino dealtDomino;
 
-    public ComputerKolYeSiPlayer(String name, int order, int money, int pushThreshold, int bonusForWen) {
+    public ComputerKolYeSiPlayer(String name, int money, int pushThreshold, int bonusForWen) {
         this.name = name;
         this.money = money;
 
@@ -57,11 +57,11 @@ public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
     public int dominoCount(Domino d1, Domino d2) {
         final int bankersMod10 = Mod10Calculation.mod10(d1, d2);
 
-        final int[] pairs = KolYeSiProbabilities.calculatePairsFor(dealtDomino, List.of(d1, d2));
-        final int[] triplets = KolYeSiProbabilities.calculateTripletsFor(dealtDomino, List.of(d1, d2));
+        final int[] pairs = KolYeSiProbabilities.calculatePairsFrequencyFor(dealtDomino, List.of(d1, d2));
+        final int[] triplets = KolYeSiProbabilities.calculateTripletsFrequencyFor(dealtDomino, List.of(d1, d2));
 
-        int pairsSum = sum(pairs);
-        int tripletsSum = sum(triplets);
+        int pairsSum = 29;//sum(pairs);
+        int tripletsSum = 406;//sum(triplets);
 
         int maxAcceptable = (bankersMod10 >= pushThreshold) ? bankersMod10 : bankersMod10 + 1;
         int acceptablePairs = 0;

@@ -138,6 +138,15 @@ Other players take 1 or 2 tiles.
 All tiles are exposed now.
 Hands are calculated by Modulo 10 rule.
 
+Apparently Banker is at a disadvantage against a perfect player's play.
+The 'perfect pair' rule does not beat the player's ability to choose between 1 and 2 tiles.
+
+Implemented. 
+Wishlist: 
+ 
+ - extract strategies of choosing the count and a stake
+ - use genetic algorithm for finding out best stake strategy
+
 ### DaLing
 
 Players put 3 bets - 1 tile bet, 2 tiles bet and 3 tiles bet.
