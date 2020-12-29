@@ -1,5 +1,7 @@
 # Plan of which games to implement
 
+Chinese dominoes are called GuPai 骨牌, Korean dominoes are called GolPae 골패
+
 ## Connecting games
 
 These games are the most similar to the European dominoes.
@@ -9,7 +11,9 @@ DingNiu is the most complex variation - therefore it is done separately.
 JieLong, CeDeng and Kkoriput-igi differ only in set composition, player number and points calculation.
 Only CeDeng point calculation is missing.
 
-### JieLong
+Source: [Wikipedia](https://zh.wikipedia.org/wiki/%E6%8E%A5%E9%BE%8D_(%E4%B8%AD%E5%9C%8B%E9%AA%A8%E7%89%8C))
+
+### JieLong 接龙 (Connect the dragon)
 
 Basic game.
 Single arm, discard a tile when cannot move.
@@ -22,7 +26,7 @@ When 2 players play - each get 16 tiles.
 
 Variation - two arm game.
 
-### CeDeng
+### CeDeng 斜钉 (Slanted nail)
 
 Additional rules:
 
@@ -32,7 +36,7 @@ Pass, 7-Head-8-Tail (alternatively 6-Head-7-Tail) double the score.
 
 Is played strictly with 4 people.
 
-### Kkoriput-igi
+### Kkoriput-igi 꼬리붙이기 (Sticking the tail)
 
 Korean variant of JieLong.
 
@@ -42,7 +46,9 @@ Scoring - only lowest player pays the highest player. Additionally, all players 
 When 3 players play - doubles from 3 to 6 are removed, each player gets 8 tiles.
 When 2 players play - doubles from 3 to 6 are removed, each player gets 12 tiles.
 
-### DingNiu
+Sources: [Culin](https://healthy.uwaterloo.ca/museum/Archives/Culin/Dice1893/kkoripouttchiki.html), [Namu Wiki](https://namu.wiki/w/%EA%B3%A8%ED%8C%A8)
+
+### DingNiu 顶牛 (Bull fight)
 
 Two armed game.
 All military tiles except for a bull pair (62 and 63) are removed.
@@ -53,12 +59,14 @@ When losers are in a tie, higher hand (last from the dealer) gets a preference.
 
 SuanZhang - special rule, similar to blocking in European dominoes.
 
+Source: [Wenku Baidu](https://wenku.baidu.com/view/ae426c0dfc4ffe473368ab39?pcf=2&bfetype=new#)
+
 ## Trick taking games
 
 Already have ShiWuHu, after adjusting a bit, TianJiu can be created. 
 Still need to think of which tiles to put down - this moment is not present in ShiWuHu.
 
-### TianJiu (TienGow)
+### TianJiu (TienGow) 天九 (Heaven Nine)
 
 Basic trick taking game.
 
@@ -84,7 +92,9 @@ When 3 players play:
 
 When 2 play: the cat and the mouse, described by MinFanXin
 
-### GuPai
+### KuPai 古牌 (Ancient Tiles)
+
+Described in Macao book, information should be treated with caution.
 
 Similar to TianJiu, but only single cards can be played - need more info from Macao book.
 
@@ -101,7 +111,7 @@ This can be done as the last game, since it is not so difficult and it's actuall
 Banker in all of the further games moves around a circle.
 All the games use the Modulo 10 rule for hand evaluation.
 
-### PaiGow
+### PaiGow 牌九 (Tile-nine)
 
 4 tiles are received, split into 2 pairs.
 
@@ -117,7 +127,7 @@ Equals are split by High domino (only). GeeGoon tiles have no value for evaluati
 If High domino cannot be used for a split, then the dealer wins.
 If one hand loses and one wins - that's a push, player takes his bet back.
 
-### Tau Ngau
+### Tau Ngau 鬥牛 Bullfight
 
 Game of pure luck.
 Receive 5 tiles, first discard 3 tiles which cleanly divide by 10.
@@ -128,9 +138,11 @@ If a banker cannot make a discard, he loses to all players who discarded.
 If both a banker and a player discarded, higher ranking hand wins.
 Ties are 'pushes', players take their bets back.
 
+Sources: Macao book, [Pagat](https://www.pagat.com/domino/adding/taungau.html)
+
 ### Kol-ye-si
 
-Korean game.
+Korean game, probably named 골여시
 
 Players take 1 tile each and place their bets.
 Banker takes 2 tiles. If it's a perfect pair (identical tiles) he immediately wins.
@@ -146,8 +158,10 @@ Wishlist:
  
  - extract strategies of choosing the count and a stake
  - use genetic algorithm for finding out best stake strategy
+ 
+Sources: [Culin](https://healthy.uwaterloo.ca/museum/Archives/Culin/Dice1893/kolyesi.html)
 
-### DaLing
+### DaLing 打零 (Beat Zeroes)
 
 Players put 3 bets - 1 tile bet, 2 tiles bet and 3 tiles bet.
 Banker takes 2 and 5 players take 6 tiles each.
@@ -155,12 +169,14 @@ Players split their 6 tiles into three groups - 1 tile, 2 tiles and 3 tiles.
 Mod 10 calculation, but 0 is highest.
 Each group plays against the banker.
 
+Sources: Macao book, [Video with DaLing shown](https://www.youtube.com/watch?v=PmtH7Ad4ayI&t=1s&ab_channel=%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EB%86%80%EC%9D%B4KoreanGame)
+
 ## Fishing games
 
 These games are similar to Korean Hwatu / Japanese Hanafuda.
 Purpose of the fishing game is to collect as many tiles as possible by 'fishing' them from the table.
 
-### Tiu-U
+### Tiu-U 釣魚
 
 Translates as 'Catching Fish'.
 Uses two sets of dominoes.
@@ -188,7 +204,9 @@ Small fish are tiles with less than 8 pips, they score one point per red pip the
 Total small fish score is rounded to the nearest 10 up.
 Big fish score 2 points per each pip, regardless of a color.
 
-#### ShiWuHu Tiu-U variation (84 cards) 
+Sources: [Culin](https://healthy.uwaterloo.ca/museum/Archives/Culin/Dice1893/tiuu.html)
+
+#### ShiWuHu (十五湖) Tiu-U variation (84 cards) 
 
 It is very likely that the game originally is played with the deck of 84 domino cards, which includes four of each tile.
 
@@ -248,7 +266,9 @@ Proposed changes are:
  - Remove the '1-Wen-2-Wu' restriction for forming mixed Wen-Wu pairs and counting large/middle fish
  - 8 TianJiu counts as a special combination
 
-### Tsung Shap
+### Tsung Shap (對十)
+
+Translates as 'Dispute for tens'.
 
 Game is mostly based on luck.
 2 people play, each gets 16 tiles.
@@ -264,6 +284,8 @@ If the player tool emptied a table by his move - made a so called 'sweep', he is
 his pile, not the table to be empty.
 
 The game ends when one of the players has laid out all of his pieces.
+
+Source: Culin, Macao book
 
 #### 4 tiles in a hand variation
 
@@ -283,6 +305,8 @@ Similar to Rummy games, like Canasta.
 
 ### KapTaiShap
 
+Called 執十 in Macao book
+
 Many players can play, and many sets are used.
 Approximate sets calculation - 2 sets per 5 players.
 
@@ -295,17 +319,21 @@ Each move consists of:
   - Always take a tile from the wall and discard one tile face up.    
 
 At any point when a player gets 10 tiles and has a winning hand, he can declare a victory.
-Victorious player collects same amount of chips from every other player. 
+Victorious player collects same amount of chips from every other player.
 
-### KapShap
+42 tile always counts as 3 points 
+
+### KapShap (夾十)
 
 2 player variant of a KapTaiShap which uses 1 set.
 Rules are the same, except that a winning hand consists of 8 tiles: 
 1 ngan (which means military tiles cannot be used for this purpose) and 3 pairs which divide by 10.
 
+42 tile always counts as 3 points
+
 ### Ho-hpai
 
-Korean game. Probably the same as Tuk which is often mentioned on Korean websites.
+Korean game. Probably the same as Tuk (톡) which is often mentioned on Korean websites.
 
 Played with 3 or 4 people.
 According to Culin when 3 players play, 33, 44, 55 and 66 are taken away from the set.
@@ -390,7 +418,9 @@ Straights adjustment:
 
 2-3-Kao combination not made of doubles counts as 1.
 
-### Jjak-mat-chu-gi
+Sources: [Korean whsohn12 blog](https://blog.naver.com/whsohn12/100185916542), [Culin](https://healthy.uwaterloo.ca/museum/Archives/Culin/Dice1893/hohpai.html)
+
+### Jjak-mat-chu-gi (짝맞추기)
 
 Korean game. 2-4 players.
 This game relies on luck more than other Mahjong-like games.
@@ -407,7 +437,7 @@ Players can agree that finishing the game by a discarded tile is forbidden.
 
 *Since the game relies mostly on luck, tiles can be put face down to introduce the guessing/memory element into the game.*
 
-### Small Mahjong
+### Small Mahjong (打小麻将)
 
 Described in a [HuaBaoLeiDa blog post](http://blog.sina.com.cn/s/blog_62969d840100ucdk.html).
 

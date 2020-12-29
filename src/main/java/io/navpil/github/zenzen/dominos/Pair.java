@@ -2,7 +2,7 @@ package io.navpil.github.zenzen.dominos;
 
 import java.util.Objects;
 
-public class Pair {
+public class Pair implements Comparable<Pair> {
 
     private final Domino a;
     private final Domino b;
@@ -30,5 +30,22 @@ public class Pair {
     @Override
     public int hashCode() {
         return Objects.hash(a, b);
+    }
+
+    @Override
+    public String toString() {
+        return "Pair{" +
+                a +
+                ", " + b +
+                '}';
+    }
+
+    @Override
+    public int compareTo(Pair o) {
+        final int comp = a.compareTo(o.a);
+        if (comp != 0) {
+            return comp;
+        }
+        return b.compareTo(o.b);
     }
 }

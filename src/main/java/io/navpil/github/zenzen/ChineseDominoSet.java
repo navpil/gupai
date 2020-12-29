@@ -39,6 +39,14 @@ public class ChineseDominoSet {
         return result;
     }
 
+    public static List<Domino> create(int count) {
+        final ArrayList<Domino> result = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            result.addAll(ChineseDominoSet.create());
+        }
+        return result;
+    }
+
     public static List<Triplet> random8Triplets() {
         List<IDomino> dominoList = new ArrayList<>(ChineseDominoSet.create());
         final NoDomino noDomino = new NoDomino();
