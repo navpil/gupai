@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.jielong.player;
 
-import io.navpil.github.zenzen.DominoFactory;
+import io.navpil.github.zenzen.DominoParser;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Move;
 import io.navpil.github.zenzen.jielong.player.evaluators.CombiningMoveEvaluator;
@@ -22,7 +22,7 @@ public class CombiningMoveEvaluatorTest {
                 .addEvaluator(new MinMaxMoveEvaluator())
                 .addEvaluator(new RarenessMoveEvaluator());
 
-        final List<Domino> dominos = DominoFactory.parseList("[6:6], [6:6], [4:4], [4:4], [3:1], [3:1]");
+        final List<Domino> dominos = DominoParser.parseList("[6:6], [6:6], [4:4], [4:4], [3:1], [3:1]");
         final List<Integer> integers = me.evaluateLead(dominos.stream().map(Move::lead).collect(Collectors.toList()), null, new PlayerState(dominos, Collections.emptyList()));
 
         System.out.println(integers);
@@ -38,7 +38,7 @@ public class CombiningMoveEvaluatorTest {
                 .addEvaluator(new MinMaxMoveEvaluator())
                 .addEvaluator(new RarenessMoveEvaluator(), 0);
 
-        final List<Domino> dominos = DominoFactory.parseList("[6:6], [6:6], [4:4], [4:4], [4:1], [3:1]");
+        final List<Domino> dominos = DominoParser.parseList("[6:6], [6:6], [4:4], [4:4], [4:1], [3:1]");
         final List<Integer> integers = me.evaluateLead(dominos.stream().map(Move::lead).collect(Collectors.toList()), null, new PlayerState(dominos, Collections.emptyList()));
 
         final List<Domino> sort = PriorityUtil.sort(integers, dominos);
@@ -52,7 +52,7 @@ public class CombiningMoveEvaluatorTest {
                 .addEvaluator(new MinMaxMoveEvaluator(), 0)
                 .addEvaluator(new RarenessMoveEvaluator());
 
-        final List<Domino> dominos = DominoFactory.parseList("[6:6], [6:6], [4:4], [4:4], [4:1], [3:1]");
+        final List<Domino> dominos = DominoParser.parseList("[6:6], [6:6], [4:4], [4:4], [4:1], [3:1]");
         final List<Integer> integers = me.evaluateLead(dominos.stream().map(Move::lead).collect(Collectors.toList()), null, new PlayerState(dominos, Collections.emptyList()));
         System.out.println(integers);
 

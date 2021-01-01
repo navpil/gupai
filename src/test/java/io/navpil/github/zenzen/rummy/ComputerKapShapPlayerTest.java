@@ -1,7 +1,7 @@
 package io.navpil.github.zenzen.rummy;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
-import io.navpil.github.zenzen.DominoFactory;
+import io.navpil.github.zenzen.DominoParser;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.rummy.kapshap.ComputerKapShapPlayer;
 import io.navpil.github.zenzen.rummy.kapshap.KapShapHand;
@@ -192,7 +192,7 @@ public class ComputerKapShapPlayerTest {
     @Test
     public void handConsistingOfOnlyPairsShouldNotFail() {
         final KapShapTableVisibleInformation table = new KapShapTableVisibleInformation(ChineseDominoSet.create());
-        final List<Domino> deal = DominoFactory.parseList("[1:1], [6:5], [3:1], [5:5], [4:4], [3:3], [5:4]");
+        final List<Domino> deal = DominoParser.parseList("[1:1], [6:5], [3:1], [5:5], [4:4], [3:3], [5:4]");
         final KapShapPlayer player = new ComputerKapShapPlayer("First");
         player.showTable(table);
         player.deal(deal);
@@ -228,7 +228,7 @@ First was given [6:1]
 First discarded [6:1]
          */
 
-        final List<Domino> firstDeal = DominoFactory.parseList("[6:2], [6:1], [6:5], [6:6], [6:3], [6:5], [3:3]");
+        final List<Domino> firstDeal = DominoParser.parseList("[6:2], [6:1], [6:5], [6:6], [6:3], [6:5], [3:3]");
         final KapShapPlayer first = new ComputerKapShapPlayer("First");
         final KapShapTableVisibleInformation table = new KapShapTableVisibleInformation(ChineseDominoSet.create(), new KapShapRuleset(KapShapRuleset.Offer.ALL, true, 1, 8, false));
         first.showTable(table);
@@ -277,7 +277,7 @@ First discarded [6:1]
         at io.navpil.github.zenzen.rummy.kapshap.KapShap.runSimulation(KapShap.java:48)
         at io.navpil.github.zenzen.rummy.kapshap.KapShap.main(KapShap.java:18)
          */
-        final List<Domino> deal = DominoFactory.parseList("[5:3], [5:4], [4:4], [1:1], [6:6], [3:2], [4:1]");
+        final List<Domino> deal = DominoParser.parseList("[5:3], [5:4], [4:4], [1:1], [6:6], [3:2], [4:1]");
         final KapShapTableVisibleInformation table = new KapShapTableVisibleInformation(ChineseDominoSet.create(), new KapShapRuleset(KapShapRuleset.Offer.LAST, true, 1, 8, false));
 
         final KapShapPlayer first = new ComputerKapShapPlayer("First");

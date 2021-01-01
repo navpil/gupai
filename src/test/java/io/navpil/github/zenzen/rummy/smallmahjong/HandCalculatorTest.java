@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.rummy.smallmahjong;
 
-import io.navpil.github.zenzen.DominoFactory;
+import io.navpil.github.zenzen.DominoParser;
 import io.navpil.github.zenzen.dominos.Domino;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -11,7 +11,7 @@ public class HandCalculatorTest {
 
     @Test
     public void calculateHands() {
-        final List<Domino> dominos = DominoFactory.parseList("[4:2], [6:4], [6:1], [3:2], [2:2], [4:4]");
+        final List<Domino> dominos = DominoParser.parseList("[4:2], [6:4], [6:1], [3:2], [2:2], [4:4]");
         final List<Hand> hands = HandCalculator.calculateHands(dominos);
         System.out.println(hands);
 

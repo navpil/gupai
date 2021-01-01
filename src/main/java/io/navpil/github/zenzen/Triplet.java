@@ -28,9 +28,9 @@ public class Triplet {
 
     public static Triplet parse(String string) {
         final ArrayList<IDomino> dominos = new ArrayList<>();
-        dominos.add(DominoFactory.parse(string.substring(0, 5)));
-        dominos.add(DominoFactory.parse(string.substring(7, 12)));
-        dominos.add(DominoFactory.parse(string.substring(14, 19)));
+        dominos.add(DominoParser.parse(string.substring(0, 5)));
+        dominos.add(DominoParser.parse(string.substring(7, 12)));
+        dominos.add(DominoParser.parse(string.substring(14, 19)));
         return new Triplet(dominos);
     }
 

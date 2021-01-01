@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.jielong;
 
-import io.navpil.github.zenzen.DominoFactory;
+import io.navpil.github.zenzen.DominoParser;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.player.Player;
 import io.navpil.github.zenzen.jielong.player.PlayerFactory;
@@ -109,10 +109,10 @@ public class DingNiuSimulationTest {
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
         final ArrayList<Player> players = new ArrayList<>();
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoFactory.parseList("[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]")));
-        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoFactory.parseList("[6:4], [6:6], [6:1], [5:1], [4:4], [3:1]")));
-        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoFactory.parseList("[6:5], [6:4], [4:4], [5:1], [2:2], [3:3]")));
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoFactory.parseList("[6:2], [2:2], [5:5], [6:6], [1:1], [1:1]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoParser.parseList("[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]")));
+        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoParser.parseList("[6:4], [6:6], [6:1], [5:1], [4:4], [3:1]")));
+        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoParser.parseList("[6:5], [6:4], [4:4], [5:1], [2:2], [3:3]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoParser.parseList("[6:2], [2:2], [5:5], [6:6], [1:1], [1:1]")));
 
         DingNiuSimulation.runSimulation(players, 6, 0);
 
@@ -140,10 +140,10 @@ public class DingNiuSimulationTest {
     @Test
     public void testPlayersWillThinkAboutDoublesTwice() {
         final List<Player> players = List.of(
-                PlayerFactory.createMinMaxPlayer("Dima   ", DominoFactory.parseList("[6:6][6:5][1:1][5:5][2:2][5:5]".replace("][", "], ["))),
-                PlayerFactory.createMinMaxPlayer("MinMax ", DominoFactory.parseList("[6:4][6:1][2:6][2:2][3:1][4:4]".replace("][", "], ["))),
-                PlayerFactory.createRarenessPlayer("Rare   ", DominoFactory.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["))),
-                PlayerFactory.createCombiningStrategyPlayer("Combine", DominoFactory.parseList("[4:6][6:6][1:5][5:6][3:3][3:1]".replace("][", "], ["))));
+                PlayerFactory.createMinMaxPlayer("Dima   ", DominoParser.parseList("[6:6][6:5][1:1][5:5][2:2][5:5]".replace("][", "], ["))),
+                PlayerFactory.createMinMaxPlayer("MinMax ", DominoParser.parseList("[6:4][6:1][2:6][2:2][3:1][4:4]".replace("][", "], ["))),
+                PlayerFactory.createRarenessPlayer("Rare   ", DominoParser.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["))),
+                PlayerFactory.createCombiningStrategyPlayer("Combine", DominoParser.parseList("[4:6][6:6][1:5][5:6][3:3][3:1]".replace("][", "], ["))));
 
         DingNiuSimulation.runSimulation(players, 6, 0);
 
@@ -162,10 +162,10 @@ public class DingNiuSimulationTest {
         playerFactories.add(list -> PlayerFactory.createCombiningStrategyPlayer(names.get(3), list));
 
         final ArrayList<Player> players = new ArrayList<>();
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoFactory.parseList("[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]")));
-        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoFactory.parseList("[6:6], [6:5], [6:2], [6:4], [5:1], [3:3]")));
-        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoFactory.parseList("[3:1], [5:5], [1:1], [6:4], [4:4], [2:2]")));
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoFactory.parseList("[6:6], [1:1], [6:5], [6:1], [5:5], [4:4]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoParser.parseList("[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]")));
+        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoParser.parseList("[6:6], [6:5], [6:2], [6:4], [5:1], [3:3]")));
+        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoParser.parseList("[3:1], [5:5], [1:1], [6:4], [4:4], [2:2]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoParser.parseList("[6:6], [1:1], [6:5], [6:1], [5:5], [4:4]")));
 
         DingNiuSimulation.runSimulation(players, 6, 0);
 

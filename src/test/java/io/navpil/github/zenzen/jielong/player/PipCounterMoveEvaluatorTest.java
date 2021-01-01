@@ -1,7 +1,7 @@
 package io.navpil.github.zenzen.jielong.player;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
-import io.navpil.github.zenzen.DominoFactory;
+import io.navpil.github.zenzen.DominoParser;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Dragon;
 import io.navpil.github.zenzen.jielong.Move;
@@ -42,7 +42,7 @@ Player Dima played Move{side=1, inwards=6, outwards=5}
         dragon.executeMove(Move.lead(Domino.of(6, 6)));
         dragon.executeMove(new Move(1, 6, 4));
 
-        final List<Domino> dominos = DominoFactory.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["));
+        final List<Domino> dominos = DominoParser.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["));
 
         final MoveEvaluator evaluator = new PipCounterMoveEvaluator();
 

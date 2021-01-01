@@ -8,7 +8,7 @@ import io.navpil.github.zenzen.jielong.Move;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DominoFactory {
+public class DominoParser {
 
     /**
      * Parses [4:3] format

@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.shiwuhu;
 
-import io.navpil.github.zenzen.DominoFactory;
+import io.navpil.github.zenzen.DominoParser;
 import io.navpil.github.zenzen.dominos.IDomino;
 import io.navpil.github.zenzen.dominos.Domino;
 
@@ -84,7 +84,7 @@ public class ShiWuHuMain {
         for (int i = 0; i < 84; i++) {
             final IDomino parse;
             try {
-                parse = DominoFactory.parse(dominos.substring(i * 7, (i + 1) * 7));
+                parse = DominoParser.parse(dominos.substring(i * 7, (i + 1) * 7));
             } catch (Exception e) {
                 throw e;
             }
