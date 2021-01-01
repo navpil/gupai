@@ -68,6 +68,7 @@ public class KapShap {
             //In KapShap player has to take the closed domino after taking the open one, but this should be configurable
             if ((rules.isTakeAfterOffer() || wished == null) && dominoIndex < dominos.size()) {
                 final Domino give = dominos.get(dominoIndex);
+                dominoIndex++;
                 System.out.println(player.getName() + " was given " + give);
                 player.give(give);
 
@@ -81,7 +82,6 @@ public class KapShap {
             }
 
             currentPlayer = (currentPlayer + 1) % players.size();
-            dominoIndex++;
 
         }
 

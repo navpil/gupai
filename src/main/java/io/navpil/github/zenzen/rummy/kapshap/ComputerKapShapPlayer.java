@@ -212,7 +212,7 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
     private static List<Integer> getPriorities(List<Domino> deadwood, KapShapTableVisibleInformation table, List<Domino> dominoes) {
         int [] frequencies = table.getTotalFrequencies();
 
-        List<Domino> openDominoes = table.getOpenDominoes();
+        Collection<Domino> openDominoes = table.getOpenDominoes();
         int[] openFrequencies = new int[10];
         if (table.getRules().getOfferType() == KapShapRuleset.Offer.ALL) {
             for (Domino openDomino : openDominoes) {
