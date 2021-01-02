@@ -86,6 +86,7 @@ public class AbstractBagTest {
                 )
         );
 
+        Assertions.assertThat(dominos.size()).isEqualTo(5);
 
     }
 }

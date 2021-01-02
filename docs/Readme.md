@@ -265,6 +265,7 @@ Proposed changes are:
 
  - Remove the '1-Wen-2-Wu' restriction for forming mixed Wen-Wu pairs and counting large/middle fish
  - 8 TianJiu counts as a special combination
+ - 2 Supreme pairs count as 200
 
 ### Tsung Shap (對十)
 
@@ -435,7 +436,11 @@ If a player completes a hand from the "wall", everyone pays him.
 If a player completes a hand by the tile discarded by the previous player, only that player pays him.
 Players can agree that finishing the game by a discarded tile is forbidden.
 
-*Since the game relies mostly on luck, tiles can be put face down to introduce the guessing/memory element into the game.*
+#### Blind game variation
+
+Since the game relies mostly on luck, tiles can be put face down to introduce the guessing/memory element into the game.
+In this case any tile from the table can be picked up to form a pair.
+This is not a variation described anywhere.
 
 ### Small Mahjong (打小麻将)
 

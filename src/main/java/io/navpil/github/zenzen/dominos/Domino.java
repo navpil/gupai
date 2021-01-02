@@ -16,6 +16,10 @@ public class Domino implements IDomino {
         return new Domino(i, i1);
     }
 
+    public static Domino of(int i) {
+        return of(i % 10, i / 10);
+    }
+
     public boolean isCivil() {
         return isDouble() || is(3, 1) || is(6, 5) || is(6,4) || is(1,6) || is(1,5);
     }

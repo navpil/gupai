@@ -36,4 +36,19 @@ public class DominoParser {
         }
         return dominos;
     }
+
+    public static List<Domino> parseBag(String bag) {
+
+//        String p = "[1:1]=c:2, [2:2]=c:3, [3:1]=c:3, [3:3]=c:1, [4:3]=c:1, [4:4]=c:3, [5:1]=c:1, [5:2]=c:1, [5:3]=c:1, [6:1]=c:2"
+        final String[] m = bag.split(", ");
+        List<Domino> dominos = new ArrayList<>();
+        for (String move : m) {
+            final int count = Integer.parseInt("" + move.charAt(8));
+            final Domino d = new Domino(Integer.parseInt("" + move.charAt(1)), Integer.parseInt("" + move.charAt(3)));
+            for (int i = 0; i < count; i++) {
+                dominos.add(d);
+            }
+        }
+        return dominos;
+    }
 }

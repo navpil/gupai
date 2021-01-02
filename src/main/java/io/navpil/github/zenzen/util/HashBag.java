@@ -3,6 +3,7 @@ package io.navpil.github.zenzen.util;
 import io.navpil.github.zenzen.jielong.player.Counter;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +18,12 @@ public class HashBag<T> extends AbstractBag<T> {
     public HashBag(Collection<T> ts) {
         map = new HashMap<>();
         addAll(ts);
+    }
+
+    public static <T> HashBag<T> of(T ... elements) {
+        final HashBag<T> ts = new HashBag<>();
+        Collections.addAll(ts, elements);
+        return ts;
     }
 
     @Override
