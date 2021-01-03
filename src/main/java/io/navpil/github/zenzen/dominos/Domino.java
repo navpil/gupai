@@ -1,6 +1,9 @@
 package io.navpil.github.zenzen.dominos;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class Domino implements IDomino {
 
@@ -18,6 +21,10 @@ public class Domino implements IDomino {
 
     public static Domino of(int i) {
         return of(i % 10, i / 10);
+    }
+
+    public static Collection<Domino> ofList(int ... ints) {
+        return Arrays.stream(ints).mapToObj(Domino::of).collect(Collectors.toList());
     }
 
     public boolean isCivil() {
