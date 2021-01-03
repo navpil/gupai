@@ -2,6 +2,7 @@ package io.navpil.github.zenzen.fishing;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.jielong.Stats;
 import io.navpil.github.zenzen.util.AbstractBag;
 import io.navpil.github.zenzen.util.Bag;
 import io.navpil.github.zenzen.util.HashBag;
@@ -21,23 +22,79 @@ import java.util.stream.Collector;
 public class TiuU {
 
     public static void main(String[] args) {
-        runSimulation(
-                List.of(
-                        new ComputerPlayer("Comp-1"),
-                        new ComputerPlayer("Comp-2"),
-                        new ComputerPlayer("Comp-3")
-                ), 0
+
+        final List<Player> players = List.of(
+                new ComputerPlayer("Comp-1"),
+                new ComputerPlayer("Comp-2"),
+                new RealPlayer("John")
         );
+        final List<Domino> dominos = ChineseDominoSet.create(2);
+        final RuleSet rules = RuleSet.mixed();
+        final int simCount = 10;
+
+        Stats overallStats = runManySimulations(players, dominos, rules, simCount);
+
+        for (Player player : players) {
+            System.out.println(player.getName() + " has " + overallStats.getPointsFor(player.getName()));
+        }
     }
 
-    public static void runSimulation(List<Player> players, int whoGoesFirst) {
+    private static Stats runManySimulations(List<Player> players, List<Domino> dominos, RuleSet rules, int simCount) {
+        Stats overallStats = new Stats();
+        for (Player player : players) {
+            overallStats.put(player.getName(), 0);
+        }
+        int firstPlayer = 0;
+        for (int sim = 0; sim < simCount; sim++) {
+            Collections.shuffle(dominos);
 
-        final List<Domino> dominos = ChineseDominoSet.create(2);
-        Collections.shuffle(dominos);
+            final Stats stats = runSimulation(
+                    players,
+                    firstPlayer,
+                    rules,
+                    dominos
+            );
 
+            for (int i = 0; i < players.size(); i++) {
+                final Player p1 = players.get(i);
+                for (int j = i + 1; j < players.size(); j++) {
+                    final Player p2 = players.get(j);
+                    final Integer p1Points = stats.getPointsFor(p1.getName());
+                    final Integer p2Points = stats.getPointsFor(p2.getName());
+
+                    final int p1WinningPoints = p1Points - p2Points;
+
+                    overallStats.add(p1.getName(), p1WinningPoints);
+                    overallStats.add(p2.getName(), -p1WinningPoints);
+                }
+            }
+
+            //Rules do not specify who goes first next, but let's assume it's the same as for JieLong
+            //the one who gets the most points, hand closer to dealer wins when a tie occurs.
+            firstPlayer = nextPlayerCalculation(stats, firstPlayer, players);
+        }
+        return overallStats;
+    }
+
+    public static int nextPlayerCalculation(Stats stats, int previousFirstPlayer, List<Player> players) {
+        int maxPlayerIndex = -1;
+        int maxPoints = -1;
+        for (int i = 0; i < players.size(); i++) {
+            final int currentPlayerIndex = (i + previousFirstPlayer) % players.size();
+            final Player player = players.get(currentPlayerIndex);
+            final Integer pointsFor = stats.getPointsFor(player.getName());
+            if (pointsFor > maxPoints) {
+                maxPlayerIndex = currentPlayerIndex;
+                maxPoints = pointsFor;
+            }
+        }
+        return maxPlayerIndex;
+    }
+
+    public static Stats runSimulation(List<Player> players, int whoGoesFirst, RuleSet ruleSet, List<Domino> dominos) {
         int tilesPerPlayer = 24 / players.size();
 
-        final Table table = new Table(RuleSet.mixed());
+        final Table table = new Table(ruleSet);
 
         int counter = 0;
         for (Player player : players) {
@@ -71,25 +128,19 @@ public class TiuU {
             playerIndex.next();
         }
 
-        Collection<Domino> all = new HashBag<>();
+        final Stats stats = new Stats();
+
         for (Player player : players) {
-            Bag<Catch> catches = table.getCatch(player.getName());
-            if (catches == null) {
+            Bag<Domino> catches = table.getCatch(player.getName());
+            if (catches.isEmpty()) {
                 System.out.println("Player " + player.getName() + " caught nothing");
                 continue;
             }
-            final Collection<Domino> collect = catches.stream().flatMap(c -> {
-                final HashBag<Domino> d = new HashBag<>();
-                d.add(c.getBait());
-                d.addAll(c.getFish());
-                return d.stream();
-            }).collect(new ToBagCollector<>());
-            all.addAll(collect);
-            System.out.println(player.getName() + " caught " + collect + " which gives " + table.getRuleSet().calculatePoints(collect) + " points");
+            final int points = table.getRuleSet().calculatePoints(catches);
+            System.out.println(player.getName() + " caught " + catches + " which gives " + points + " points");
+            stats.put(player.getName(), points);
         }
-        all.addAll(table.getPool());
-
-
+        return stats;
     }
 
     public static class ToBagCollector<T> implements Collector<T, TreeBag<T>, TreeBag<T>> {

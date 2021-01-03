@@ -8,8 +8,16 @@ public class Stats {
     private int suanZhangPlayer = -1;
     private boolean gameBlocked;
 
-    public void add(String name, int points) {
+    public void put(String name, int points) {
         this.points.put(name, points);
+    }
+
+    public void add(String name, int points) {
+        Integer currentPoints = this.points.get(name);
+        if (currentPoints == null) {
+            currentPoints = 0;
+        }
+        this.points.put(name, currentPoints + points);
     }
 
     public void setSuanZhangPlayer(int suanZhangPlayer) {
@@ -26,5 +34,9 @@ public class Stats {
 
     public boolean getGameBlocked() {
         return gameBlocked;
+    }
+
+    public Integer getPointsFor(String name) {
+        return points.get(name);
     }
 }

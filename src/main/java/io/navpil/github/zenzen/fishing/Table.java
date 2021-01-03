@@ -2,7 +2,6 @@ package io.navpil.github.zenzen.fishing;
 
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.util.Bag;
-import io.navpil.github.zenzen.util.HashBag;
 import io.navpil.github.zenzen.util.TreeBag;
 
 import java.util.Collection;
@@ -13,7 +12,7 @@ public class Table {
 
     private final RuleSet ruleSet;
     private Bag<Domino> pool;
-    private Map<String, Bag<Catch>> catches = new HashMap<>();
+    private Map<String, TreeBag<Domino>> catches = new HashMap<>();
 
     public Table(RuleSet ruleSet) {
         this.ruleSet = ruleSet;
@@ -33,9 +32,9 @@ public class Table {
         } else {
             remove(c.getFish());
             if (!catches.containsKey(name)) {
-                catches.put(name, new HashBag<>());
+                catches.put(name, new TreeBag<>());
             }
-            catches.get(name).add(c);
+            catches.get(name).addAll(c.getDominos());
         }
     }
 
@@ -55,9 +54,9 @@ public class Table {
                 '}';
     }
 
-    public Bag<Catch> getCatch(String name) {
+    public Bag<Domino> getCatch(String name) {
         if (catches.get(name) == null) {
-            catches.put(name, new HashBag<>());
+            catches.put(name, new TreeBag<>());
         }
         return catches.get(name);
     }

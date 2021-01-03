@@ -17,10 +17,10 @@ public class DingNiuSimulationTest {
     @Test
     public void resolveUnusualPoints() {
         final Stats stats = new Stats();
-        stats.add("A", 0);
-        stats.add("B", 0);
-        stats.add("C", 0);
-        stats.add("D", 0);
+        stats.put("A", 0);
+        stats.put("B", 0);
+        stats.put("C", 0);
+        stats.put("D", 0);
 
         final Map<String, Integer> points = DingNiuSimulation.resolvePoints(stats, new ArrayList<>(List.of("A", "B", "C", "D")), 2).getPoints();
 
@@ -33,10 +33,10 @@ public class DingNiuSimulationTest {
     @Test
     public void resolveNormalPoints() {
         final Stats stats = new Stats();
-        stats.add("A", 5);
-        stats.add("B", 10);
-        stats.add("C", 2);
-        stats.add("D", 15);
+        stats.put("A", 5);
+        stats.put("B", 10);
+        stats.put("C", 2);
+        stats.put("D", 15);
 
         final Map<String, Integer> points = DingNiuSimulation.resolvePoints(stats, new ArrayList<>(List.of("A", "B", "C", "D")), 2).getPoints();
 
@@ -49,10 +49,10 @@ public class DingNiuSimulationTest {
     @Test
     public void resolveWinningMatchPoints() {
         final Stats stats = new Stats();
-        stats.add("A", 10);
-        stats.add("B", 2);
-        stats.add("C", 2);
-        stats.add("D", 15);
+        stats.put("A", 10);
+        stats.put("B", 2);
+        stats.put("C", 2);
+        stats.put("D", 15);
 
         final Map<String, Integer> points = DingNiuSimulation.resolvePoints(stats, new ArrayList<>(List.of("A", "B", "C", "D")), 2).getPoints();
 
@@ -65,10 +65,10 @@ public class DingNiuSimulationTest {
     @Test
     public void resolveLosingMatchPoints() {
         final Stats stats = new Stats();
-        stats.add("A", 10);
-        stats.add("B", 10);
-        stats.add("C", 2);
-        stats.add("D", 15);
+        stats.put("A", 10);
+        stats.put("B", 10);
+        stats.put("C", 2);
+        stats.put("D", 15);
 
         final Map<String, Integer> points = DingNiuSimulation.resolvePoints(stats, new ArrayList<>(List.of("A", "B", "C", "D")), 2).getPoints();
 

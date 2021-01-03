@@ -153,7 +153,7 @@ public class JieLongSimulation {
             final String name = player.getName();
             final int points = player.getPoints();
             System.out.println(name + " has points: " + points);
-            stats.add(name, points);
+            stats.put(name, points);
         }
         return stats;
     }

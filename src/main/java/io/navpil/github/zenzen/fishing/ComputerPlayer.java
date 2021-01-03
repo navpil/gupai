@@ -63,7 +63,7 @@ public class ComputerPlayer implements Player {
             sortedCatches.sort((c1, c2) -> Integer.compare(points(c2.getBait()), points(c1.getBait())));
             Catch maxCatch = null;
             int maxPoints = -1;
-            final List<Domino> previousCatches = table.getCatch(name).stream().flatMap(c -> c.getDominos().stream()).collect(Collectors.toList());
+            final Collection<Domino> previousCatches = table.getCatch(name);
             for (Catch c : sortedCatches) {
                 final int points = table.getRuleSet().calculatePoints(new CombineCollection<>(List.of(previousCatches, c.getDominos())));
                 if (points > maxPoints) {

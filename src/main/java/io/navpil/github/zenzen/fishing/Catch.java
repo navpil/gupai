@@ -5,6 +5,7 @@ import io.navpil.github.zenzen.util.Bag;
 import io.navpil.github.zenzen.util.HashBag;
 
 import java.util.Collection;
+import java.util.Objects;
 
 public class Catch {
     private Domino bait;
@@ -36,6 +37,20 @@ public class Catch {
                 "bait=" + bait +
                 ", fish=" + fish +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Catch aCatch = (Catch) o;
+        return Objects.equals(bait, aCatch.bait) &&
+                Objects.equals(fish, aCatch.fish);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(bait, fish);
     }
 
     public Collection<Domino> getDominos() {

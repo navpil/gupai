@@ -220,7 +220,7 @@ public class DingNiuSimulation {
             final String name = player.getName();
             final int points = player.getPoints();
             System.out.println(name + " has points: " + points);
-            stats.add(name, points);
+            stats.put(name, points);
         }
         //Only SuanZhang if poitns are more than 0, otherwise - no SuanZhang counted
         if (suanZhangPlayer >= 0 && hands.get(suanZhangPlayer).getPoints() > 0) {
