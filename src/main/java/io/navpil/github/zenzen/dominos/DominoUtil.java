@@ -56,4 +56,8 @@ public class DominoUtil {
         return d1.isCivil() && d2.isCivil() && d1.equals(d2);
     }
 
+    public static int getPipPoints(Domino d) {
+        return d.getPips()[0] + d.getPips()[1];
+    }
+
 }

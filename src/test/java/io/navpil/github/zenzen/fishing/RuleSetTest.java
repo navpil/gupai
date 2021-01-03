@@ -1,18 +1,12 @@
 package io.navpil.github.zenzen.fishing;
 
-import io.navpil.github.zenzen.DominoParser;
 import io.navpil.github.zenzen.dominos.Domino;
-import io.navpil.github.zenzen.util.Bag;
 import io.navpil.github.zenzen.util.HashBag;
-import io.navpil.github.zenzen.util.TreeBag;
-import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.*;
-import static org.junit.Assert.*;
+import static org.assertj.core.api.Assertions.assertThat;
 
 public class RuleSetTest {
 
