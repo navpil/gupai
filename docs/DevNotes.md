@@ -44,10 +44,11 @@ Not in plans:
 Kol-ye-si seems to give a preference to a player, not a banker, maybe there is no point in improving the AI. 
 Same probably goes for DaLing.
 
+Make all games to use RunGamblingGame
+
 Todo list:
 
  - PaiGow - This can be done as the last game, since it is not so difficult and it's actually popular.
- - Tau Ngau (pure luck game)
  - DaLing (probability calculation included already)
 
 Included games:
@@ -55,6 +56,7 @@ Included games:
  - Kol-ye-si, wishlist:
      - extract strategies of choosing the count and a stake
      - use genetic algorithm for finding out best stake strategy
+ - Tau Ngau, see todo in a Computer player.
 
 ## Fishing games
 

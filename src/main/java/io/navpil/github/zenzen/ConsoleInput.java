@@ -37,4 +37,20 @@ public class ConsoleInput {
         }
     }
 
+    public String readString(Predicate<String> successTest, String prompt, String errorMessage) {
+        while (true) {
+            System.out.println(prompt);
+            String s = "";
+            try {
+                s = bufferedReader.readLine();
+            } catch (IOException ignore) {
+            }
+            if (successTest.test(s)) {
+                return s;
+            } else {
+                System.out.println(errorMessage);
+            }
+        }
+    }
+
 }

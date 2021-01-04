@@ -5,6 +5,11 @@ import io.navpil.github.zenzen.dominos.Domino;
 import java.util.Arrays;
 import java.util.Collection;
 
+/**
+ * @deprecated
+ *
+ * Consider using Mod10Rule instead
+ */
 public class Mod10Calculation {
 
     static int mod10(Collection<Domino> dominoes) {
