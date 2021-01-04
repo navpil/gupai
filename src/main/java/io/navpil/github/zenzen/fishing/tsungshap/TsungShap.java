@@ -7,30 +7,27 @@ import io.navpil.github.zenzen.jielong.Stats;
 import io.navpil.github.zenzen.util.HashBag;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
 public class TsungShap {
 
     public static void main(String[] args) {
-
         final List<Domino> deck = ChineseDominoSet.create();
         final List<TsungShapPlayer> players = List.of(
-                new TsungShapPlayer("Comp-1"),
-                new TsungShapPlayer("Comp-2")
+                new TsungShapComputerPlayer("Comp-1"),
+                new TsungShapRealPlayer("Mark")
         );
 
-        Collections.shuffle(deck);
         final TsungShapRuleSet ruleSet = new TsungShapRuleSet(false, -1);
-        final Stats stats = runSimulation(deck, players, 0, ruleSet);
-        for (TsungShapPlayer player : players) {
-            System.out.println(stats.getPointsFor(player.getName()));
-        }
+        Stats stats = new RunManySimulations().runManySimulations(deck, players, ruleSet, 100, TsungShap::runSimulation);
 
+        for (TsungShapPlayer player : players) {
+            System.out.println(player.getName() + " got points: " + stats.getPointsFor(player.getName()));
+        }
     }
 
-    private static Stats runSimulation(List<Domino> deck, List<TsungShapPlayer> players, int whoGoesFirst, TsungShapRuleSet ruleSet) {
+    private static Stats runSimulation(List<Domino> deck, List<TsungShapPlayer> players, TsungShapRuleSet ruleSet, int whoGoesFirst) {
         final List<LinkedList<Domino>> personalDecks = List.of(
                 new LinkedList<>(deck.subList(0, deck.size() / 2)),
                 new LinkedList<>(deck.subList(deck.size() / 2, deck.size()))
@@ -128,7 +125,10 @@ public class TsungShap {
 
         final Stats stats = new Stats();
         for (TsungShapPlayer player : players) {
-            stats.put(player.getName(), ruleSet.calculatePoints(table.getCatch(player.getName())));
+            final Collection<TsungShapCatch> catches = table.getCatch(player.getName());
+            final int points = ruleSet.calculatePoints(catches);
+            System.out.println("Player " + player.getName() + " got " + points + " points from the catch: " + catches);
+            stats.put(player.getName(), points);
         }
         return stats;
 
