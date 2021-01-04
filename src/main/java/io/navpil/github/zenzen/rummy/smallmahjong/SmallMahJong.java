@@ -2,6 +2,8 @@ package io.navpil.github.zenzen.rummy.smallmahjong;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.fishing.tsungshap.RunManySimulations;
+import io.navpil.github.zenzen.jielong.Stats;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -18,23 +20,18 @@ import static io.navpil.github.zenzen.rummy.smallmahjong.HandCalculator.evaluate
 public class SmallMahJong {
 
     public static void main(String [] args) {
-        //TODO: dmp 01.01.2021 Score calculation, multiple simulation runs
         //TODO: dmp 01.01.2021 Actual calculation of a discard for a computer player
-
         //Actually the game can last very few rounds - maybe the given Computer players are good enough already.
-
-//        runSingleGame();
-        calculateProbabilities();
-    }
-
-    private static void runSingleGame() {
         final List<Player> players = List.of(
                 new ComputerPlayer("Comp-1"),
                 new ComputerPlayer("Comp-2"),
-                new ComputerPlayer("Comp-3"),
-                new RealPlayer("Jim")
+                new ComputerPlayer("Comp-3")
+//                new RealPlayer("Jim")
         );
-        Simulation.runSimulation(players, 0);
+
+        final List<Domino> deck = ChineseDominoSet.create();
+        new RunManySimulations().runManySimulations(deck, players, "NoRules", 100, (dominos, players1, ruleSet, whoGoesFirst) -> Simulation.runSimulation(dominos, players1, whoGoesFirst));
+//        calculateProbabilities();
     }
 
     private static void winProb() {

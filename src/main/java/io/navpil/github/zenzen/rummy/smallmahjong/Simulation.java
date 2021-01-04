@@ -1,17 +1,16 @@
 package io.navpil.github.zenzen.rummy.smallmahjong;
 
-import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.jielong.Stats;
+import io.navpil.github.zenzen.util.CombineCollection;
 
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 
 public class Simulation {
 
-    public static void runSimulation(List<Player> players, int whoGoesFirst) {
+    public static Stats runSimulation(List<Domino> dominos, List<Player> players, int whoGoesFirst) {
 
-        final List<Domino> dominos = ChineseDominoSet.create();
-        Collections.shuffle(dominos);
         int currentPlayer = whoGoesFirst;
         int cardsPerPlayer = 5;
 
@@ -89,11 +88,10 @@ public class Simulation {
 
                     if (player.hasWon()) {
                         final Hand winningHand = player.getWinningHand();
-                        for (Triplet tableTriplet : table.getTriplets(player.getName())) {
-                            winningHand.add(tableTriplet);
-                        }
-                        System.out.println(player.getName() + " won with winning hand of " + winningHand);
-                        return;
+                        final Collection<Triplet> tableTriplets = table.getTriplets(player.getName());
+                        int points = HandCalculator.calculatePoints(player.getWinningHand(), tableTriplets, tookDiscard);
+                        System.out.println(player.getName() + " won with combinations " + new CombineCollection<>(List.of(winningHand.triplets, tableTriplets)));
+                        return statsFor(player.getName(), points);
                     } else if (onlyWinAllowed) {
                         throw new IllegalStateException("Player could only take a last discarded for winning");
                     }
@@ -109,8 +107,10 @@ public class Simulation {
                 player.give(give);
 
                 if (player.hasWon()) {
-                    System.out.println(player.getName() + " won with winning hand of " + player.getWinningHand());
-                    return;
+                    final Collection<Triplet> tableTriplets = table.getTriplets(player.getName());
+                    System.out.println(player.getName() + " won with combinations " + new CombineCollection<>(List.of(player.getWinningHand().getTriplets(), tableTriplets)));
+                    int points = HandCalculator.calculatePoints(player.getWinningHand(), tableTriplets, tookDiscard);
+                    return statsFor(player.getName(), points);
                 }
                 final Domino discard = player.getDiscard();
                 table.add(discard);
@@ -119,8 +119,13 @@ public class Simulation {
             currentPlayer = (currentPlayer + 1) % players.size();
         }
         System.out.println("No one won");
+        return new Stats();
+    }
 
-
+    private static Stats statsFor(String name, int points) {
+        final Stats stats = new Stats();
+        stats.put(name, points);
+        return stats;
     }
 
 }

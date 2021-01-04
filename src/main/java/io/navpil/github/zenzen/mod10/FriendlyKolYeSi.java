@@ -24,15 +24,15 @@ public class FriendlyKolYeSi {
                 new ComputerKolYeSiPlayer("Jack", money, 9, 0),
                 new FixedKolYeSiPlayer("Fixed 1", money, 5, 1),
                 new FixedKolYeSiPlayer("Fixed 2", money, 5, 2),
-                new RealKolYeSiPlayer("Panteleymon", 100),
+                new RealKolYeSiPlayer("Panteleymon", money),
                 new RandomKolYeSiPlayer("Jannie", money)
         ));
 
-        runSimulation(sim, minStake, maxStake, players, 0, false);
+        runManySimulations(sim, minStake, maxStake, players, 0, false);
 
     }
 
-    private static void runSimulation(int sim, int minStake, int maxStake, List<KolYeSiPlayer> players, int banker, boolean casinoGame) {
+    private static void runManySimulations(int sim, int minStake, int maxStake, List<KolYeSiPlayer> players, int banker, boolean casinoGame) {
         if (casinoGame) {
             players.add(0, new KolYeSiBanker());
             banker = 0;

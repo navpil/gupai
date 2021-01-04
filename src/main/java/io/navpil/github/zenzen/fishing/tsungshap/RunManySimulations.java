@@ -44,6 +44,8 @@ public class RunManySimulations {
             //Rules do not specify who goes first next, but let's assume it's the same as for JieLong
             //the one who gets the most points, hand closer to dealer wins when a tie occurs.
             firstPlayer = nextPlayerCalculation(stats, firstPlayer, players);
+
+            System.out.println("Running stats: " + overallStats);
         }
         return overallStats;
     }

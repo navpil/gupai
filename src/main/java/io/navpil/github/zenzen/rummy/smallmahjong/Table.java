@@ -5,6 +5,7 @@ import io.navpil.github.zenzen.util.Bag;
 import io.navpil.github.zenzen.util.HashBag;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 
 public class Table {
@@ -34,6 +35,6 @@ public class Table {
     }
 
     public Collection<Triplet> getTriplets(String name) {
-        return winningTriplets.get(name);
+        return winningTriplets.getOrDefault(name, HashBag.of());
     }
 }

@@ -35,6 +35,10 @@ public class Hand {
         return deadWood.isEmpty();
     }
 
+    public Bag<Triplet> getTriplets() {
+        return triplets;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

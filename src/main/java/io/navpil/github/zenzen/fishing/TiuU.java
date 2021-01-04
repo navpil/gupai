@@ -2,15 +2,13 @@ package io.navpil.github.zenzen.fishing;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.fishing.tsungshap.RunManySimulations;
 import io.navpil.github.zenzen.jielong.Stats;
 import io.navpil.github.zenzen.util.AbstractBag;
 import io.navpil.github.zenzen.util.Bag;
-import io.navpil.github.zenzen.util.HashBag;
 import io.navpil.github.zenzen.util.TreeBag;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -28,70 +26,18 @@ public class TiuU {
                 new ComputerPlayer("Comp-2"),
                 new RealPlayer("John")
         );
-        final List<Domino> dominos = ChineseDominoSet.create(2);
+        final List<Domino> deck = ChineseDominoSet.create(2);
         final RuleSet rules = RuleSet.mixed();
         final int simCount = 10;
 
-        Stats overallStats = runManySimulations(players, dominos, rules, simCount);
+        Stats overallStats = new RunManySimulations().runManySimulations(deck, players, rules, simCount, TiuU::runSimulation);
 
         for (Player player : players) {
             System.out.println(player.getName() + " has " + overallStats.getPointsFor(player.getName()));
         }
     }
 
-    private static Stats runManySimulations(List<Player> players, List<Domino> dominos, RuleSet rules, int simCount) {
-        Stats overallStats = new Stats();
-        for (Player player : players) {
-            overallStats.put(player.getName(), 0);
-        }
-        int firstPlayer = 0;
-        for (int sim = 0; sim < simCount; sim++) {
-            Collections.shuffle(dominos);
-
-            final Stats stats = runSimulation(
-                    players,
-                    firstPlayer,
-                    rules,
-                    dominos
-            );
-
-            for (int i = 0; i < players.size(); i++) {
-                final Player p1 = players.get(i);
-                for (int j = i + 1; j < players.size(); j++) {
-                    final Player p2 = players.get(j);
-                    final Integer p1Points = stats.getPointsFor(p1.getName());
-                    final Integer p2Points = stats.getPointsFor(p2.getName());
-
-                    final int p1WinningPoints = p1Points - p2Points;
-
-                    overallStats.add(p1.getName(), p1WinningPoints);
-                    overallStats.add(p2.getName(), -p1WinningPoints);
-                }
-            }
-
-            //Rules do not specify who goes first next, but let's assume it's the same as for JieLong
-            //the one who gets the most points, hand closer to dealer wins when a tie occurs.
-            firstPlayer = nextPlayerCalculation(stats, firstPlayer, players);
-        }
-        return overallStats;
-    }
-
-    public static int nextPlayerCalculation(Stats stats, int previousFirstPlayer, List<Player> players) {
-        int maxPlayerIndex = -1;
-        int maxPoints = -1;
-        for (int i = 0; i < players.size(); i++) {
-            final int currentPlayerIndex = (i + previousFirstPlayer) % players.size();
-            final Player player = players.get(currentPlayerIndex);
-            final Integer pointsFor = stats.getPointsFor(player.getName());
-            if (pointsFor > maxPoints) {
-                maxPlayerIndex = currentPlayerIndex;
-                maxPoints = pointsFor;
-            }
-        }
-        return maxPlayerIndex;
-    }
-
-    public static Stats runSimulation(List<Player> players, int whoGoesFirst, RuleSet ruleSet, List<Domino> dominos) {
+    public static Stats runSimulation(List<Domino> dominos, List<Player> players, RuleSet ruleSet, int whoGoesFirst) {
         int tilesPerPlayer = 24 / players.size();
 
         final Table table = new Table(ruleSet);

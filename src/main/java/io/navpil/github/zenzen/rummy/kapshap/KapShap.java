@@ -2,26 +2,24 @@ package io.navpil.github.zenzen.rummy.kapshap;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.fishing.tsungshap.RunManySimulations;
+import io.navpil.github.zenzen.jielong.Stats;
 
-import java.util.Collections;
 import java.util.List;
 
 public class KapShap {
 
     public static void main(String[] args) {
-        //TODO: dmp 29.12.2020 Run several simulations and calculate the overall winner
         final List<KapShapPlayer> players = List.of(
                 new RealKapShapPlayer("Jim"),
-//                new KapShapPlayer("Second"),
                 new ComputerKapShapPlayer("Third")
         );
         final KapShapRuleset rules = new KapShapRuleset(KapShapRuleset.Offer.LAST, true, 1, 8, false);
-        runSimulation(players, 0, rules);
+        final Stats stats = new RunManySimulations().runManySimulations(ChineseDominoSet.create(), players, rules, 100, KapShap::runSimulation);
+        System.out.println(stats);
     }
 
-    public static void runSimulation(List<KapShapPlayer> players, int whoGoesFirst, KapShapRuleset rules) {
-        final List<Domino> dominos = ChineseDominoSet.create(rules.getSetCount());
-        Collections.shuffle(dominos);
+    public static Stats runSimulation(List<Domino> dominos, List<KapShapPlayer> players, KapShapRuleset rules, int whoGoesFirst) {
         final KapShapTableVisibleInformation table = new KapShapTableVisibleInformation(dominos, rules);
 
         final int cardsPerPlayer = rules.getWinningHandSize() - 1;
@@ -58,7 +56,7 @@ public class KapShap {
 
                 if (player.hasWon()) {
                     System.out.println(player.getName() + " won with winning hand of " + player.getWinningHand());
-                    return;
+                    return statsFor(player.getName(), player.getWinningHand());
                 }
                 final Domino discard = player.getDiscard();
                 table.add(discard);
@@ -74,7 +72,8 @@ public class KapShap {
 
                 if (player.hasWon()) {
                     System.out.println(player.getName() + " won with winning hand of " + player.getWinningHand());
-                    return;
+                    return statsFor(player.getName(), player.getWinningHand());
+
                 }
                 final Domino discard = player.getDiscard();
                 table.add(discard);
@@ -86,5 +85,13 @@ public class KapShap {
         }
 
         System.out.println("No one win");
+        return new Stats();
+    }
+
+    private static Stats statsFor(String name, KapShapHand winningHand) {
+        final Stats stats = new Stats();
+        //Actual winning hand is irrelevant, the winner simply collects the pot
+        stats.put(name, 1);
+        return stats;
     }
 }

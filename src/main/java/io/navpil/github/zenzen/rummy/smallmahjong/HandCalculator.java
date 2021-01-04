@@ -1,6 +1,8 @@
 package io.navpil.github.zenzen.rummy.smallmahjong;
 
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.util.Bag;
+import io.navpil.github.zenzen.util.CombineCollection;
 import io.navpil.github.zenzen.util.HashBag;
 
 import java.util.ArrayList;
@@ -51,6 +53,7 @@ public class HandCalculator {
     public static TripletType evaluate(Triplet triplet) {
         return evaluate(triplet.asList());
     }
+
     public static TripletType evaluate(Collection<Domino> dominos) {
         final int[] ints = new int[6];
         int counter = 0;
@@ -98,6 +101,28 @@ public class HandCalculator {
         }
 
         return null;
+    }
+
+    public static int calculatePoints(Hand hand, Collection<Triplet> triplets, boolean tookDiscard) {
+        //Maybe some logic for points calculation can be added if won by discarded tile or if won with closed hand
+        //But nothing like this is done yet
+        final CombineCollection<Triplet> allTriplets = new CombineCollection<>(List.of(hand.getTriplets(), triplets));
+        int points = 0;
+        for (Triplet t : allTriplets) {
+            final TripletType type = evaluate(t);
+            switch (type) {
+                case MIXED:
+                    points += 2;
+                    break;
+                case SETS:
+                    points += 3;
+                    break;
+                case STRAIGHTS:
+                    points += 1;
+                    break;
+            }
+        }
+        return points;
     }
 
 }

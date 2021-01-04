@@ -37,6 +37,13 @@ public class Stats {
     }
 
     public Integer getPointsFor(String name) {
-        return points.get(name);
+        return points.getOrDefault(name, 0);
+    }
+
+    @Override
+    public String toString() {
+        return "Stats{" +
+                "points=" + points +
+                '}';
     }
 }

@@ -1,10 +1,11 @@
 package io.navpil.github.zenzen.rummy.smallmahjong;
 
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.fishing.tsungshap.NamedPlayer;
 
 import java.util.List;
 
-public interface Player {
+public interface Player extends NamedPlayer {
 
     void deal(List<Domino> deal);
 

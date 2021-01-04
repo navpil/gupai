@@ -1,10 +1,11 @@
 package io.navpil.github.zenzen.rummy.kapshap;
 
 import io.navpil.github.zenzen.dominos.Domino;
+import io.navpil.github.zenzen.fishing.tsungshap.NamedPlayer;
 
 import java.util.List;
 
-public interface KapShapPlayer {
+public interface KapShapPlayer extends NamedPlayer {
 
     void showTable(KapShapTableVisibleInformation table);
 

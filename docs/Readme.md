@@ -1,4 +1,4 @@
-# Plan of which games to implement
+# Games played with Chinese dominoes
 
 Chinese dominoes are called GuPai 骨牌, Korean dominoes are called GolPae 골패
 
@@ -130,6 +130,7 @@ If one hand loses and one wins - that's a push, player takes his bet back.
 ### Tau Ngau 鬥牛 Bullfight
 
 Game of pure luck.
+3 to 6 players.
 Receive 5 tiles, first discard 3 tiles which cleanly divide by 10.
 Then add pips on other 2 tiles and modulo 10.
 
