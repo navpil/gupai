@@ -4,10 +4,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * Interface to describe how to resolve points given Stats
+ */
 public interface PointsResolution {
 
     WinningStats resolvePoints(Stats stats, List<String> originalNameList, int whoGoesFirst);
 
+    /**
+     * Resolved points together with the winner's name
+     */
     class WinningStats {
         private LinkedHashMap<String, Integer> points;
         private String winner;

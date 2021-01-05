@@ -12,6 +12,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Computer player, which uses various strategies (evaluators) for choosing the move
+ */
 public class PriorityPlayer implements Player {
 
     private final String name;

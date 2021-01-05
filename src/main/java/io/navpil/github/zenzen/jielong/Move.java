@@ -2,11 +2,34 @@ package io.navpil.github.zenzen.jielong;
 
 import io.navpil.github.zenzen.dominos.Domino;
 
+/**
+ * JieLong move
+ */
 public class Move {
 
+    /**
+     * Side shows where to put a tile.
+     *
+     * Numbers mean:
+     * <ul>
+     *     <li>1 means side 1 (right)</li>
+     *     <li>2 means side 2 (left)</li>
+     *     <li>0 means a leading tile (outwards/right side being opened)</li>
+     *     <li>-1 means discard</li>
+     * </ul>
+     */
     private final int side;
+    /**
+     * Pip pointing inwards - to the dragon
+     */
     private final int inwards;
+    /**
+     * Pip pointing outwards - becomes a new opened end
+     */
     private final int outwards;
+    /**
+     * May the move result in a SuanZhang
+     */
     private boolean suanZhang;
 
     private Domino cacheDomino;

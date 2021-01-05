@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.util;
 
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class HashBag<T> extends AbstractBag<T> {
 
-    private final Map<T, Counter> map;
+    private final Map<T, MutableInteger> map;
 
     public HashBag() {
         map = new HashMap<>();
@@ -27,7 +27,7 @@ public class HashBag<T> extends AbstractBag<T> {
     }
 
     @Override
-    protected Map<T, Counter> getMap() {
+    protected Map<T, MutableInteger> getMap() {
         return map;
     }
 

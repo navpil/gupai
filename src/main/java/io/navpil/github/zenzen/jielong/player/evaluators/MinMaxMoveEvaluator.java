@@ -8,6 +8,9 @@ import io.navpil.github.zenzen.jielong.player.PlayerState;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Always gives preference to the largest/smallest tile, depending on situation.
+ */
 public class MinMaxMoveEvaluator implements MoveEvaluator {
 
     @Override

@@ -12,6 +12,17 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+/**
+ * This evaluator does two things:
+ *
+ * <ol>
+ *   <li>It checks whether the move is a SuanZhang move and marks it as such</li>
+ *   <li>Decides which priority to give to a move - depending on whether a player wants to SuanZhang or not</li>
+ *</ol>
+ *
+ * If used in a CombiningMoveEvaluator, ratio of 0 can be given if the move should be marked as SuanZhang,
+ * but it should not affect the tile choice.
+ */
 public class SuanZhangMoveEvaluator implements MoveEvaluator {
 
     private final double maximumAcceptedPoints;

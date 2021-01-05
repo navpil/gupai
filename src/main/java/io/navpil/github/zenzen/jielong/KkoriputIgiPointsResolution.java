@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.jielong;
 
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,9 +41,9 @@ public class KkoriputIgiPointsResolution implements PointsResolution {
 
         final Integer minPoints = stats.points.values().stream().min(Integer::compareTo).get();
         final Integer maxPoints = stats.points.values().stream().max(Integer::compareTo).get();
-        final HashMap<String, Counter> points = new HashMap<>();
+        final HashMap<String, MutableInteger> points = new HashMap<>();
         for (String s : originalNameList) {
-            points.put(s, new Counter());
+            points.put(s, new MutableInteger());
         }
         if (!minPoints.equals(maxPoints)) {
             List<String> winners = new ArrayList<>();
@@ -78,7 +78,7 @@ public class KkoriputIgiPointsResolution implements PointsResolution {
         }
 
         final HashMap<String, Integer> result = new HashMap<>();
-        for (Map.Entry<String, Counter> stringCounterEntry : points.entrySet()) {
+        for (Map.Entry<String, MutableInteger> stringCounterEntry : points.entrySet()) {
             result.put(stringCounterEntry.getKey(), stringCounterEntry.getValue().getCount());
         }
 

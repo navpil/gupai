@@ -6,6 +6,9 @@ import io.navpil.github.zenzen.dominos.DominoUtil;
 
 import java.util.Collection;
 
+/**
+ * Tracks how many pips are left
+ */
 public class PipTracker {
 
     private final int [] pips = new int[7];

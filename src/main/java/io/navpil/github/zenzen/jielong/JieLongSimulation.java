@@ -3,7 +3,7 @@ package io.navpil.github.zenzen.jielong;
 import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.player.evaluators.CombiningMoveEvaluator;
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 import io.navpil.github.zenzen.jielong.player.evaluators.MinMaxMoveEvaluator;
 import io.navpil.github.zenzen.jielong.player.Player;
 import io.navpil.github.zenzen.jielong.player.PlayerFactory;
@@ -72,9 +72,9 @@ public class JieLongSimulation {
             runningTotal.put(name, 0);
         }
 
-        Map<String, Counter> whoWentFirst = new HashMap<>();
+        Map<String, MutableInteger> whoWentFirst = new HashMap<>();
         for (String name : names) {
-            whoWentFirst.put(name, new Counter());
+            whoWentFirst.put(name, new MutableInteger());
         }
 
         final int tilesPerPlayer = dominoSet.size() / playerFactories.size();
@@ -108,7 +108,7 @@ public class JieLongSimulation {
         for (Map.Entry<String, Integer> total : runningTotal.entrySet()) {
             System.out.println("Player " + total.getKey() + " got " + total.getValue() + " points");
         }
-        for (Map.Entry<String, Counter> total : whoWentFirst.entrySet()) {
+        for (Map.Entry<String, MutableInteger> total : whoWentFirst.entrySet()) {
             System.out.println("Player " + total.getKey() + " got " + total.getValue().getCount() + " first moves");
         }
     }

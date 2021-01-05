@@ -6,6 +6,9 @@ import io.navpil.github.zenzen.jielong.player.PlayerState;
 
 import java.util.List;
 
+/**
+ * Describes a logic to choose the best tile for move/lead/discard
+ */
 public interface MoveEvaluator {
 
     List<Integer> evaluateMove(List<Move> moves, TableVisibleInformation tableVisibleInformation, PlayerState playerState);

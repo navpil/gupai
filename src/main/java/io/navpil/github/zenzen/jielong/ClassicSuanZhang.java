@@ -1,5 +1,8 @@
 package io.navpil.github.zenzen.jielong;
 
+/**
+ * Calcualtes the classic SuanZhang - the analogous to the Blocked game in Western dominoes
+ */
 public class ClassicSuanZhang {
 
     private int type = 0;
@@ -9,6 +12,12 @@ public class ClassicSuanZhang {
 
     private final PipTracker pipTracker = PipTracker.dingNiuPipTracker();
 
+    /**
+     * Will the move result in a SuanZhang
+     *
+     * @param move move to check
+     * @return SuanZhang or not
+     */
     public boolean willSuanZhang(Move move) {
         if (side1 == -1) {
             return false;
@@ -29,6 +38,12 @@ public class ClassicSuanZhang {
 
     }
 
+    /**
+     * Updates inner SuanZhang state for the future calculations to be correct
+     *
+     * @param move move to execute
+     * @return number of which pip was blocked (returns 2 for a 2-3 SuanZhang)
+     */
     public int executeMove(Move move) {
         if (move.getSide() < 0) {
             return 0;
@@ -68,6 +83,11 @@ public class ClassicSuanZhang {
         return 0;
     }
 
+    /**
+     * Number of a blocked pip
+     *
+     * @return number of which pip was blocked (returns 2 for a 2-3 SuanZhang)
+     */
     public int suanZhangType() {
         return type;
     }

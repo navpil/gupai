@@ -2,13 +2,13 @@ package io.navpil.github.zenzen.jielong.player;
 
 import java.util.Objects;
 
-public class Counter {
+public class MutableInteger {
     private int count;
 
-    public Counter() {
+    public MutableInteger() {
     }
 
-    public Counter(int count) {
+    public MutableInteger(int count) {
         this.count = count;
     }
 
@@ -36,7 +36,7 @@ public class Counter {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        Counter counter = (Counter) o;
+        MutableInteger counter = (MutableInteger) o;
         return count == counter.count;
     }
 

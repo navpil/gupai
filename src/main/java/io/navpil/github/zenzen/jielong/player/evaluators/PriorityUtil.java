@@ -5,6 +5,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Sorts a list according to the priorities
+ */
 public class PriorityUtil {
 
     public static <T> List<T> sort(List<Integer> priorities, List<T> list) {

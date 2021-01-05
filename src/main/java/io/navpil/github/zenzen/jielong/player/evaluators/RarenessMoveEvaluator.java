@@ -9,6 +9,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Tries to keep the rarest tile in the hand
+ */
 public class RarenessMoveEvaluator implements MoveEvaluator {
 
     @Override

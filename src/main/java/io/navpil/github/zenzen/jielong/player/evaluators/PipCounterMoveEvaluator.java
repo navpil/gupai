@@ -3,7 +3,7 @@ package io.navpil.github.zenzen.jielong.player.evaluators;
 import io.navpil.github.zenzen.dominos.DominoUtil;
 import io.navpil.github.zenzen.jielong.Move;
 import io.navpil.github.zenzen.jielong.TableVisibleInformation;
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 import io.navpil.github.zenzen.jielong.player.PlayerState;
 
 import java.util.Collection;
@@ -11,13 +11,22 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Evaluator which tries to correctly decide on whether to close an end or to put a double.
+ *
+ * For example given the dragon of [4:6][6:5] player may play [6:4] by still having a [4:4] double in the hand.
+ * This evaluator tries to prevent this kind of mistake.
+ *
+ * Another thing is that if all the tiles of certain number are already on the table or in own hand,
+ * there is no point of putting the tile of this number unless there are no other moves.
+ */
 public class PipCounterMoveEvaluator implements MoveEvaluator {
 
     @Override
     public List<Integer> evaluateMove(List<Move> moves, TableVisibleInformation tableVisibleInformation, PlayerState playerState) {
         final Collection<Integer> openEnds = new HashSet<>(tableVisibleInformation.getDragon().getOpenEnds());
 
-        final List<Counter> priorities = moves.stream().map(s -> new Counter()).collect(Collectors.toList());
+        final List<MutableInteger> priorities = moves.stream().map(s -> new MutableInteger()).collect(Collectors.toList());
 
         for (Integer openEnd : openEnds) {
             final int leftPipsOnAllHands = tableVisibleInformation.getDragon().getPipTracker().count(openEnd);
@@ -51,7 +60,7 @@ public class PipCounterMoveEvaluator implements MoveEvaluator {
             }
         }
 
-        return priorities.stream().map(Counter::getCount).collect(Collectors.toList());
+        return priorities.stream().map(MutableInteger::getCount).collect(Collectors.toList());
     }
 
     @Override

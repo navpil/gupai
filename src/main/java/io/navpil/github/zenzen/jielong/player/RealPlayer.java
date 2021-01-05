@@ -10,6 +10,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Human player
+ */
 public class RealPlayer implements Player {
 
     private final List<Domino> dominoes;

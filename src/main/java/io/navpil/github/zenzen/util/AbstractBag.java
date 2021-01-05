@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.util;
 
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 
 import java.util.AbstractCollection;
 import java.util.Collection;
@@ -18,12 +18,12 @@ public abstract class AbstractBag<T> extends AbstractCollection<T> implements Ba
         if (getMap().containsKey(t)) {
             getMap().get(t).inc();
         } else {
-            getMap().put(t, new Counter(1));
+            getMap().put(t, new MutableInteger(1));
         }
         return true;
     }
 
-    protected abstract Map<T, Counter> getMap();
+    protected abstract Map<T, MutableInteger> getMap();
 
     @Override
     public boolean contains(Object o) {
@@ -32,7 +32,7 @@ public abstract class AbstractBag<T> extends AbstractCollection<T> implements Ba
 
     @Override
     public boolean remove(Object o) {
-        final Counter counter = getMap().get(o);
+        final MutableInteger counter = getMap().get(o);
         if (counter == null) {
             return false;
         } else if (counter.getCount() == 1) {
@@ -53,7 +53,7 @@ public abstract class AbstractBag<T> extends AbstractCollection<T> implements Ba
 
     @Override
     public int size() {
-        return getMap().values().stream().map(Counter::getCount).reduce(Integer::sum).orElse(0);
+        return getMap().values().stream().map(MutableInteger::getCount).reduce(Integer::sum).orElse(0);
     }
 
     public void strictRemoveAll(Collection<T> elements) {
@@ -96,8 +96,8 @@ public abstract class AbstractBag<T> extends AbstractCollection<T> implements Ba
 
     private class BagIterator implements Iterator<T> {
 
-        private final Iterator<Map.Entry<T, Counter>> iterator;
-        private Map.Entry<T, Counter> currentEntry;
+        private final Iterator<Map.Entry<T, MutableInteger>> iterator;
+        private Map.Entry<T, MutableInteger> currentEntry;
         private int currentEntryIndex;
 
         public BagIterator() {
@@ -129,7 +129,7 @@ public abstract class AbstractBag<T> extends AbstractCollection<T> implements Ba
         }
 
         private T getEntryFromIterator() {
-            final Map.Entry<T, Counter> entry = iterator.next();
+            final Map.Entry<T, MutableInteger> entry = iterator.next();
             if (entry.getValue().getCount() > 1) {
                 currentEntryIndex = 0;
                 currentEntry = entry;

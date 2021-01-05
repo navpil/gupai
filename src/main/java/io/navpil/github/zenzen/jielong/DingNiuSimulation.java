@@ -20,6 +20,9 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Because of SuanZhang the DingNiu simulation is different to the JieLong, that's why it's written separately.
+ */
 public class DingNiuSimulation {
 
     public static void main(String[] args) {

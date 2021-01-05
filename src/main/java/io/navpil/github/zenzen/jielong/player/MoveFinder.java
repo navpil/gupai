@@ -6,6 +6,11 @@ import io.navpil.github.zenzen.jielong.Move;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Util class to find all possible moves given the dragon open ends and available dominoes.
+ *
+ * Does not calculate the discard moves - only the real moves.
+ */
 public class MoveFinder {
 
     public static List<Move> getAvailableMoves(List<Integer> openEnds, List<Domino> dominos) {

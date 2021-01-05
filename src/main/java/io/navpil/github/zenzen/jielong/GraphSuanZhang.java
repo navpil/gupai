@@ -8,6 +8,25 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Calculates the more advanced SuanZhang - so that some tiles are blocked out of the game.
+ *
+ * Examples:
+ * <br/>
+ * In the following game fours are out, since only tiles which have fours are [6:4] and they can't be played anymore.
+ * <pre>[2:6][6:3][3:1][1:6][6:5][5:6][6:1]</pre>
+ * Blocked doubles are not considered to be SuanZhang, so
+ * <pre>[6:4][4:6]</pre>
+ * is not a blocked game even though [4:4] can never be played
+ * <br/>
+ * Another example (blocked 5):
+ * <pre>[6:3][3:1][1:6][6:5][5:6][6:1][1:3]</pre>
+ * Fives cannot be played, because only [5:1] are left and they cannot be played (all ones are out)
+ * <br/>
+ * Classically only two GraphSuanZhang are valid: Fours and Fives (as described), but technically other tiles can also
+ * be blocked. This is configurable.
+ *
+ */
 public class GraphSuanZhang {
 
     private Map<Integer, Collection<Connection>> connections;
@@ -17,9 +36,10 @@ public class GraphSuanZhang {
 
     private int side1 = -1;
     private int side2 = -1;
+    /**
+     * Should all pips be checked for GraphSuanZhang, or only the classical ones
+     */
     private boolean all = false;
-
-    //TODO: dmp 13.12.2020 Add the calculation of what sides are impossible (same is in usual suanzhang)
 
     public GraphSuanZhang() {
         reset();

@@ -8,6 +8,9 @@ import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * Represents tiles which are played on the table.
+ */
 public class Dragon {
 
     private final LinkedList<Integer> dragon = new LinkedList<>();
@@ -32,10 +35,19 @@ public class Dragon {
         }
     }
 
+    /**
+     * Should it be a single-armed Dragon, so that one end is closed (such as in CeDeng),
+     * or double-armed (such as in DingNiu)
+     */
     public enum OpenArms {
         SINGLE, DOUBLE;
     }
 
+    /**
+     * Creates a Dragon used in DingNiu game
+     *
+     * @return DingNiu dragon
+     */
     public static Dragon dingNiuDragon() {
         return new Dragon(OpenArms.DOUBLE, ChineseDominoSet.dingNiuSet(), new SuanZhangImpl());
     }
@@ -64,6 +76,11 @@ public class Dragon {
         }
     }
 
+    /**
+     * Executes a move on the dragon
+     *
+     * @param move move to execute
+     */
     public void executeMove(Move move) {
         suanZhang.executeMove(move);
         pipTracker.diminish(move);

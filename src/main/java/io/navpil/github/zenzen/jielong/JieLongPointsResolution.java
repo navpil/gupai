@@ -1,6 +1,6 @@
 package io.navpil.github.zenzen.jielong;
 
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +27,9 @@ public class JieLongPointsResolution implements PointsResolution {
         });
         final String winner = names.get(0);
 
-        final HashMap<String, Counter> points = new HashMap<>();
+        final HashMap<String, MutableInteger> points = new HashMap<>();
         for (String s : originalNameList) {
-            points.put(s, new Counter());
+            points.put(s, new MutableInteger());
         }
 
         for (int i = 0; i < originalNameList.size(); i++) {
@@ -48,7 +48,7 @@ public class JieLongPointsResolution implements PointsResolution {
         }
 
         final HashMap<String, Integer> result = new HashMap<>();
-        for (Map.Entry<String, Counter> stringCounterEntry : points.entrySet()) {
+        for (Map.Entry<String, MutableInteger> stringCounterEntry : points.entrySet()) {
             result.put(stringCounterEntry.getKey(), stringCounterEntry.getValue().getCount());
         }
 

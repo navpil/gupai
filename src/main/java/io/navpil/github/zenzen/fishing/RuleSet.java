@@ -1,7 +1,7 @@
 package io.navpil.github.zenzen.fishing;
 
 import io.navpil.github.zenzen.dominos.Domino;
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 import io.navpil.github.zenzen.util.Bag;
 import io.navpil.github.zenzen.util.HashBag;
 
@@ -179,9 +179,9 @@ public class RuleSet {
             Bag<Domino> gooseFive = new HashBag<>();
 
             //Small fish
-            Counter smallFishCount = new Counter();
-            Counter middleFishCount = new Counter();
-            Counter bigFishCount = new Counter();
+            MutableInteger smallFishCount = new MutableInteger();
+            MutableInteger middleFishCount = new MutableInteger();
+            MutableInteger bigFishCount = new MutableInteger();
 
             boolean allSupremes;
             boolean allJun;
@@ -214,7 +214,7 @@ public class RuleSet {
             allSupremes = deckSize == 64 ? supremes.size() == 4 : supremes.size()==8;
 
             //Jun
-            Counter junCount = new Counter();
+            MutableInteger junCount = new MutableInteger();
             getJunCount(plumsJun, bigFishCount, smallFishCount, junCount);
             getJunCount(axesJun, bigFishCount, smallFishCount, junCount);
             getJunCount(tensJun, bigFishCount, smallFishCount, junCount);
@@ -239,7 +239,7 @@ public class RuleSet {
         }
     }
 
-    private void lenientComparison(Bag<Domino> toCheck, Domino eye, Set<Domino> kickers, Counter successCount, Counter smallFishCount) {
+    private void lenientComparison(Bag<Domino> toCheck, Domino eye, Set<Domino> kickers, MutableInteger successCount, MutableInteger smallFishCount) {
         boolean containsAnyKicker = false;
         for (Domino kicker : kickers) {
             containsAnyKicker = containsAnyKicker || toCheck.contains(kicker);
@@ -251,7 +251,7 @@ public class RuleSet {
         }
     }
 
-    private void strictComparison(Bag<Domino> toCheck, Set<Domino> expected, Counter successCount, Counter smallFishCount) {
+    private void strictComparison(Bag<Domino> toCheck, Set<Domino> expected, MutableInteger successCount, MutableInteger smallFishCount) {
         if (toCheck.containsAll(expected)) {
             successCount.add(toCheck.size());
         } else {
@@ -259,7 +259,7 @@ public class RuleSet {
         }
     }
 
-    private void getJunCount(Bag<Domino> jun, Counter bigFishCount, Counter smallFishCount, Counter junCount) {
+    private void getJunCount(Bag<Domino> jun, MutableInteger bigFishCount, MutableInteger smallFishCount, MutableInteger junCount) {
         if (jun.size() == 4) {
             bigFishCount.add(4);
             junCount.inc();

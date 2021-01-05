@@ -2,7 +2,7 @@ package io.navpil.github.zenzen.jielong.player.evaluators;
 
 import io.navpil.github.zenzen.jielong.Move;
 import io.navpil.github.zenzen.jielong.TableVisibleInformation;
-import io.navpil.github.zenzen.jielong.player.Counter;
+import io.navpil.github.zenzen.jielong.player.MutableInteger;
 import io.navpil.github.zenzen.jielong.player.PlayerState;
 
 import java.util.ArrayList;
@@ -10,6 +10,9 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+/**
+ * Combines several evaluators into one, runs all of them and combines result
+ */
 public class CombiningMoveEvaluator implements MoveEvaluator {
 
     private final List<Tuple<MoveEvaluator, PriorityNormalizer>> evaluators;
@@ -49,9 +52,9 @@ public class CombiningMoveEvaluator implements MoveEvaluator {
     }
 
     private List<Integer> evaluate(List<Move> moves, TableVisibleInformation tableVisibleInformation, PlayerState playerState, MoveFunction moveFunction) {
-        List<Counter> result = new ArrayList<>();
+        List<MutableInteger> result = new ArrayList<>();
         for (Move move : moves) {
-            result.add(new Counter());
+            result.add(new MutableInteger());
         }
         for (Tuple<MoveEvaluator, PriorityNormalizer> evaluator : evaluators) {
             final List<Integer> evaluated = moveFunction.evaluate(evaluator.a, moves, tableVisibleInformation, playerState);
@@ -60,9 +63,12 @@ public class CombiningMoveEvaluator implements MoveEvaluator {
                 result.get(i).add(normalized.get(i));
             }
         }
-        return result.stream().map(Counter::getCount).collect(Collectors.toList());
+        return result.stream().map(MutableInteger::getCount).collect(Collectors.toList());
     }
 
+    /**
+     * Applies some logic to the list of priorities and returns the result.
+     */
     @FunctionalInterface
     public interface PriorityNormalizer extends Function<List<Integer>, List<Integer>> {
     }

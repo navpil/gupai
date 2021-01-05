@@ -3,6 +3,9 @@ package io.navpil.github.zenzen.jielong.player.evaluators;
 import java.util.List;
 import java.util.stream.Collectors;
 
+/**
+ * Changes the priority according to some ratio
+ */
 public class RatioNormalizer implements CombiningMoveEvaluator.PriorityNormalizer {
 
     private final double ratio;
