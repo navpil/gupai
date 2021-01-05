@@ -1,15 +1,20 @@
 package io.navpil.github.zenzen.jielong;
 
 import io.navpil.github.zenzen.jielong.player.MutableInteger;
+import io.navpil.github.zenzen.jielong.player.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class JieLongPointsResolution implements PointsResolution {
+public class JieLongRuleSet implements RuleSet {
+
     @Override
-    public WinningStats resolvePoints(Stats stats, List<String> originalNameList, int whoGoesFirst) {
+    public WinningStats resolvePoints(Stats stats, List<? extends Player> players, int whoGoesFirst) {
+        final List<String> originalNameList = players.stream().map(Player::getName).collect(Collectors.toList());
+
         Map<String, Integer> order = new HashMap<>();
         List<String> names = new ArrayList<>(originalNameList);
         for (int i = 0, size = names.size(); i < size; i++) {
@@ -52,6 +57,6 @@ public class JieLongPointsResolution implements PointsResolution {
             result.put(stringCounterEntry.getKey(), stringCounterEntry.getValue().getCount());
         }
 
-        return new PointsResolution.WinningStats(result, winner);
+        return new RuleSet.WinningStats(result, winner);
     }
 }

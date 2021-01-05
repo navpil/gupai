@@ -2,13 +2,13 @@ package io.navpil.github.zenzen.jielong;
 
 import io.navpil.github.zenzen.ChineseDominoSet;
 import io.navpil.github.zenzen.dominos.Domino;
-import io.navpil.github.zenzen.jielong.player.evaluators.CombiningMoveEvaluator;
-import io.navpil.github.zenzen.jielong.player.evaluators.MinMaxMoveEvaluator;
 import io.navpil.github.zenzen.jielong.player.Player;
 import io.navpil.github.zenzen.jielong.player.PlayerFactory;
 import io.navpil.github.zenzen.jielong.player.PriorityPlayer;
-import io.navpil.github.zenzen.jielong.player.evaluators.RarenessMoveEvaluator;
 import io.navpil.github.zenzen.jielong.player.RealPlayer;
+import io.navpil.github.zenzen.jielong.player.evaluators.CombiningMoveEvaluator;
+import io.navpil.github.zenzen.jielong.player.evaluators.MinMaxMoveEvaluator;
+import io.navpil.github.zenzen.jielong.player.evaluators.RarenessMoveEvaluator;
 import io.navpil.github.zenzen.jielong.player.evaluators.SuanZhangMoveEvaluator;
 
 import java.util.ArrayList;
@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -31,18 +30,18 @@ public class DingNiuSimulation {
 
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
-        List<Function<List<Domino>, Player>> playerFactories = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
 
         final boolean realPlayerGame = true;
         if (realPlayerGame) {
-            playerFactories.add(list -> new RealPlayer(names.get(0), list));
+            players.add(new RealPlayer(names.get(0)));
         } else {
-            playerFactories.add(list -> PlayerFactory.createCombiningStrategyPlayer(names.get(0), list));
+            players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0)));
         }
 
-        playerFactories.add(list -> new PriorityPlayer(names.get(1), list, new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
-        playerFactories.add(list -> new PriorityPlayer(names.get(2), list, new CombiningMoveEvaluator().addEvaluator(new RarenessMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
-        playerFactories.add(list -> new PriorityPlayer(names.get(3), list, new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator()).addEvaluator(new RarenessMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
+        players.add(new PriorityPlayer(names.get(1), new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
+        players.add(new PriorityPlayer(names.get(2), new CombiningMoveEvaluator().addEvaluator(new RarenessMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
+        players.add(new PriorityPlayer(names.get(3), new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator()).addEvaluator(new RarenessMoveEvaluator()).addEvaluator(new SuanZhangMoveEvaluator(), 0)));
 
 
         Map<String, Integer> indexes = new HashMap<>();//Map.of(names.get(0), 0, "MinMax", 1, "Rare", 2, "Combine", 3);
@@ -52,28 +51,25 @@ public class DingNiuSimulation {
 
         final int simCount = 100;
         int whoGoesFirst = 0;
-        final List<Domino> set = getDingNiuShuffledSet();
+        final List<Domino> set = ChineseDominoSet.dingNiuSet();
 
         Map<String, Integer> runningTotal = new LinkedHashMap<>();
         for (String name : names) {
             runningTotal.put(name, 0);
         }
 
-        final int tilesPerPlayer = set.size() / playerFactories.size();
+        final int tilesPerPlayer = set.size() / players.size();
 
         for (int i = 0; i < simCount; i++) {
             Collections.shuffle(set);
             final ArrayList<Domino> shuffledSet = new ArrayList<>(set);
 
-            final ArrayList<Player> hands = new ArrayList<>();
-
-            for (int counter = 0; counter < playerFactories.size(); counter++) {
-                final Function<List<Domino>, Player> playerFactory = playerFactories.get(counter);
-                hands.add(playerFactory.apply(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer)));
+            for (int counter = 0; counter < players.size(); counter++) {
+                players.get(counter).deal(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer));
             }
 
-            final Stats stats = runSimulation(hands, tilesPerPlayer, whoGoesFirst);
-            final WinningStats winningStats = resolvePoints(stats, hands.stream().map(Player::getName).collect(Collectors.toList()), whoGoesFirst);
+            final Stats stats = runSimulation(players, tilesPerPlayer, whoGoesFirst);
+            final WinningStats winningStats = resolvePoints(stats, players.stream().map(Player::getName).collect(Collectors.toList()), whoGoesFirst);
 
             whoGoesFirst = indexes.get(winningStats.winner);
             System.out.println("Next lead for " + whoGoesFirst);
@@ -231,27 +227,6 @@ public class DingNiuSimulation {
         }
         stats.setGameBlocked(isGameBlocked);
         return stats;
-    }
-
-    private static List<Domino> getDingNiuShuffledSet() {
-        final List<Domino> dominos = ChineseDominoSet.create();
-        dominos.remove(new Domino(4,5));//One nine
-        dominos.remove(new Domino(3,5));//One eight
-
-        //Two sevens
-        dominos.remove(new Domino(4,3));
-        dominos.remove(new Domino(2,5));
-
-        //Six
-        dominos.remove(new Domino(4,2));
-
-        //Two fives
-        dominos.remove(new Domino(4,1));
-        dominos.remove(new Domino(3,2));
-
-        //Three
-        dominos.remove(new Domino(2,1));
-        return dominos;
     }
 
     public static class WinningStats {

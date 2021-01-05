@@ -1,13 +1,15 @@
 package io.navpil.github.zenzen.jielong;
 
 import io.navpil.github.zenzen.jielong.player.MutableInteger;
+import io.navpil.github.zenzen.jielong.player.Player;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
-public class KkoriputIgiPointsResolution implements PointsResolution {
+public class KkoriputIgiRuleSet implements RuleSet {
 
     private final CalculationType calculationType;
 
@@ -15,12 +17,13 @@ public class KkoriputIgiPointsResolution implements PointsResolution {
         POINTS, TOKENS
     }
 
-    public KkoriputIgiPointsResolution(CalculationType type) {
+    public KkoriputIgiRuleSet(CalculationType type) {
         calculationType = type;
     }
 
     @Override
-    public WinningStats resolvePoints(Stats stats, List<String> originalNameList, int whoGoesFirst) {
+    public WinningStats resolvePoints(Stats stats, List<? extends Player> players, int whoGoesFirst) {
+        final List<String> originalNameList = players.stream().map(Player::getName).collect(Collectors.toList());
 
         Map<String, Integer> order = new HashMap<>();
         List<String> names = new ArrayList<>(originalNameList);

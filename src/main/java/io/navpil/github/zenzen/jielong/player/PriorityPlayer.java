@@ -1,30 +1,23 @@
 package io.navpil.github.zenzen.jielong.player;
 
-import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Dragon;
 import io.navpil.github.zenzen.jielong.Move;
 import io.navpil.github.zenzen.jielong.TableVisibleInformation;
 import io.navpil.github.zenzen.jielong.player.evaluators.MoveEvaluator;
 import io.navpil.github.zenzen.jielong.player.evaluators.PriorityUtil;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 
 /**
  * Computer player, which uses various strategies (evaluators) for choosing the move
  */
-public class PriorityPlayer implements Player {
+public class PriorityPlayer extends AbstractPlayer {
 
-    private final String name;
-    private final List<Domino> dominos;
-    private final Collection<Domino> putDown = new ArrayList<>();
     private final MoveEvaluator moveEvaluator;
 
-    public PriorityPlayer(String name, List<Domino> dominos, MoveEvaluator moveEvaluator) {
-        this.name = name;
-        this.dominos = new ArrayList<>(dominos);
+    public PriorityPlayer(String name, MoveEvaluator moveEvaluator) {
+        super(name);
         this.moveEvaluator = moveEvaluator;
     }
 
@@ -65,23 +58,6 @@ public class PriorityPlayer implements Player {
         dominos.remove(move.getDomino());
         putDown.add(move.getDomino());
         return move;
-    }
-
-    @Override
-    public int getPoints() {
-        int score = 0;
-        for (Domino domino : dominos) {
-            score += (domino.getPips()[0] + domino.getPips()[1]);
-        }
-        for (Domino domino : putDown) {
-            score += (domino.getPips()[0] + domino.getPips()[1]);
-        }
-        return score;
-    }
-
-    @Override
-    public String getName() {
-        return name;
     }
 
     @Override

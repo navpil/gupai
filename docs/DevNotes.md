@@ -9,17 +9,11 @@ Should include them into the other games whenever possible.
 
 ## Connecting games
 
-Need to refactor the Player factories into usual players.
-CeDeng point calculation is missing.
-
-In progress:
-
- - CeDeng - point calculation, special after the deal conditions
-
 Included games:
 
  - JieLong
  - Kkoriput-igi
+ - CeDeng
  - DingNiu
 
 

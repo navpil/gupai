@@ -1,5 +1,7 @@
 package io.navpil.github.zenzen.jielong;
 
+import io.navpil.github.zenzen.jielong.player.Player;
+
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -7,9 +9,13 @@ import java.util.List;
 /**
  * Interface to describe how to resolve points given Stats
  */
-public interface PointsResolution {
+public interface RuleSet {
 
-    WinningStats resolvePoints(Stats stats, List<String> originalNameList, int whoGoesFirst);
+    WinningStats resolvePoints(Stats stats, List<? extends Player> players, int whoGoesFirst);
+
+    default boolean continueTheGame(List<? extends Player> players) {
+        return true;
+    }
 
     /**
      * Resolved points together with the winner's name

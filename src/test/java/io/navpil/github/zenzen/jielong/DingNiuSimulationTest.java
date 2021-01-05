@@ -1,7 +1,6 @@
 package io.navpil.github.zenzen.jielong;
 
 import io.navpil.github.zenzen.DominoParser;
-import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.player.Player;
 import io.navpil.github.zenzen.jielong.player.PlayerFactory;
 import org.assertj.core.api.Assertions;
@@ -10,7 +9,6 @@ import org.junit.Test;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 
 public class DingNiuSimulationTest {
 
@@ -109,10 +107,10 @@ public class DingNiuSimulationTest {
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
         final ArrayList<Player> players = new ArrayList<>();
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoParser.parseList("[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]")));
-        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoParser.parseList("[6:4], [6:6], [6:1], [5:1], [4:4], [3:1]")));
-        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoParser.parseList("[6:5], [6:4], [4:4], [5:1], [2:2], [3:3]")));
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoParser.parseList("[6:2], [2:2], [5:5], [6:6], [1:1], [1:1]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0)).deal(DominoParser.parseList("[6:5], [6:3], [3:1], [3:3], [6:1], [5:5]")));
+        players.add(PlayerFactory.createMinMaxPlayer(names.get(1)).deal( DominoParser.parseList("[6:4], [6:6], [6:1], [5:1], [4:4], [3:1]")));
+        players.add(PlayerFactory.createRarenessPlayer(names.get(2)).deal( DominoParser.parseList("[6:5], [6:4], [4:4], [5:1], [2:2], [3:3]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3)).deal( DominoParser.parseList("[6:2], [2:2], [5:5], [6:6], [1:1], [1:1]")));
 
         DingNiuSimulation.runSimulation(players, 6, 0);
 
@@ -140,10 +138,10 @@ public class DingNiuSimulationTest {
     @Test
     public void testPlayersWillThinkAboutDoublesTwice() {
         final List<Player> players = List.of(
-                PlayerFactory.createMinMaxPlayer("Dima   ", DominoParser.parseList("[6:6][6:5][1:1][5:5][2:2][5:5]".replace("][", "], ["))),
-                PlayerFactory.createMinMaxPlayer("MinMax ", DominoParser.parseList("[6:4][6:1][2:6][2:2][3:1][4:4]".replace("][", "], ["))),
-                PlayerFactory.createRarenessPlayer("Rare   ", DominoParser.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["))),
-                PlayerFactory.createCombiningStrategyPlayer("Combine", DominoParser.parseList("[4:6][6:6][1:5][5:6][3:3][3:1]".replace("][", "], ["))));
+                PlayerFactory.createMinMaxPlayer("Dima   ").deal( DominoParser.parseList("[6:6][6:5][1:1][5:5][2:2][5:5]".replace("][", "], ["))),
+                PlayerFactory.createMinMaxPlayer("MinMax ").deal( DominoParser.parseList("[6:4][6:1][2:6][2:2][3:1][4:4]".replace("][", "], ["))),
+                PlayerFactory.createRarenessPlayer("Rare   ").deal( DominoParser.parseList("[1:6][5:1][1:1][3:3][6:3][4:4]".replace("][", "], ["))),
+                PlayerFactory.createCombiningStrategyPlayer("Combine").deal( DominoParser.parseList("[4:6][6:6][1:5][5:6][3:3][3:1]".replace("][", "], ["))));
 
         DingNiuSimulation.runSimulation(players, 6, 0);
 
@@ -153,19 +151,11 @@ public class DingNiuSimulationTest {
     public void testWhyFails() {
         final List<String> names = List.of("Dima", "MinMax", "Rare", "Combine");
 
-        List<Function<List<Domino>, Player>> playerFactories = new ArrayList<>();
-//        playerFactories.add(list -> new RealPlayer(names.get(0), list));
-//        playerFactories.add(list -> new RealPlayer(names.get(0), list, suanZhang));
-        playerFactories.add(list -> PlayerFactory.createCombiningStrategyPlayer(names.get(0), list));
-        playerFactories.add(list -> PlayerFactory.createMinMaxPlayer(names.get(1), list));
-        playerFactories.add(list -> PlayerFactory.createRarenessPlayer(names.get(2), list));
-        playerFactories.add(list -> PlayerFactory.createCombiningStrategyPlayer(names.get(3), list));
-
         final ArrayList<Player> players = new ArrayList<>();
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0), DominoParser.parseList("[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]")));
-        players.add(PlayerFactory.createMinMaxPlayer(names.get(1), DominoParser.parseList("[6:6], [6:5], [6:2], [6:4], [5:1], [3:3]")));
-        players.add(PlayerFactory.createRarenessPlayer(names.get(2), DominoParser.parseList("[3:1], [5:5], [1:1], [6:4], [4:4], [2:2]")));
-        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3), DominoParser.parseList("[6:6], [1:1], [6:5], [6:1], [5:5], [4:4]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(0)).deal( DominoParser.parseList("[3:1], [5:1], [6:1], [3:3], [2:2], [6:3]")));
+        players.add(PlayerFactory.createMinMaxPlayer(names.get(1)).deal( DominoParser.parseList("[6:6], [6:5], [6:2], [6:4], [5:1], [3:3]")));
+        players.add(PlayerFactory.createRarenessPlayer(names.get(2)).deal( DominoParser.parseList("[3:1], [5:5], [1:1], [6:4], [4:4], [2:2]")));
+        players.add(PlayerFactory.createCombiningStrategyPlayer(names.get(3)).deal( DominoParser.parseList("[6:6], [1:1], [6:5], [6:1], [5:5], [4:4]")));
 
         DingNiuSimulation.runSimulation(players, 6, 0);
 
@@ -201,126 +191,4 @@ public class DingNiuSimulationTest {
          */
     }
 
-    public void testWhySuananang() {
-        /*
-
-            Next lead for 2
-            Cumulative score: {Rare=-3, Combine=-3, Dima=13, MinMax=-7}
-            io.navpil.github.zenzen.jielong.player.RealPlayer@5a2e4553
-            AbstractPlayerImpl{name='MinMax', dominos=[[5:5], [2:2], [3:3], [4:4], [5:5], [5:1]], putDown=[]}
-            AbstractPlayerImpl{name='Rare', dominos=[[2:2], [6:4], [5:1], [1:1], [6:4], [3:1]], putDown=[]}
-            AbstractPlayerImpl{name='Combine', dominos=[[3:3], [6:3], [6:1], [1:1], [6:6], [6:6]], putDown=[]}
-            Dragon [[1:1]]
-            Player Combine played Move{side=1, inwards=1, outwards=6}
-            Dragon [[1:1], [1:6]]
-            You have these dominoes:
-              (1) [6:5]
-              (2) [4:4]
-              (3) [6:2]
-              (4) [6:1]
-              (5) [3:1]
-              (6) [6:5]
-            Please choose which one to move
-            4
-            Put down [0] or move [1]?
-            1
-            Which side to put the [6:1]?
-            1
-            Player Dima played Move{side=1, inwards=6, outwards=1}
-            Dragon [[1:1], [1:6], [6:1]]
-            Player MinMax played Move{side=1, inwards=1, outwards=5}
-            Dragon [[1:1], [1:6], [6:1], [1:5]]
-            Player Rare played Move{side=1, inwards=5, outwards=1}
-            Dragon [[1:1], [1:6], [6:1], [1:5], [5:1]]
-            Player Combine played Move{side=1, inwards=1, outwards=1}
-            Dragon [[1:1], [1:6], [6:1], [1:5], [5:1], [1:1]]
-            You have these dominoes:
-              (1) [6:5]
-              (2) [4:4]
-              (3) [6:2]
-              (4) [3:1]
-              (5) [6:5]
-            Please choose which one to move
-            4
-            Put down [0] or move [1]?
-            1
-            Which side to put the [3:1]?
-            1
-            Player Dima played Move{side=1, inwards=1, outwards=3}
-            Dragon [[1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3]]
-            Player MinMax played Move{side=1, inwards=3, outwards=3}
-            Dragon [[1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3]]
-            Player Rare played Move{side=2, inwards=1, outwards=3}
-            Dragon [[3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3]]
-            Player Combine played Move{side=1, inwards=3, outwards=6}
-            Dragon [[3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6]]
-            You have these dominoes:
-              (1) [6:5]
-              (2) [4:4]
-              (3) [6:2]
-              (4) [6:5]
-            Please choose which one to move
-            1
-            Put down [0] or move [1]?
-            1
-            Player Dima played Move{side=1, inwards=6, outwards=5}
-            Dragon [[3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5]]
-            Player MinMax played Move{side=1, inwards=5, outwards=5}
-            Dragon [[3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5]]
-            Player Rare put a domino down: [2:2]
-            Dragon [[3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5]]
-            Player Combine played Move{side=2, inwards=3, outwards=3}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5]]
-            You have these dominoes:
-              (1) [4:4]
-              (2) [6:2]
-              (3) [6:5]
-            Please choose which one to move
-            3
-            Put down [0] or move [1]?
-            1
-            Player Dima played Move{side=1, inwards=5, outwards=6}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6]]
-            Player MinMax put a domino down: [2:2]
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6]]
-            Player Rare played Move{side=1, inwards=6, outwards=4}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4]]
-            Player Combine put a domino down: [6:6]
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4]]
-            You have these dominoes:
-              (1) [4:4]
-              (2) [6:2]
-            Please choose which one to move
-            1
-            Put down [0] or move [1]?
-            1
-            Player Dima played Move{side=1, inwards=4, outwards=4}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4], [4:4]]
-            Player MinMax played Move{side=1, inwards=4, outwards=4}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4], [4:4], [4:4]]
-            Player Rare played Move{side=1, inwards=4, outwards=6}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4], [4:4], [4:4], [4:6]]
-            Player Combine played Move{side=1, inwards=6, outwards=6}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4], [4:4], [4:4], [4:6], [6:6]]
-            You have these dominoes:
-              (1) [6:2]
-            Please choose which one to move
-            1
-            Put down [0] or move [1]?
-            1
-            Player Dima played Move{side=1, inwards=6, outwards=2}
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4], [4:4], [4:4], [4:6], [6:6], [6:2]]
-            SuanZhang! CLASSIC
-            Player MinMax put a domino down: [5:5]
-            Dragon [[3:3], [3:1], [1:1], [1:6], [6:1], [1:5], [5:1], [1:1], [1:3], [3:3], [3:6], [6:5], [5:5], [5:6], [6:4], [4:4], [4:4], [4:6], [6:6], [6:2]]
-            Dima has points: 0
-            MinMax has points: 14
-            Rare has points: 4
-            Combine has points: 12
-            Next lead for 0
-            Cumulative score: {Rare=-5, Combine=-7, Dima=25, MinMax=-13}
-            Player who SuanZhang-ed: 0
-
-        * */
-    }
 }

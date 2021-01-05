@@ -7,7 +7,9 @@ import io.navpil.github.zenzen.jielong.player.PlayerState;
 import java.util.List;
 
 /**
- * Describes a logic to choose the best tile for move/lead/discard
+ * Describes a logic to choose the best tile for move/lead/discard.
+ *
+ * Stateless
  */
 public interface MoveEvaluator {
 

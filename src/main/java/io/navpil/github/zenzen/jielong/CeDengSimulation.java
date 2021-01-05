@@ -14,7 +14,7 @@ import io.navpil.github.zenzen.jielong.player.evaluators.RarenessMoveEvaluator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class KkoriputigiSimulation {
+public class CeDengSimulation {
 
     public static void main(String[] args) {
         final List<String> names = List.of("Dima", "Computer");
@@ -28,7 +28,15 @@ public class KkoriputigiSimulation {
             players.add(PlayerFactory.createRandomPlayerImpl(names.get(0)));
         }
 
-        players.add(new PriorityPlayer(names.get(1), new CombiningMoveEvaluator()
+        players.add(new PriorityPlayer("Comp1", new CombiningMoveEvaluator()
+                .addEvaluator(new MinMaxMoveEvaluator())
+                .addEvaluator(new PipCounterMoveEvaluator(), 11)
+        ));
+        players.add(new PriorityPlayer("Comp2", new CombiningMoveEvaluator()
+                .addEvaluator(new RarenessMoveEvaluator())
+                .addEvaluator(new PipCounterMoveEvaluator(), 11)
+        ));
+        players.add(new PriorityPlayer("Comp3", new CombiningMoveEvaluator()
                 .addEvaluator(new RarenessMoveEvaluator())
                 .addEvaluator(new MinMaxMoveEvaluator())
                 .addEvaluator(new PipCounterMoveEvaluator(), 11)
@@ -42,7 +50,13 @@ public class KkoriputigiSimulation {
             dominoSet.remove(Domino.of(i, i));
         }
 
-        JieLongSimulation.runSeveralSimulations(players, simCount, whoGoesFirst, dominoSet, new KkoriputIgiRuleSet(KkoriputIgiRuleSet.CalculationType.TOKENS));
+        JieLongSimulation.runSeveralSimulations(
+                players,
+                simCount,
+                whoGoesFirst,
+                dominoSet,
+                new CeDengRuleSet(6, CeDengRuleSet.Penalty.SIX_HEAD_SEVEN_TAIL)
+        );
     }
 
 }

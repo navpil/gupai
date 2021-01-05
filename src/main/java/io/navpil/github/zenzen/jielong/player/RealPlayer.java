@@ -13,16 +13,12 @@ import java.util.List;
 /**
  * Human player
  */
-public class RealPlayer implements Player {
+public class RealPlayer extends AbstractPlayer {
 
-    private final List<Domino> dominoes;
-    private final List<Domino> down = new ArrayList<>();
     final BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
-    private final String name;
 
-    public RealPlayer(String name, List<Domino> dominoes) {
-        this.dominoes = dominoes;
-        this.name = name;
+    public RealPlayer(String name) {
+        super(name);
     }
 
     @Override
@@ -32,8 +28,8 @@ public class RealPlayer implements Player {
             System.out.println("Please choose which one to lead");
             try {
                 final int index = readInt() - 1;
-                if (index >= 0 && index < dominoes.size()) {
-                    final Domino domino = dominoes.get(index);
+                if (index >= 0 && index < dominos.size()) {
+                    final Domino domino = dominos.get(index);
                     int side;
                     if (!isDouble(domino)) {
                         System.out.println("Which side is open for " + domino + "?");
@@ -42,7 +38,7 @@ public class RealPlayer implements Player {
                         side = 1;
                     }
                     if (side == 1 || side == 2) {
-                        final Domino remove = dominoes.remove(index);
+                        final Domino remove = dominos.remove(index);
                         if (side == 1) {
                             return new Move(0, remove.getPips()[1], remove.getPips()[0]);
                         } else {
@@ -72,8 +68,6 @@ public class RealPlayer implements Player {
             return Integer.parseInt(s);
     }
 
-
-
     @Override
     public Move extractMove(Dragon dragon) {
         while (true) {
@@ -81,7 +75,7 @@ public class RealPlayer implements Player {
             System.out.println("Please choose which one to move");
             try {
                 final int index = readInt() - 1;
-                if (index >= 0 && index < dominoes.size()) {
+                if (index >= 0 && index < dominos.size()) {
                     final int shouldMove;
                     final List<Integer> matchingEnds = getMatchingEnds(dragon, index);
                     if (matchingEnds.isEmpty()) {
@@ -93,17 +87,17 @@ public class RealPlayer implements Player {
                     if (shouldMove == 1) {
                         int side;
                         if (matchingEnds.size() > 1) {
-                            System.out.println("Which side to put the " + dominoes.get(index) + "?");
+                            System.out.println("Which side to put the " + dominos.get(index) + "?");
                             side = readInt();
                         } else {
                             side = matchingEnds.get(0);
                         }
                         if (side == 1 || side == 2) {
-                            List<Move> moves = MoveFinder.getAvailableMoves(dragon.getOpenEnds(), dominoes);
+                            List<Move> moves = MoveFinder.getAvailableMoves(dragon.getOpenEnds(), dominos);
                             final int suanZhangMovesSize = (int) moves.stream().filter(m -> dragon.suanZhang().willSuanZhang(m)).count();
                             //SuanZhang only counts when user can choose between suanzhang and no suanzhang. IF he has no choice - SuanZhang won't count
                             boolean maySuanZhang = !(suanZhangMovesSize == 0 || suanZhangMovesSize == moves.size());
-                            final Domino remove = dominoes.remove(index);
+                            final Domino remove = dominos.remove(index);
                             Move move;
                             if (dragon.getOpenEnds().get(side - 1) == remove.getPips()[0]) {
                                 move = new Move(side, remove.getPips()[0], remove.getPips()[1]);
@@ -119,8 +113,8 @@ public class RealPlayer implements Player {
                         }
                     } else {
                         System.out.println("You've put down the domino");
-                        final Domino remove = dominoes.remove(index);
-                        down.add(remove);
+                        final Domino remove = dominos.remove(index);
+                        putDown.add(remove);
                         return Move.none(remove);
                     }
                 } else {
@@ -135,7 +129,7 @@ public class RealPlayer implements Player {
     }
 
     private List<Integer> getMatchingEnds(Dragon dragon, int index) {
-        final Domino domino = dominoes.get(index);
+        final Domino domino = dominos.get(index);
         final List<Integer> openEnds = dragon.getOpenEnds();
         List<Integer> matchingEnds = new ArrayList<>();
         int matchinEndIndex = 0;
@@ -150,30 +144,12 @@ public class RealPlayer implements Player {
     }
 
     private void showDominoes() {
-        System.out.println("You have these dominoes: ");
+        System.out.println("You have these dominos: ");
         int index = 0;
-        for (Domino dominoe : dominoes) {
+        for (Domino dominoe : dominos) {
             index++;
             System.out.println("  (" + index + ") " + dominoe);
         }
     }
-
-    @Override
-    public int getPoints() {
-        int score = 0;
-        for (Domino domino : dominoes) {
-            score += (domino.getPips()[0] + domino.getPips()[1]);
-        }
-        for (Domino domino : down) {
-            score += (domino.getPips()[0] + domino.getPips()[1]);
-        }
-        return score;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
-
 
 }

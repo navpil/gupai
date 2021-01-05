@@ -17,7 +17,6 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public class JieLongSimulation {
@@ -26,44 +25,43 @@ public class JieLongSimulation {
 
         final List<String> names = List.of("Random", "MinMax", "Rare", "PipCounter");
 
-        List<Function<List<Domino>, Player>> playerFactories = new ArrayList<>();
+        List<Player> players = new ArrayList<>();
 
         final boolean realPlayerGame = false;
         if (realPlayerGame) {
-            playerFactories.add(list -> new RealPlayer(names.get(0), list));
+            players.add(new RealPlayer(names.get(0)));
         } else {
-            playerFactories.add(list -> PlayerFactory.createRandomPlayerImpl(names.get(0), list));
+            players.add(PlayerFactory.createRandomPlayerImpl(names.get(0)));
         }
 
-        playerFactories.add(list -> new PriorityPlayer(names.get(1), list, new CombiningMoveEvaluator().addEvaluator(new RarenessMoveEvaluator())));
-        playerFactories.add(list -> new PriorityPlayer(names.get(2), list, new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator())));
-        playerFactories.add(list -> new PriorityPlayer(names.get(3), list, new CombiningMoveEvaluator().addEvaluator(new RarenessMoveEvaluator())));
+        players.add(new PriorityPlayer(names.get(1), new CombiningMoveEvaluator().addEvaluator(new RarenessMoveEvaluator())));
+        players.add(new PriorityPlayer(names.get(2), new CombiningMoveEvaluator().addEvaluator(new MinMaxMoveEvaluator())));
+        players.add(new PriorityPlayer(names.get(3), new CombiningMoveEvaluator().addEvaluator(new RarenessMoveEvaluator())));
 
-        final int simCount = 1000;
+        final int simCount = 1;
         int whoGoesFirst = 0;
         final List<Domino> set = ChineseDominoSet.create();
 
-        runSeveralSimulations(names, playerFactories, simCount, whoGoesFirst, set, new JieLongPointsResolution());
+        runSeveralSimulations(players, simCount, whoGoesFirst, set, new JieLongRuleSet());
     }
 
     /**
      * This allows to run various simulations, except for DingNiu, which is too different to try to generalize it here
      *
-     * @param names list of user names
-     * @param playerFactories list of factories to create players
+     * @param players list of players
      * @param simCount number of simulations to run
      * @param whoGoesFirst who has the initial move (usually 0)
      * @param dominoSet domino set to use
-     * @param pointsResolution who to calculate the points after each game
+     * @param ruleSet who to calculate the points after each game
      */
     public static void runSeveralSimulations(
-            List<String> names,
-            List<Function<List<Domino>, Player>> playerFactories,
+            List<Player> players,
             int simCount,
             int whoGoesFirst,
             List<Domino> dominoSet,
-            PointsResolution pointsResolution) {
-        Map<String, Integer> indexes = new HashMap<>();//Map.of(names.get(0), 0, "MinMax", 1, "Rare", 2, "Combine", 3);
+            RuleSet ruleSet) {
+        Map<String, Integer> indexes = new HashMap<>();
+        final List<String> names = players.stream().map(Player::getName).collect(Collectors.toList());
         for (int i = 0; i < names.size(); i++) {
             indexes.put(names.get(i), i);
         }
@@ -77,22 +75,24 @@ public class JieLongSimulation {
             whoWentFirst.put(name, new MutableInteger());
         }
 
-        final int tilesPerPlayer = dominoSet.size() / playerFactories.size();
+        final int tilesPerPlayer = dominoSet.size() / players.size();
 
         for (int i = 0; i < simCount; i++) {
             Collections.shuffle(dominoSet);
             final ArrayList<Domino> shuffledSet = new ArrayList<>(dominoSet);
 
-            final ArrayList<Player> hands = new ArrayList<>();
-
-            for (int counter = 0; counter < playerFactories.size(); counter++) {
-                final Function<List<Domino>, Player> playerFactory = playerFactories.get(counter);
-                hands.add(playerFactory.apply(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer)));
+            for (int counter = 0; counter < players.size(); counter++) {
+                players.get(counter).deal(shuffledSet.subList(counter * tilesPerPlayer, (counter + 1) * tilesPerPlayer));
             }
-            whoWentFirst.get(names.get(whoGoesFirst)).add(1);
+            final Stats stats;
+            if (ruleSet.continueTheGame(players)) {
+                whoWentFirst.get(names.get(whoGoesFirst)).add(1);
+                stats = runSimulation(new Dragon(Dragon.OpenArms.SINGLE, dominoSet, new NoopSuanZhang()), players, tilesPerPlayer, whoGoesFirst);
+            } else {
+                stats = null;
+            }
 
-            final Stats stats = runSimulation(new Dragon(Dragon.OpenArms.SINGLE, dominoSet, new NoopSuanZhang()), hands, tilesPerPlayer, whoGoesFirst);
-            final PointsResolution.WinningStats winningStats = pointsResolution.resolvePoints(stats, hands.stream().map(Player::getName).collect(Collectors.toList()), whoGoesFirst);
+            final RuleSet.WinningStats winningStats = ruleSet.resolvePoints(stats, players, whoGoesFirst);
 
             whoGoesFirst = indexes.get(winningStats.getWinner());
             System.out.println("Next lead for " + whoGoesFirst);

@@ -1,13 +1,19 @@
 package io.navpil.github.zenzen.jielong.player;
 
+import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.jielong.Dragon;
 import io.navpil.github.zenzen.jielong.Move;
+
+import java.util.Collection;
 
 /**
  * Player interface for "connecting" games
  */
 public interface Player {
 
+    Collection<Domino> leftOvers();
+
+    Player deal(Collection<Domino> dealt);
     /**
      * The move which starts the dragon.
      *
