@@ -400,7 +400,6 @@ Mostly all combinations count 1 point with some exceptions.
 Full Dragons or ssang-syo:
 
  - 2 Full Dragons count as 3
- - 2 Full Dragons which pair together counts as 4
  - 2 Full Dragons made purely of military tiles counts as 5
  - 1 Full Dragon counts as 1
  
@@ -421,6 +420,16 @@ Straight:
  - 2 straight counts as 5
  - 5 straight counts as 4
  - Other straights count as 3  
+
+According to Culin:
+
+    A ssang-syo composed of 6 pieces, which pair according to the Korean system, 
+    is called tăi-să-ttai  (Chinese, túi sz' tai), literally, "corresponding four times," 
+    and counts 4, the name referring to the count.
+                    
+It's not clear what this combination is.
+Probably it's some special ssang-syo/Dragon - but how can they be paired (except for military tiles, which cost 5)?
+Probably it's just three pairs, but why it's then called "corresponding *four* times" and why it's called ssang-syo?
 
 Since Sok are easy to form sometimes the game is played without them.
 

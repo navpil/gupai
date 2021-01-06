@@ -10,6 +10,7 @@ public abstract class AbstractPlayer implements Player {
     private final String name;
     protected Table table;
     protected ArrayList<Domino> dominos;
+    private HandCalculator handCalculator;
 
     public AbstractPlayer(String name) {
         this.name = name;
@@ -17,7 +18,7 @@ public abstract class AbstractPlayer implements Player {
 
 
     protected Collection<Hand> getHands() {
-        return new HandCalculator(table.getRuleSet())
+        return handCalculator
                 .handPermutations(dominos);
     }
 
@@ -29,6 +30,7 @@ public abstract class AbstractPlayer implements Player {
     @Override
     public void showTable(Table table) {
         this.table = table;
+        handCalculator = new HandCalculator(table.getRuleSet());
     }
 
     @Override

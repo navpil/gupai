@@ -4,6 +4,7 @@ public class RuleSet {
 
     private final GiveDiscardType giveDiscardType;
     private final BrokenGameFix fix;
+    private final XuanHePuPai.Pairs pairs;
 
     //Technically it does not matter what goes first - DISCARD and then DRAW or vice versa
     public enum GiveDiscardType {
@@ -64,13 +65,14 @@ public class RuleSet {
     private final boolean useSok;
 
     public static RuleSet optimal() {
-        return new RuleSet(false, GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE);
+        return new RuleSet(false, GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE, XuanHePuPai.Pairs.KOREAN);
     }
 
-    public RuleSet(boolean useSok, GiveDiscardType giveDiscardType, BrokenGameFix fix) {
+    public RuleSet(boolean useSok, GiveDiscardType giveDiscardType, BrokenGameFix fix, XuanHePuPai.Pairs pairs) {
         this.useSok = useSok;
         this.giveDiscardType = giveDiscardType;
         this.fix = fix;
+        this.pairs = pairs;
     }
 
     public boolean useSok() {
@@ -83,5 +85,9 @@ public class RuleSet {
 
     public BrokenGameFix getFix() {
         return fix;
+    }
+
+    public XuanHePuPai.Pairs getPairs() {
+        return pairs;
     }
 }

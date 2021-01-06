@@ -1,7 +1,7 @@
 package io.navpil.github.zenzen.dominos;
 
 import java.util.Arrays;
-import java.util.Collection;
+import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
@@ -23,7 +23,7 @@ public class Domino implements IDomino {
         return of(i % 10, i / 10);
     }
 
-    public static Collection<Domino> ofList(int ... ints) {
+    public static List<Domino> ofList(int ... ints) {
         return Arrays.stream(ints).mapToObj(Domino::of).collect(Collectors.toList());
     }
 

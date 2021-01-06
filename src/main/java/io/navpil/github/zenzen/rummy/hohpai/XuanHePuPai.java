@@ -3,34 +3,43 @@ package io.navpil.github.zenzen.rummy.hohpai;
 import io.navpil.github.zenzen.dominos.Domino;
 import io.navpil.github.zenzen.dominos.DominoUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.List;
 import java.util.stream.Collectors;
 
 public class XuanHePuPai {
+
+    public enum Pairs {
+        NONE, CHINESE, KOREAN
+    }
 
     private final boolean includeSok;
     private final boolean includeStraight;
     private final boolean includeErSanKao;
     private final boolean includeMiddleFour;
     private final boolean includeFourteenAndFive;
+    private final Pairs pairs;
 
     public XuanHePuPai(
             boolean includeSok,
             boolean includeStraight,
             boolean includeErSanKao,
             boolean includeMiddleFour,
-            boolean includeFourteenAndFive) {
+            boolean includeFourteenAndFive,
+            Pairs pairs) {
         this.includeSok = includeSok;
         this.includeStraight = includeStraight;
         this.includeErSanKao = includeErSanKao;
         this.includeMiddleFour = includeMiddleFour;
         this.includeFourteenAndFive = includeFourteenAndFive;
+        this.pairs = pairs;
     }
 
     public static XuanHePuPai hoHpai(boolean includeSok) {
-        return new XuanHePuPai(includeSok, true, true, false, false);
+        return new XuanHePuPai(includeSok, true, true, false, false, Pairs.KOREAN);
     }
 
     public static XuanHePuPai hoHpai() {
@@ -38,11 +47,11 @@ public class XuanHePuPai {
     }
 
     public static XuanHePuPai xiangShiFu() {
-        return new XuanHePuPai(false, false, true, false, true);
+        return new XuanHePuPai(false, false, true, false, true, Pairs.CHINESE);
     }
 
     public static XuanHePuPai xiangShiFuModern() {
-        return new XuanHePuPai(false, false, false, true, true);
+        return new XuanHePuPai(false, false, false, true, true, Pairs.CHINESE);
     }
 
     public enum Combination {
@@ -75,7 +84,71 @@ public class XuanHePuPai {
         //Ho-hpai specials
         STRAIGHT,
 
+        //Pairs
+        CIVIL_PAIR,
+
+        MILITARY_CHINESE_PAIR,
+        SUPREME_PAIR,
+
+        MILITARY_KOREAN_PAIR,
+
         none
+    }
+
+    /**
+     *                    [4:5] [3:6]
+     *                    [3:5] [2:6]
+     *                    [3:4] [2:5]
+     *                    [1:4] [2:3]
+     */
+    private static final HashMap<Domino, Domino> CHINESE_MILITARY_PAIRS = new HashMap<>();
+    /**
+     *                    [2:1] [4:2]
+     */
+    private static final HashMap<Domino, Domino> SUPREME_PAIR = new HashMap<>();
+
+    /**
+     *                    [2:6] [3:6]
+     *                    [2:5] [3:5]
+     *                    [2:4] [3:4]
+     *                    [1:4] [2:3]
+     *                    [1:2] [4:5]
+     */
+    private static final HashMap<Domino, Domino> KOREAN_MILITARY_PAIRS = new HashMap<>();
+
+
+    static {
+        //Korean military pairs:
+        final List<List<Domino>> korean = List.of(
+                Domino.ofList(62, 63),
+                Domino.ofList(52, 53),
+                Domino.ofList(42, 43),
+                Domino.ofList(14, 23),
+                Domino.ofList(12, 45)
+        );
+        for (List<Domino> pairList : korean) {
+            KOREAN_MILITARY_PAIRS.put(pairList.get(0), pairList.get(1));
+            KOREAN_MILITARY_PAIRS.put(pairList.get(1), pairList.get(0));
+        }
+
+        //Korean military pairs:
+        final List<List<Domino>> chinese = List.of(
+                Domino.ofList(54, 63),
+                Domino.ofList(53, 62),
+                Domino.ofList(52, 43),
+                Domino.ofList(14, 23)
+        );
+        for (List<Domino> pairList : chinese) {
+            CHINESE_MILITARY_PAIRS.put(pairList.get(0), pairList.get(1));
+            CHINESE_MILITARY_PAIRS.put(pairList.get(1), pairList.get(0));
+        }
+
+        //Supreme
+        final List<Domino> supremes = Domino.ofList(42, 21);
+        SUPREME_PAIR.put(supremes.get(0), supremes.get(1));
+        SUPREME_PAIR.put(supremes.get(1), supremes.get(0));
+
+
     }
 
     public Combination evaluate(Collection<Domino> dominos) {
@@ -99,6 +172,25 @@ public class XuanHePuPai {
                 if (Arrays.equals(pips, new int[]{0, 1, 1, 1, 1, 1, 1})) {
                     return Combination.STRAIGHT;
                 }
+            }
+        } else if (pairs != Pairs.NONE && dominos.size() == 2) {
+            final ArrayList<Domino> pair = new ArrayList<>(dominos);
+            if (pair.get(0).isCivil() && pair.get(0).equals(pair.get(1))) {
+                return Combination.CIVIL_PAIR;
+            }
+            if (pair.get(0).isMilitary()) {
+                if (pairs == Pairs.KOREAN) {
+                    if (KOREAN_MILITARY_PAIRS.get(pair.get(0)).equals(pair.get(1))) {
+                        return Combination.MILITARY_KOREAN_PAIR;
+                    }
+                } else {
+                    if (CHINESE_MILITARY_PAIRS.get(pair.get(0)).equals(pair.get(1))) {
+                        return Combination.MILITARY_CHINESE_PAIR;
+                    } else if (SUPREME_PAIR.get(pair.get(0)).equals(pair.get(1))) {
+                        return Combination.SUPREME_PAIR;
+                    }
+                }
+
             }
         }
         return Combination.none;
