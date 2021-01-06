@@ -68,15 +68,23 @@ Included games:
  
 ## Draw and discard games
 
-Small MahJohn looks like an invented game and I'm not sure people actually play it.
+Small MahJong looks like an invented game and I'm not sure people actually play it.
 Nevertheless, I have included it, and maybe I will include more AIs in the future.
+Need to add a calculation of a discard for a computer player.
+Also there can be different strategies in which discard to take.
+Winning hands are picked at random - can it happen that the same set of dominoes yield different winning hands?
+Actually the game can last very few rounds - maybe the given Computer players are good enough already.
 
 Try including more strategy for KapShap computer player.
 
 Todo list:
 
- - Ho-hpai
  - Jjak-mat-chu-gi (3 classic pairs) + blind game variation(?)
+ - Tok (?): MahJong variation of Ho-hpai 
+ 
+In progress:
+
+ - Ho-hpai, need to include points calculation
  
 Included games:
 

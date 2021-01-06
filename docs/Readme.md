@@ -335,7 +335,42 @@ Rules are the same, except that a winning hand consists of 8 tiles:
 
 ### Ho-hpai
 
-Korean game. Probably the same as Tuk (톡) which is often mentioned on Korean websites.
+Korean game. Probably the same as Tok (톡) which is often mentioned on Korean websites.
+
+Korean sources describing Tok are inconsistent, e.g some mention 3 pairs, some mention 2 triplets. 
+
+#### Fixing Culin's description
+
+The game as described by Culin is broken - tiles are not shuffled across the players during the game,
+so each player has access to only 8 tiles.
+This is because of the mechanics of the game - put a tile to one end and take from another.
+Since the row of dominoes is always divisible by a number of players - they will pick the same tiles over and over again.
+
+There are several fixes which may help.
+
+The simplest fix is to add an "eye" - the tile which is put face up and does not take part of the game.
+Probably in Culin's description the eye is the tile which "slips" from the dealer's hands, when he "whirls" the tiles.
+Culin says that this tile is the shuffled back to the tiles on the table, but he is probably wrong. 
+Because why would the table tiles be shuffled once again after other tiles were already dealt to the players.
+If this seventh tile from a dealer's hand is kept face up, then the game works because players have theoretical access
+to all the table tiles.
+The rule for picking the eye for winning purposes only can be introduced (*pure invention*).
+
+Other fixes would be to introduce the more common MahJong draw-discard way. 
+[Gol Pae on Band](https://band.us/band/71832633) mention something about exhastion of 12 (11) tiles.
+This may imply that 4 players receive 5 tiles each (maybe dealer gets 6) so that 12 (11) tiles are left.
+Maybe this variation can be added as a separate Tok game.
+
+There are too few MahJong-type games, so it's difficult to say what are the exact rules.
+I may assume same rules as for MahJong:
+ 
+ 1. Any player can take a discarded tile (with the preference for the lowest hand)
+ 2. Combination from a tile is enforced
+ 3. Only the latest discared tile can be taken
+
+All three rules are not universal - for example KapShap has the opposite to all the previous rules. 
+
+#### Rules  
 
 Played with 3 or 4 people.
 According to Culin when 3 players play, 33, 44, 55 and 66 are taken away from the set.

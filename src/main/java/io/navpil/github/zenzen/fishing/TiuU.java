@@ -89,36 +89,5 @@ public class TiuU {
         return stats;
     }
 
-    public static class ToBagCollector<T> implements Collector<T, TreeBag<T>, TreeBag<T>> {
-
-        @Override
-        public Supplier<TreeBag<T>> supplier() {
-            return TreeBag::new;
-        }
-
-        @Override
-        public BiConsumer<TreeBag<T>, T> accumulator() {
-            return AbstractBag::add;
-        }
-
-        @Override
-        public BinaryOperator<TreeBag<T>> combiner() {
-            return (ts, ts2) -> {
-                ts.addAll(ts2);
-                return ts;
-            };
-        }
-
-        @Override
-        public Function<TreeBag<T>, TreeBag<T>> finisher() {
-            return null;
-        }
-
-        @Override
-        public Set<Characteristics> characteristics() {
-            return Set.of(Characteristics.IDENTITY_FINISH, Characteristics.UNORDERED);
-        }
-    }
-
 
 }
