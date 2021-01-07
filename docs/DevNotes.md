@@ -77,21 +77,21 @@ Actually the game can last very few rounds - maybe the given Computer players ar
 
 Try including more strategy for KapShap computer player.
 
+Ho-hpai now has only Random Computer player and only an EYE fix for broken game.
+Should include more AI variation and probably other fixes (maybe include those into a separate game - Tok)
+
 Todo list:
 
  - Jjak-mat-chu-gi (3 classic pairs) + blind game variation(?)
  - Tok (?): MahJong variation of Ho-hpai 
- 
-In progress:
-
- - Ho-hpai, need to include points calculation
  
 Included games:
 
  - KapTaiShap
  - KapShap
  - Small Mahjong
-
+ - Ho-hpai
+ 
 ## Single player games
 
 Todo list:
