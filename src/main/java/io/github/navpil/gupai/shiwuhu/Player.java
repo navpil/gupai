@@ -4,7 +4,7 @@ import io.github.navpil.gupai.dominos.Domino;
 
 import java.util.List;
 
-public interface Hand {
+public interface Player {
     List<Domino> lead();
 
     String getName();

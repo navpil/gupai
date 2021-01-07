@@ -8,16 +8,22 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
-//High lead, high beat
-public class GenericHand implements Hand {
+/**
+ * Describes a computer player who behaves depending on a passed strategy
+ */
+public class ComputerPlayer implements Player {
 
     public static final Domino HE = new Domino(1, 3);
     public static final Domino REN = new Domino(4, 4);
     public static final Domino DI = new Domino(1, 1);
     public static final Domino TIAN = new Domino(6, 6);
+
+    /**
+     * Contains all supremes, which were dealt (in case user had both 42 and 21) and also all taken tricks
+     */
     private final ArrayList<Domino> hu;
-    private final ArrayList<Domino> supremes;
     private final List<Domino> dominosToLead;
     private final List<Domino> dominosToBeat;
     private final String name;
@@ -29,14 +35,26 @@ public class GenericHand implements Hand {
 
     public static class Strategy {
 
+        //Should we first lead high, or should we first lead low, if true [6:6] wins over [1:1]
         private final boolean leadHighFirst;
 
+        //If both multi-suit move and  single-suit moves have the same size - whether multi-suit move should have preference
+        //if true [1:1][5:3] wins over [6:6][6:6], but not over [6:6][6:6][6:6]
         private final boolean leadCombinationFirstIfTie;
+
+        //Regardless of a single-suit move size, if a multi-suit move is available - go with it.
+        //if true [1:1][5:3] wins over [6:6][6:6][6:6][6:6]
         private final boolean alwaysLeadCombinationFirst;
 
-        private final boolean leadBroadFirst;
+        //Whether combination is broad will be more important of whether combination is high.
+        //if true [1:1][1:1][1:1] wins over [3:3][3:3] if 'leadBroadFirst' is set to true
         private final boolean broadOverHigh;
 
+        //Broader combination wins over narrower
+        //if true [1:1][1:1][1:1] will win over [3:3][3:3] if broadOverhigh is set to true
+        private final boolean leadBroadFirst;
+
+        //Should the trick be beaten by the highest or lowest possible combination
         private final boolean beatHigh;
 
         public Strategy(boolean leadBroadFirst, boolean leadHighFirst, boolean leadCombinationFirstIfTie, boolean alwaysLeadCombinationFirst, boolean beatHigh, boolean broadOverHigh) {
@@ -50,7 +68,7 @@ public class GenericHand implements Hand {
         }
     }
 
-    public GenericHand(String name, List<Domino> dominos2, Strategy strategy) {
+    public ComputerPlayer(String name, List<Domino> dominos2, Strategy strategy) {
         this.name = name;
         this.strategy = strategy;
         this.dominosToLead = new ArrayList<>(dominos2);
@@ -67,25 +85,20 @@ public class GenericHand implements Hand {
         }
 
         hu = new ArrayList<>();
-        supremes = new ArrayList<>();
 
-        if (hasSupremes(dominos2)) {
-            final Domino mother = new Domino(2, 4);
-            final Domino son = new Domino(1, 2);
-            for (Domino domino : dominos2) {
-                if (domino.equals(mother) || domino.equals(son)) {
-                    hu.add(domino);
-                    supremes.add(domino);
-                }
-            }
+        if (hasBothSupremes(dominos2)) {
+            final List<Domino> supremesSet = Domino.ofList(42, 21);
+            hu.addAll(dominos2.stream().filter(supremesSet::contains).collect(Collectors.toList()));
             removeAll(hu);
         }
 
     }
 
     private void removeAll(Collection<Domino> dominos) {
-        dominosToBeat.removeAll(dominos);
-        dominosToLead.removeAll(dominos);
+        for (Domino domino : dominos) {
+            dominosToBeat.remove(domino);
+            dominosToLead.remove(domino);
+        }
     }
 
     public List<Domino> lead() {
@@ -94,6 +107,7 @@ public class GenericHand implements Hand {
         }
         List<List<Domino>> combos = findAllComboMoves(MoveType.LEAD);
 
+        //Combos are already sorted by being high, need to resort only if broad should take preference
         if (strategy.broadOverHigh) {
             if (strategy.leadBroadFirst) {
                 combos.sort((l1, l2) -> l2.size() - l1.size());
@@ -108,18 +122,18 @@ public class GenericHand implements Hand {
             return combomove;
         }
 
-        final List<SimpleMove> simpleMoves = findAllSimpleMoves(dominosToLead);
+        final List<SingleSuitMove> singleSuitMoves = findAllSimpleMoves(dominosToLead);
 
         if (strategy.broadOverHigh) {
             if (strategy.leadBroadFirst) {
-                simpleMoves.sort((l1, l2) -> l2.getSize() - l1.getSize());
+                singleSuitMoves.sort((l1, l2) -> l2.getSize() - l1.getSize());
             } else {
-                simpleMoves.sort((l1, l2) -> l1.getSize() - l2.getSize());
+                singleSuitMoves.sort((l1, l2) -> l1.getSize() - l2.getSize());
             }
         }
 
-        final SimpleMove simpleMove2 = simpleMoves.get(0);
-        List<Domino> simpleMove = times(simpleMove2.getSize(), simpleMove2.getDomino());
+        final SingleSuitMove singleSuitMove2 = singleSuitMoves.get(0);
+        List<Domino> simpleMove = times(singleSuitMove2.getSize(), singleSuitMove2.getDomino());
 
         if (simpleMove.size() == combomove.size()) {
             if (strategy.leadCombinationFirstIfTie) {
@@ -186,8 +200,8 @@ public class GenericHand implements Hand {
 //        return times(largestCounter, largestDomino);
 //    }
 
-    private List<SimpleMove> findAllSimpleMoves(List<Domino> dominos) {
-        final ArrayList<SimpleMove> result = new ArrayList<>();
+    private List<SingleSuitMove> findAllSimpleMoves(List<Domino> dominos) {
+        final ArrayList<SingleSuitMove> result = new ArrayList<>();
         Domino d = dominos.get(0);
         int counter = 1;
         for (int i = 1; i < dominos.size(); i++) {
@@ -195,12 +209,12 @@ public class GenericHand implements Hand {
             if (d.equals(next)) {
                 counter++;
             } else {
-                result.add(new SimpleMove(times(counter, d)));
+                result.add(new SingleSuitMove(times(counter, d)));
                 d = next;
                 counter = 1;
             }
         }
-        result.add(new SimpleMove(times(counter, d)));
+        result.add(new SingleSuitMove(times(counter, d)));
         return result;
     }
 
@@ -227,22 +241,22 @@ public class GenericHand implements Hand {
         final HashSet<Domino> leadSet = new HashSet<>(lead);
         final int size = leadSet.size();
         if (size == 1) {
-            final SimpleMove leadMove = new SimpleMove(lead);
-            final List<SimpleMove> allSimpleMoves = findAllSimpleMoves(dominosToBeat);
-            for (SimpleMove simpleMove : allSimpleMoves) {
-                if (simpleMove.beats(leadMove)) {
-                    final List<Domino> myMove = times(lead.size(), simpleMove.getDomino());
+            final SingleSuitMove leadMove = new SingleSuitMove(lead);
+            final List<SingleSuitMove> allSingleSuitMoves = findAllSimpleMoves(dominosToBeat);
+            for (SingleSuitMove singleSuitMove : allSingleSuitMoves) {
+                if (singleSuitMove.beats(leadMove)) {
+                    final List<Domino> myMove = times(lead.size(), singleSuitMove.getDomino());
                     removeAll(myMove);
                     return myMove;
                 }
             }
         } else {
-            final ComboMove leadComboMove = new ComboMove(lead);
+            final MultiSuitMove leadMultiSuitMove = new MultiSuitMove(lead);
             final List<List<Domino>> allComboMoves = findAllComboMoves(MoveType.BEAT);
             for (List<Domino> allComboMove : allComboMoves) {
-                final ComboMove myComboMove = new ComboMove(allComboMove);
-                if (myComboMove.beats(leadComboMove)) {
-                    final List<Domino> myMove = myComboMove.extractBeat(leadComboMove);
+                final MultiSuitMove myMultiSuitMove = new MultiSuitMove(allComboMove);
+                if (myMultiSuitMove.beats(leadMultiSuitMove)) {
+                    final List<Domino> myMove = myMultiSuitMove.extractBeat(leadMultiSuitMove);
                     removeAll(myMove);
                     return myMove;
                 }
@@ -262,7 +276,7 @@ public class GenericHand implements Hand {
         return result;
     }
 
-    private boolean hasSupremes(List<Domino> red) {
+    private boolean hasBothSupremes(List<Domino> red) {
         final Domino mother = new Domino(2, 4);
         final Domino son = new Domino(1, 2);
         boolean hasMother = false;
@@ -280,7 +294,6 @@ public class GenericHand implements Hand {
     @Override
     public String toString() {
         return "ShiWuHuHand["+name+"]{" +
-                "supremes=" + supremes +
                 "hu=" + hu +
                 ", dominos=" + dominosToLead +
                 '}';

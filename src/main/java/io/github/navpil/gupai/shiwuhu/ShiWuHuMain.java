@@ -1,5 +1,6 @@
 package io.github.navpil.gupai.shiwuhu;
 
+import io.github.navpil.gupai.ChineseDominoSet;
 import io.github.navpil.gupai.dominos.Domino;
 import io.github.navpil.gupai.dominos.IDomino;
 import io.github.navpil.gupai.DominoParser;
@@ -13,14 +14,21 @@ import java.util.function.BiFunction;
 public class ShiWuHuMain {
 
     enum WinningCondition {
-        TRICKS, GET_RID, GET_RID_ON_LAST_TRICK, NONE
+        //Taking 15 tricks is a win
+        TRICKS,
+        //Getting rid of 15 cards is a win
+        GET_RID,
+        //Same as GET_RID, but in order to win at least one trick (15th or any next one) should be taken
+        GET_RID_ON_LAST_TRICK,
+        //No winning condition - all cards are played out - testing only
+        NONE
     }
 
     public static void main(String[] args) {
         //[ShiWuHuHand[1]{supremes=[[4:2], [4:2], [2:1], [2:1]]hu=[[4:2], [4:2], [2:1], [2:1]], dominos=[[6:6], [6:6], [6:3], [6:3], [6:2], [5:3], [5:3], [5:2], [4:3], [3:1], [3:1], [4:1], [5:5], [3:3], [3:3], [2:2], [6:5]]}, ShiWuHuHand[2]{supremes=[]hu=[], dominos=[[6:6], [6:3], [5:4], [1:1], [6:2], [6:2], [5:3], [5:3], [4:4], [4:3], [4:2], [4:1], [3:2], [5:5], [5:5], [3:3], [2:2], [6:4], [6:1], [6:1], [6:1]]}, ShiWuHuHand[3]{supremes=[]hu=[], dominos=[[6:6], [6:3], [5:4], [1:1], [1:1], [6:2], [4:4], [4:4], [5:2], [5:2], [3:1], [4:1], [3:2], [3:3], [2:2], [2:2], [6:5], [6:4], [6:1], [5:1], [2:1]]}, ShiWuHuHand[4]{supremes=[[4:2], [2:1]]hu=[[4:2], [2:1]], dominos=[[5:4], [5:4], [1:1], [4:4], [5:2], [4:3], [4:3], [3:1], [4:1], [3:2], [3:2], [5:5], [6:5], [6:5], [6:4], [6:4], [5:1], [5:1], [5:1]]}]
 
-        final GenericHand.Strategy strategy = new GenericHand.Strategy(true, true, false, false, false, true);
-        final BiFunction<String, List<Domino>, Hand> stringListHandBiFunction = (s, t) -> new GenericHand(s, t, strategy);
+        final ComputerPlayer.Strategy strategy = new ComputerPlayer.Strategy(true, true, false, false, false, true);
+        final BiFunction<String, List<Domino>, Player> stringListHandBiFunction = (s, t) -> new ComputerPlayer(s, t, strategy);
 
 //        final WhoWon whoWon = runGame(true, true, ShiWuHuHand::new, 4, WinningCondition.GET_RID_ON_LAST_TRICK, getFastGameForGetRid());
 //        System.out.println("Player won: " + whoWon.handName);
@@ -28,10 +36,10 @@ public class ShiWuHuMain {
         //Run single test
 //        runTest(true, true, ShiWuHuHand::new, 4, WinningCondition.GET_RID);
         //Run tests with success rate
-        testSuccessRate(ShiWuHuHand::new);
+        testSuccessRate(stringListHandBiFunction);
     }
 
-    private static void testSuccessRate(BiFunction<String, List<Domino>, Hand> stringListHandBiFunction) {
+    private static void testSuccessRate(BiFunction<String, List<Domino>, Player> stringListHandBiFunction) {
         int success = 0;
         final int times = 10000;
         final HashMap<String, Integer> stats = new HashMap<>();
@@ -41,8 +49,7 @@ public class ShiWuHuMain {
 
         for (int i = 0; i < times; i++) {
             //Try four different strategies, also combine them and check whether first person gets most of wins
-//            int maxHu = runTest(false, true, ShiWuHuHand2::new, 3, WinningCondition.TRICKS);
-            final WhoWon whoWon = runGame(false, true, stringListHandBiFunction, 3, WinningCondition.NONE);
+            final WhoWon whoWon = runGame(false, true, stringListHandBiFunction, 4, WinningCondition.GET_RID_ON_LAST_TRICK);
             if (whoWon.handName != null) {
                 success++;
                 if (!stats.containsKey(whoWon.handName)) {
@@ -57,20 +64,6 @@ public class ShiWuHuMain {
         System.out.println("Success rate " + (100.0 * success / times) + "%");
         System.out.println("Winning rate: "+ stats);
         System.out.println("MaxHu rate: "+(100.0 * maxHuRate / times) + "%" );
-    }
-
-    private static void testSuccessRate_old(BiFunction<String, List<Domino>, Hand> stringListHandBiFunction) {
-        int success = 0;
-        final int times = 10000;
-        for (int i = 0; i < times; i++) {
-            //Try four different strategies, also combine them and check whether first person gets most of wins
-//            int maxHu = runTest(false, true, ShiWuHuHand2::new, 3, WinningCondition.TRICKS);
-            int maxHu = runGame(false, true, stringListHandBiFunction, 3, WinningCondition.TRICKS).getMaxHu();
-            if (maxHu >= 15) {
-                success++;
-            }
-        }
-        System.out.println("Success rate " + (100.0 * success / times) + "%");
     }
 
     //This will be an almost instant win for a first player with "GET_RID" rules, but not so for "TRICKS" rules.
@@ -94,24 +87,20 @@ public class ShiWuHuMain {
 
     }
 
-    private static WhoWon runGame(boolean log, boolean breakOnEmptyLead, BiFunction<String, List<Domino>, Hand> producer, int playersNo, WinningCondition winningCondition) {
-        final List<Domino> shiWuHuSet = ShiWuHuSet.create();
+    private static WhoWon runGame(boolean log, boolean breakOnEmptyLead, BiFunction<String, List<Domino>, Player> producer, int playersNo, WinningCondition winningCondition) {
+        final List<Domino> shiWuHuSet = ChineseDominoSet.shiWuHuSet();
         Collections.shuffle(shiWuHuSet);
 
-        return runGame(log, breakOnEmptyLead, producer, playersNo, winningCondition, shiWuHuSet);
-    }
-
-    private static WhoWon runGame(boolean log, boolean breakOnEmptyLead, BiFunction<String, List<Domino>, Hand> producer, int playersNo, WinningCondition winningCondition, List<Domino> shiWuHuSet) {
-        final ArrayList<Hand> hands = new ArrayList<>();
+        final ArrayList<Player> players = new ArrayList<>();
         int cardsPerPlayer = 84 / playersNo;
         for (int i = 0; i < playersNo; i++) {
-            hands.add(producer.apply(""+(i+1), shiWuHuSet.subList(i * cardsPerPlayer, (i + 1) * cardsPerPlayer)));
+            players.add(producer.apply(""+(i+1), shiWuHuSet.subList(i * cardsPerPlayer, (i + 1) * cardsPerPlayer)));
         }
 
-        return runGame(log, breakOnEmptyLead, playersNo, winningCondition, hands, cardsPerPlayer);
+        return runGame(log, breakOnEmptyLead, winningCondition, players);
     }
 
-    private static WhoWon runGame(boolean log, boolean breakOnEmptyLead, int playersNo, WinningCondition winningCondition, ArrayList<Hand> hands, int cardsPerPlayer) {
+    private static WhoWon runGame(boolean log, boolean breakOnEmptyLead, WinningCondition winningCondition, ArrayList<Player> players) {
         int currentHand = 0;
         int passes = 0;
 
@@ -120,71 +109,74 @@ public class ShiWuHuMain {
 
         List<Domino> lead = Collections.emptyList();
 
-        if (log) System.out.println(hands);
+        if (log) System.out.println(players);
+        int playersNo = players.size();
+        int cardsPerPlayer = 84 / playersNo;
 
         play_cycle:
         while(leadsInARow < playersNo) {
-            final Hand hand = hands.get(currentHand);
+            final Player player = players.get(currentHand);
+            boolean noOneCouldBeatLastTrick = passes == playersNo - 1;
             if (lead.isEmpty()) {
                 passes = 0;
                 leadsInARow++;
-                lead = hand.lead();
+                lead = player.lead();
                 if (breakOnEmptyLead && lead.isEmpty()) {
                     if (log) System.out.println("Empty lead");
                     break;
                 }
-                if (log) System.out.println("Hand " + hand.getName() + " leads with " + lead);
-            } else if (passes == playersNo - 1) {
-                if (winningCondition == WinningCondition.GET_RID_ON_LAST_TRICK && hand.getLeftovers() <= (cardsPerPlayer - 15)) {
-                    if (log) System.out.println("Hand " + hand.getName() + " won");
-                    winningPlayer = hand.getName();
+                if (log) System.out.println("Hand " + player.getName() + " leads with " + lead);
+            } else if (noOneCouldBeatLastTrick) {
+                if (winningCondition == WinningCondition.GET_RID_ON_LAST_TRICK && player.getLeftovers() <= (cardsPerPlayer - 15)) {
+                    if (log) System.out.println("Hand " + player.getName() + " won");
+                    winningPlayer = player.getName();
                     break play_cycle;
                 }
                 passes = 0;
                 leadsInARow = 1;
-                hand.trick(lead);
-                lead = hand.lead();
+                player.trick(lead);
+                lead = player.lead();
                 if (breakOnEmptyLead && lead.isEmpty()) {
                     if (log) System.out.println("Empty lead");
                     break;
                 }
-                if (log) System.out.println("Hand " + hand.getName() + " takes a trick and leads with " + lead);
+                if (log) System.out.println("Hand " + player.getName() + " takes a trick and leads with " + lead);
             } else {
                 leadsInARow = 0;
-                final List<Domino> beat = hand.beat(lead);
+                final List<Domino> beat = player.beat(lead);
                 if (beat.isEmpty()) {
-                    if (log) System.out.println("Hand "+hand.getName() +" passes");
+                    if (log) System.out.println("Hand "+ player.getName() +" passes");
                     passes++;
                 } else {
                     passes = 0;
                     lead = beat;
-                    if (log) System.out.println("Hand "+hand.getName() +" beats with " + beat);
+                    if (log) System.out.println("Hand "+ player.getName() +" beats with " + beat);
                 }
             }
             switch (winningCondition) {
                 case NONE: break;
                 case TRICKS:
-                    if (hand.getHu() >= 15) {
-                        if (log) System.out.println("Hand " + hand.getName() + " won");
-                        winningPlayer = hand.getName();
+                    if (player.getHu() >= 15) {
+                        if (log) System.out.println("Hand " + player.getName() + " won");
+                        winningPlayer = player.getName();
                         break play_cycle;
                     }
                     break;
                 case GET_RID:
-                    if (hand.getLeftovers() <= (cardsPerPlayer - 15)) {
-                        if (log) System.out.println("Hand " + hand.getName() + " won " + (hand));
-                        winningPlayer = hand.getName();
+                    if (player.getLeftovers() <= (cardsPerPlayer - 15)) {
+                        if (log) System.out.println("Hand " + player.getName() + " won " + (player));
+                        winningPlayer = player.getName();
                         break play_cycle;
                     }
             }
             currentHand = (currentHand + 1) % playersNo;
         }
         int maxHu = 0;
-        for (Hand hand : hands) {
-            if (log) System.out.println("Hand " + hand.getName() + " got " + hand.getHu() + "Hu");
-            maxHu = Math.max(maxHu, hand.getHu());
+        for (Player player : players) {
+            if (log) System.out.println("Hand " + player.getName() + " got " + player.getHu() + "Hu");
+            maxHu = Math.max(maxHu, player.getHu());
         }
-        if (log) System.out.println(hands);
+        if (log) System.out.println(players);
         return new WhoWon(winningPlayer, maxHu);
     }
 

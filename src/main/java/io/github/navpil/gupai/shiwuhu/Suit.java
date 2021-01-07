@@ -42,10 +42,10 @@ public enum Suit {
 
 
     public static Suit findType(Domino domino) {
-        if (ShiWuHuSet.RED.contains(domino)) {
+        if (RED.contains(domino)) {
             return Suit.WU_RED;
         }
-        if (ShiWuHuSet.BLACK.contains(domino)) {
+        if (BLACK.contains(domino)) {
             return Suit.WU_BLACK;
         }
         return Suit.WEN;

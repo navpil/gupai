@@ -3,14 +3,18 @@ package io.github.navpil.gupai.shiwuhu;
 import io.github.navpil.gupai.dominos.Domino;
 
 import java.util.List;
+import java.util.Objects;
 
-public class SimpleMove {
+/**
+ * Describes a move which only consists of a single suit
+ */
+public class SingleSuitMove {
 
     private final Domino domino;
     private final int size;
     private final Suit suit;
 
-    public SimpleMove(List<Domino> dominos) {
+    public SingleSuitMove(List<Domino> dominos) {
         if (dominos.isEmpty()) {
             domino = null;
             size = 0;
@@ -35,7 +39,7 @@ public class SimpleMove {
         return suit;
     }
 
-    public boolean beats(SimpleMove leadMove) {
+    public boolean beats(SingleSuitMove leadMove) {
         if (domino == null) {
             return false;
         }
@@ -45,5 +49,29 @@ public class SimpleMove {
         return this.suit == leadMove.suit
                 && this.size >= leadMove.size
                 && new ShiWuHuComparator().compare(this.domino, leadMove.domino) < 0;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        SingleSuitMove that = (SingleSuitMove) o;
+        return size == that.size &&
+                Objects.equals(domino, that.domino) &&
+                suit == that.suit;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(domino, size, suit);
+    }
+
+    @Override
+    public String toString() {
+        return "SingleSuitMove{" +
+                "domino=" + domino +
+                ", size=" + size +
+                ", suit=" + suit +
+                '}';
     }
 }
