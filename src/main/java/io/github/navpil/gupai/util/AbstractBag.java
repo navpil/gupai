@@ -53,7 +53,7 @@ public abstract class AbstractBag<T> extends AbstractCollection<T> implements Ba
 
     @Override
     public int size() {
-        return getMap().values().stream().map(MutableInteger::getCount).reduce(Integer::sum).orElse(0);
+        return size;//getMap().values().stream().map(MutableInteger::getCount).reduce(Integer::sum).orElse(0);
     }
 
     public void strictRemoveAll(Collection<T> elements) {

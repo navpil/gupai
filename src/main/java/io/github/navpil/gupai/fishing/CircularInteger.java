@@ -14,7 +14,8 @@ public class CircularInteger {
         return current;
     }
 
-    public void next() {
+    public int next() {
         current = (current + 1) % size;
+        return current;
     }
 }

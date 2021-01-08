@@ -5,6 +5,7 @@ import io.github.navpil.gupai.dominos.Domino;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -23,14 +24,14 @@ public class ComputerPlayer implements Player {
     /**
      * Contains all supremes, which were dealt (in case user had both 42 and 21) and also all taken tricks
      */
-    private final ArrayList<Domino> hu;
-    private final List<Domino> dominosToLead;
-    private final List<Domino> dominosToBeat;
+    private ArrayList<Domino> hu;
+    private List<Domino> dominosToLead;
+    private List<Domino> dominosToBeat;
     private final String name;
     private final Strategy strategy;
 
     private enum MoveType {
-        LEAD, BEAT;
+        LEAD, BEAT
     }
 
     public static class Strategy {
@@ -66,13 +67,21 @@ public class ComputerPlayer implements Player {
             this.leadBroadFirst = leadBroadFirst;
             this.broadOverHigh = broadOverHigh;
         }
+
+        public static Strategy createDefault() {
+            return new Strategy(true, true, false, false, false, false);
+        }
     }
 
-    public ComputerPlayer(String name, List<Domino> dominos2, Strategy strategy) {
+    public ComputerPlayer(String name, Strategy strategy) {
         this.name = name;
         this.strategy = strategy;
-        this.dominosToLead = new ArrayList<>(dominos2);
-        this.dominosToBeat = new ArrayList<>(dominos2);
+    }
+
+    @Override
+    public void deal(Collection<Domino> dominos) {
+        this.dominosToLead = new ArrayList<>(dominos);
+        this.dominosToBeat = new ArrayList<>(dominos);
         if (strategy.leadHighFirst) {
             this.dominosToLead.sort(new ShiWuHuComparator());
         } else {
@@ -86,12 +95,11 @@ public class ComputerPlayer implements Player {
 
         hu = new ArrayList<>();
 
-        if (hasBothSupremes(dominos2)) {
+        if (hasBothSupremes(dominos)) {
             final List<Domino> supremesSet = Domino.ofList(42, 21);
-            hu.addAll(dominos2.stream().filter(supremesSet::contains).collect(Collectors.toList()));
+            hu.addAll(dominos.stream().filter(supremesSet::contains).collect(Collectors.toList()));
             removeAll(hu);
         }
-
     }
 
     private void removeAll(Collection<Domino> dominos) {
@@ -101,6 +109,7 @@ public class ComputerPlayer implements Player {
         }
     }
 
+    @Override
     public List<Domino> lead() {
         if (dominosToLead.isEmpty()) {
             return Collections.emptyList();
@@ -110,9 +119,10 @@ public class ComputerPlayer implements Player {
         //Combos are already sorted by being high, need to resort only if broad should take preference
         if (strategy.broadOverHigh) {
             if (strategy.leadBroadFirst) {
+//                combos.sort(Comparator.comparingInt(List::size).reversed());
                 combos.sort((l1, l2) -> l2.size() - l1.size());
             } else {
-                combos.sort((l1, l2) -> l1.size() - l2.size());
+                combos.sort(Comparator.comparingInt(List::size));
             }
         }
 
@@ -126,9 +136,9 @@ public class ComputerPlayer implements Player {
 
         if (strategy.broadOverHigh) {
             if (strategy.leadBroadFirst) {
-                singleSuitMoves.sort((l1, l2) -> l2.getSize() - l1.getSize());
+                singleSuitMoves.sort(Comparator.comparingInt(SingleSuitMove::getSize).reversed());
             } else {
-                singleSuitMoves.sort((l1, l2) -> l1.getSize() - l2.getSize());
+                singleSuitMoves.sort(Comparator.comparingInt(SingleSuitMove::getSize));
             }
         }
 
@@ -175,30 +185,6 @@ public class ComputerPlayer implements Player {
         }
         return combos;
     }
-//
-//    private List<RealDomino> findLargestMove(List<RealDomino> dominos) {
-//        RealDomino d = dominos.get(0);
-//        int counter = 1;
-//        int largestCounter = 1;
-//        RealDomino largestDomino = d;
-//        for (int i = 1; i < dominos.size(); i++) {
-//            final RealDomino next = dominos.get(i);
-//            if (d.equals(next)) {
-//                counter++;
-//                if (counter == 4) {
-//                    return times(4, d);
-//                }
-//            } else {
-//                if (counter > largestCounter) {
-//                    largestCounter = counter;
-//                    largestDomino = d;
-//                }
-//                d = next;
-//                counter = 1;
-//            }
-//        }
-//        return times(largestCounter, largestDomino);
-//    }
 
     private List<SingleSuitMove> findAllSimpleMoves(List<Domino> dominos) {
         final ArrayList<SingleSuitMove> result = new ArrayList<>();
@@ -234,6 +220,7 @@ public class ComputerPlayer implements Player {
         }
     }
 
+    @Override
     public List<Domino> beat(List<Domino> lead) {
         if (dominosToBeat.isEmpty()) {
             return Collections.emptyList();
@@ -276,7 +263,7 @@ public class ComputerPlayer implements Player {
         return result;
     }
 
-    private boolean hasBothSupremes(List<Domino> red) {
+    private boolean hasBothSupremes(Collection<Domino> red) {
         final Domino mother = new Domino(2, 4);
         final Domino son = new Domino(1, 2);
         boolean hasMother = false;
@@ -299,14 +286,17 @@ public class ComputerPlayer implements Player {
                 '}';
     }
 
+    @Override
     public void trick(List<Domino> lead) {
         hu.addAll(lead);
     }
 
+    @Override
     public String getName() {
         return name;
     }
 
+    @Override
     public int getHu() {
         return hu.size();
 

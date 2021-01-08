@@ -1,10 +1,15 @@
 package io.github.navpil.gupai.shiwuhu;
 
 import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.fishing.tsungshap.NamedPlayer;
 
+import java.util.Collection;
 import java.util.List;
 
-public interface Player {
+public interface Player extends NamedPlayer {
+
+    void deal(Collection<Domino> deal);
+
     List<Domino> lead();
 
     String getName();
