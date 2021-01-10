@@ -5,6 +5,7 @@ import org.assertj.core.api.Assertions;
 import org.assertj.core.data.Percentage;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class ComputerKolYeSiPlayerTest {
@@ -24,7 +25,7 @@ public class ComputerKolYeSiPlayerTest {
         Domino dealtDomino = Domino.of(6, 5);
         Domino d1 = Domino.of(4, 1);
         Domino d2 = Domino.of(1, 1);
-        final int bankersMod10 = Mod10Calculation.mod10(d1, d2);
+        final int bankersMod10 = Mod10Rule.KOL_YE_SI.getPoints(Arrays.asList(d1, d2)).getMax();
 
         final int[] pairs = KolYeSiProbabilities.calculatePairsFrequencyFor(dealtDomino, List.of(d1, d2));
         final int[] triplets = KolYeSiProbabilities.calculateTripletsFrequencyFor(dealtDomino, List.of(d1, d2));

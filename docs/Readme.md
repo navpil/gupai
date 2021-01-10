@@ -104,12 +104,14 @@ Tibetian game. Currently not in plans.
 
 Similar to TianJiu, but 32x2 tiles, many other additional rules.
 
-## PaiGow and friends
+## Gambling games
 
-This can be done as the last game, since it is not so difficult and it's actually popular.
-
-Banker in all of the further games moves around a circle.
+All the following games have one player designated as a banker.
+Banker in all the games moves around a circle.
 All the games use the Modulo 10 rule for hand evaluation.
+In all the games, except for Kol-ye-si, [4:2] and [2:1] (two tiles which form a Supreme pair) tiles are "wild" in sense 
+that both of them can cost 3 or 6 points in the Module 10 rule.
+Kol-ye-si is a Korean game and, according to Culin, Koreans use different Military pairs and "Supreme pair" is not a thing there.
 
 ### PaiGow 牌九 (Tile-nine)
 
@@ -141,9 +143,9 @@ Ties are 'pushes', players take their bets back.
 
 Sources: Macao book, [Pagat](https://www.pagat.com/domino/adding/taungau.html)
 
-### Kol-ye-si
+### Kol-ye-si 골여시
 
-Korean game, probably named 골여시
+Korean game
 
 Players take 1 tile each and place their bets.
 Banker takes 2 tiles. If it's a perfect pair (identical tiles) he immediately wins.
@@ -169,6 +171,8 @@ Banker takes 2 and 5 players take 6 tiles each.
 Players split their 6 tiles into three groups - 1 tile, 2 tiles and 3 tiles.
 Mod 10 calculation, but 0 is highest.
 Each group plays against the banker.
+
+It's not clear whether players have to match banker's hand or, similarly to other games, outrank it.
 
 Sources: Macao book, [Video with DaLing shown](https://www.youtube.com/watch?v=PmtH7Ad4ayI&t=1s&ab_channel=%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EB%86%80%EC%9D%B4KoreanGame)
 

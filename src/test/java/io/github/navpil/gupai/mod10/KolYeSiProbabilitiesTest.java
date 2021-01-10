@@ -154,7 +154,7 @@ public class KolYeSiProbabilitiesTest {
             dominos.remove(e);
         }
         for (Domino d : dominos) {
-            pairs[Mod10Calculation.mod10(domino, d)]++;
+            pairs[Mod10Rule.KOL_YE_SI.getPoints(Arrays.asList(domino, d)).getMax()]++;
         }
         return pairs;
     }
@@ -168,7 +168,7 @@ public class KolYeSiProbabilitiesTest {
         }
         for (int i = 0; i < dominos.size(); i++) {
             for (int j = i + 1; j < dominos.size(); j++) {
-                pairs[Mod10Calculation.mod10(domino, dominos.get(i), dominos.get(j))]++;
+                pairs[Mod10Rule.KOL_YE_SI.getPoints(Arrays.asList(domino, dominos.get(i), dominos.get(j))).getMax()]++;
             }
         }
         System.out.println(Arrays.toString(pairs));

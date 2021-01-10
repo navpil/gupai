@@ -11,7 +11,7 @@ public class Mod10RuleTest {
     //KolYeSi
     @Test
     public void kolYeSiNonMod10() {
-        final Mod10Rule mod10Rule = Mod10Rule.kolYeSi();
+        final Mod10Rule mod10Rule = Mod10Rule.KOL_YE_SI;
         final Mod10Rule.Points points = mod10Rule.getPoints(Domino.ofList(42, 33));
         assertThat(points.isMod10()).isFalse();
         assertThat(points.getMax()).isEqualTo(2);
@@ -19,7 +19,7 @@ public class Mod10RuleTest {
 
     @Test
     public void kolYeSiMod10() {
-        final Mod10Rule mod10Rule = Mod10Rule.kolYeSi();
+        final Mod10Rule mod10Rule = Mod10Rule.KOL_YE_SI;
         final Mod10Rule.Points points = mod10Rule.getPoints(Domino.ofList(42, 31));
         assertThat(points.isMod10()).isTrue();
         assertThat(points.getMax()).isEqualTo(0);
@@ -28,7 +28,7 @@ public class Mod10RuleTest {
     //DaLing
     @Test
     public void testDaLing() {
-        final Mod10Rule mod10Rule = Mod10Rule.daLing();
+        final Mod10Rule mod10Rule = Mod10Rule.DA_LING;
         assertThat(mod10Rule.getPoints(Domino.ofList(42, 33)).getMax()).isEqualTo(9);
         assertThat(mod10Rule.getPoints(Domino.ofList(21, 11)).getMax()).isEqualTo(8);
         assertThat(mod10Rule.getPoints(Domino.ofList(42, 34)).isMod10()).isTrue();
@@ -38,7 +38,7 @@ public class Mod10RuleTest {
     //Tau Ngau
     @Test
     public void testTauNgau() {
-        final Mod10Rule mod10Rule = Mod10Rule.tauNgau();
+        final Mod10Rule mod10Rule = Mod10Rule.TAU_NGAU;
         assertThat(mod10Rule.getPoints(Domino.ofList(42, 33)).getMax()).isEqualTo(9);
         assertThat(mod10Rule.getPoints(Domino.ofList(42, 34)).isMod10()).isTrue();
         assertThat(mod10Rule.getPoints(Domino.ofList(42, 34)).getMax()).isEqualTo(3);

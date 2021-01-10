@@ -12,13 +12,14 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TauNgau {
 
-    public static final Mod10Rule MOD_10_RULE = Mod10Rule.tauNgau();
+    public static final Mod10Rule MOD_10_RULE = Mod10Rule.TAU_NGAU;
 
     public interface Player extends RunGamblingGame.Gambler {
 
@@ -101,7 +102,7 @@ public class TauNgau {
         @Override
         public Collection<Domino> discard() {
             final ArrayList<Domino> dominoList = new ArrayList<>(dominos);
-            final StringBuilder sb = new StringBuilder("Which dominos you'd like to discard (strictly comma-separated)?");
+            final StringBuilder sb = new StringBuilder("Which dominos you'd like to discard (strictly comma-separated)?\n");
             for (int i = 0; i < dominoList.size(); i++) {
                 sb.append(i + 1).append(") ").append(dominoList.get(i)).append("\n");
             }
@@ -141,29 +142,62 @@ public class TauNgau {
         @Override
         public Collection<Domino> discard() {
             final Collection<Collection<Domino>> possibleDiscards = CollectionUtil.allPermutations(dominos, 3);
-            //TODO: dmp 04.01.2021 Can do better - since GeeJoon are wild, it's better to keep them in a hand, if discard can be done without them
-            final Collection<Domino> dominos = possibleDiscards.stream().filter(d -> MOD_10_RULE.getPoints(d).isMod10()).findAny().orElse(Collections.emptyList());
-            this.dominos.strictRemoveAll(dominos);
-            return dominos;
+            final Collection<Collection<Domino>> dominos = possibleDiscards.stream().filter(d -> MOD_10_RULE.getPoints(d).isMod10()).collect(Collectors.toSet());
+            final Collection<Domino> discard = calculateBestDiscard(dominos);
+            this.dominos.strictRemoveAll(discard);
+            return discard;
         }
 
+        private Collection<Domino> calculateBestDiscard(Collection<Collection<Domino>> dominos) {
+            if (dominos.isEmpty()) {
+                return Collections.emptyList();
+            } else if (dominos.size() == 1) {
+                return dominos.iterator().next();
+            } else {
+                final Iterator<Collection<Domino>> discards = dominos.iterator();
+                Collection<Domino> discard = discards.next();
+                long supremesCount = discard.stream().filter(Mod10Rule.SUPREMES::contains).count();
+                if (supremesCount == 0) {
+                    return discard;
+                }
+                while (discards.hasNext()) {
+                    final Collection<Domino> currentDiscard = discards.next();
+                    final long currentSupremesCount = discard.stream().filter(Mod10Rule.SUPREMES::contains).count();
+                    if (currentSupremesCount == 0) {
+                        return currentDiscard;
+                    }
+                    if (currentSupremesCount < supremesCount) {
+                        supremesCount = currentSupremesCount;
+                        discard = currentDiscard;
+                    }
+                }
+                return discard;
+            }
+        }
+
+    }
+
+    public static class BankerPlayer extends ComputerPlayer {
+
+        public BankerPlayer(String name) {
+            super(name, 0);
+        }
+
+        @Override
+        public boolean stillHasMoney() {
+            return true;
+        }
+
+        @Override
+        public boolean isBankrupt() {
+            return false;
+        }
     }
 
     public static void main(String[] args) {
         final List<Domino> deck = ChineseDominoSet.create();
         final List<Player> gamblers = List.of(
-                new ComputerPlayer("Comp-1", 100) {
-
-                    @Override
-                    public boolean stillHasMoney() {
-                        return true;
-                    }
-
-                    @Override
-                    public boolean isBankrupt() {
-                        return false;
-                    }
-                },
+                new BankerPlayer("Banker"),
                 new ComputerPlayer("Comp-2", 100),
                 new RealPlayer("Jim", 100)
         );
@@ -252,7 +286,7 @@ public class TauNgau {
         if (discard.size() != 3) {
             return false;
         }
-        return Mod10Rule.tauNgau().getPoints(discard).isMod10();
+        return Mod10Rule.TAU_NGAU.getPoints(discard).isMod10();
     }
 
 

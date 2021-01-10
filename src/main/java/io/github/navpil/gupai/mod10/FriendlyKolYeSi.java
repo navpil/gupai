@@ -89,7 +89,7 @@ public class FriendlyKolYeSi {
                         userDominoes.add(it.next());
                     }
                 }
-                int bankersPoints = Mod10Calculation.mod10(d1, d2);
+                int bankersPoints = Mod10Rule.KOL_YE_SI.getPoints(List.of(d1, d2)).getMax();
 
                 for (int i = 0; i < players.size(); i++) {
                     if (i == banker) continue;
@@ -98,7 +98,7 @@ public class FriendlyKolYeSi {
                     final int stake = stakes[i];
                     final List<Domino> dealt = dealtDominoes.get(i);
 
-                    int playerPoints = Mod10Calculation.mod10(dealt);
+                    int playerPoints = Mod10Rule.KOL_YE_SI.getPoints(dealt).getMax();
                     String message;
                     if (bankersPoints == playerPoints) {
                         message = "PUSH";

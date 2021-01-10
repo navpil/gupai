@@ -8,35 +8,42 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
-public class Mod10Rule {
+public enum Mod10Rule {
 
-    private static final Set<Domino> geeJoon = Set.of(Domino.of(4,2), Domino.of(2,1));
+    /**
+     * Korean game, so Supreme cards have no significance
+     */
+    KOL_YE_SI(false, false),
+
+    /**
+     * 0 is high
+     */
+    DA_LING(true, true),
+    /**
+     * Pai gow and Tau ngau rules.
+     */
+    TAU_NGAU(true, false);
+
+    public static final Set<Domino> SUPREMES = Set.of(Domino.of(4,2), Domino.of(2,1));
 
     private final boolean geeJoonWild;
     private final boolean zeroHigh;
 
-    private Mod10Rule(boolean geeJoonWild, boolean zeroHigh) {
+    Mod10Rule(boolean geeJoonWild, boolean zeroHigh) {
         this.geeJoonWild = geeJoonWild;
         this.zeroHigh = zeroHigh;
     }
 
-    public static Mod10Rule kolYeSi() {
-        return new Mod10Rule(false, false);
-    }
 
-    public static Mod10Rule daLing() {
-        return new Mod10Rule(true, true);
-    }
-
-    public static Mod10Rule tauNgau() {
-        return new Mod10Rule(true, false);
+    public Points getPoints(Domino domino) {
+        return getPoints(List.of(domino));
     }
 
     public Points getPoints(Collection<Domino> dominoes) {
         List<Integer> sumList = List.of(0);
         for (Domino d : dominoes) {
             final ArrayList<Integer> newSum = new ArrayList<>();
-            final List<Integer> points = getPoints(d);
+            final List<Integer> points = getPointsList(d);
             for (Integer sum : sumList) {
                 for (Integer oldPoints : points) {
                     newSum.add(sum + oldPoints);
@@ -47,7 +54,7 @@ public class Mod10Rule {
         return new Points(sumList, zeroHigh);
     }
 
-    private List<Integer> getPoints(Domino domino) {
+    private List<Integer> getPointsList(Domino domino) {
         if (geeJoonWild && isGeeJoon(domino)) {
             return List.of(3, 6);
         } else {
@@ -56,7 +63,7 @@ public class Mod10Rule {
     }
 
     private static boolean isGeeJoon(Domino domino) {
-        return geeJoon.contains(domino);
+        return SUPREMES.contains(domino);
     }
 
     public static class Points {

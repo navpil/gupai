@@ -50,7 +50,7 @@ Included games:
  - Kol-ye-si, wishlist:
      - extract strategies of choosing the count and a stake
      - use genetic algorithm for finding out best stake strategy
- - Tau Ngau, see todo in a Computer player.
+ - Tau Ngau
 
 ## Fishing games
 

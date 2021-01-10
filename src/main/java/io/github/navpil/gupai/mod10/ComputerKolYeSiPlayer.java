@@ -41,7 +41,7 @@ public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
 
         int maxPossibleStake = Math.min(money, maxStake);
 
-        final int mod10 = Mod10Calculation.mod10(domino);
+        final int mod10 = getMod10(domino);
         switch (mod10) {
             case 6: case 8: case 4: return Math.min(minStake + bonus, maxPossibleStake);
             case 5: return Math.min(minStake + step + bonus, maxPossibleStake);
@@ -53,9 +53,13 @@ public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
         return minStake;
     }
 
+    private int getMod10(Domino domino) {
+        return Mod10Rule.KOL_YE_SI.getPoints(domino).getMax();
+    }
+
     @Override
     public int dominoCount(Domino d1, Domino d2) {
-        final int bankersMod10 = Mod10Calculation.mod10(d1, d2);
+        final int bankersMod10 = geMod10(d1, d2);
 
         final int[] pairs = KolYeSiProbabilities.calculatePairsFrequencyFor(dealtDomino, List.of(d1, d2));
         final int[] triplets = KolYeSiProbabilities.calculateTripletsFrequencyFor(dealtDomino, List.of(d1, d2));
@@ -73,6 +77,10 @@ public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
         }
 
         return (1.0 * acceptablePairs / pairsSum) > (1.0 * acceptableTriplets / tripletsSum) ? 1 : 2;
+    }
+
+    private int geMod10(Domino d1, Domino d2) {
+        return Mod10Rule.KOL_YE_SI.getPoints(List.of(d1, d2)).getMax();
     }
 
     private int sum(int[] ints) {

@@ -10,7 +10,7 @@ public class KolYeSiProbabilities {
     public static int[] mods = new int[]{4, 2, 4, 1, 4, 2, 5, 4, 4, 2};
 
     public static int[] calculatePairsFrequencyFor(Domino domino, List<Domino> excluded) {
-        final int currentDominoMod10 = Mod10Calculation.mod10(domino);
+        final int currentDominoMod10 = Mod10Rule.KOL_YE_SI.getPoints(domino).getMax();
 
         return calculatePairsFrequencyFor(currentDominoMod10, excluded);
     }
@@ -21,7 +21,7 @@ public class KolYeSiProbabilities {
 
         modsCopy[currentDominoMod10]--;
         for (Domino d : excluded) {
-            modsCopy[Mod10Calculation.mod10(d)]--;
+            modsCopy[Mod10Rule.KOL_YE_SI.getPoints(d).getMax()]--;
         }
 
         int[] pairs = new int[10];
@@ -37,7 +37,7 @@ public class KolYeSiProbabilities {
 
     public static int[] calculateTripletsFrequencyFor(Domino domino, List<Domino> excluded) {
 
-        final int currentDominoMod10 = Mod10Calculation.mod10(domino);
+        final int currentDominoMod10 = Mod10Rule.KOL_YE_SI.getPoints(domino).getMax();
 
         return calculateTripletsFrequencyFor(currentDominoMod10, excluded);
     }
@@ -52,7 +52,7 @@ public class KolYeSiProbabilities {
 
         modsCopy[currentDominoMod10]--;
         for (Domino d : excluded) {
-            modsCopy[Mod10Calculation.mod10(d)]--;
+            modsCopy[Mod10Rule.KOL_YE_SI.getPoints(d).getMax()]--;
         }
 
         int[] pairs = new int[10];
