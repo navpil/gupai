@@ -92,11 +92,14 @@ When 3 players play:
 
 When 2 play: the cat and the mouse, described by MinFanXin
 
+Some descriptions and videos involve betting, but I don't know how this looks like.
+Some 3 player variants involve 4 players, where one player rests - this is not implemented.
+
 ### KuPai 古牌 (Ancient Tiles)
 
 Described in Macao book, information should be treated with caution.
 
-Similar to TianJiu, but only single cards can be played - need more info from Macao book.
+Similar to TianJiu, but only single cards can be played.
 
 ### Bagchen
 

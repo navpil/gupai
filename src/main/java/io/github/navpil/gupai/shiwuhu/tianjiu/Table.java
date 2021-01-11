@@ -22,7 +22,7 @@ public class Table {
         if (!playerToTrickCount.containsKey(trick.getTrickWinner())) {
             playerToTrickCount.put(trick.getTrickWinner(), new MutableInteger());
         }
-        playerToTrickCount.get(trick.getTrickWinner()).inc();
+        playerToTrickCount.get(trick.getTrickWinner()).add(trick.size());
     }
 
     public RuleSet getRuleSet() {

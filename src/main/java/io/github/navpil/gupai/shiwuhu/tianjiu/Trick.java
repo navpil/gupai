@@ -50,6 +50,10 @@ public class Trick {
         return latestHighest;
     }
 
+    public int size() {
+        return latestHighest.size();
+    }
+
     private static class Entry {
 
         private final int playerIndex;

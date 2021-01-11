@@ -22,10 +22,15 @@ Included games:
 Already have ShiWuHu, after adjusting a bit, TianJiu can be created. 
 Still need to think of which tiles to put down - this moment is not present in ShiWuHu.
 
-Todo list:
+KuPai is made as a TianJiu rules modification.
 
- - TianJiu: classic, 3 players variant, cat and mice
- - KuPai - same as TianJiu, but single cards only (can be rules restriction)
+Todo:
+
+ - TianJiu 2 players cat and mouse
+
+In progress:
+
+ - TianJiu: improve AI, add real player
  
 ShiWuHu can be adjusted to have a human player
 

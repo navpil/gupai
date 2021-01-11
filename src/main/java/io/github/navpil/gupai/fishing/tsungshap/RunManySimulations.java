@@ -8,11 +8,19 @@ import java.util.List;
 
 public class RunManySimulations {
 
+    public enum PointsCalculationType {
+        WITH_EACH_OTHER, KEEP_AS_IS
+    }
+
     public interface SimulationFunction<X, Y> {
         Stats runSimulation(List<Domino> dominos, List<X> players, Y ruleSet, int whoGoesFirst);
     }
 
     public <T extends NamedPlayer, RuleSet> Stats runManySimulations(List<Domino> deck, List<T> players, RuleSet rules, int simCount, SimulationFunction<T, RuleSet> f) {
+        return runManySimulations(deck, players, rules, simCount, f, PointsCalculationType.WITH_EACH_OTHER);
+    }
+
+    public <T extends NamedPlayer, RuleSet> Stats runManySimulations(List<Domino> deck, List<T> players, RuleSet rules, int simCount, SimulationFunction<T, RuleSet> f, PointsCalculationType pointsCalculationType) {
         Stats overallStats = new Stats();
         for (NamedPlayer player : players) {
             overallStats.put(player.getName(), 0);
@@ -27,17 +35,23 @@ public class RunManySimulations {
                     rules, firstPlayer
             );
 
-            for (int i = 0; i < players.size(); i++) {
-                final NamedPlayer p1 = players.get(i);
-                for (int j = i + 1; j < players.size(); j++) {
-                    final NamedPlayer p2 = players.get(j);
-                    final Integer p1Points = stats.getPointsFor(p1.getName());
-                    final Integer p2Points = stats.getPointsFor(p2.getName());
+            if (pointsCalculationType == PointsCalculationType.WITH_EACH_OTHER) {
+                for (int i = 0; i < players.size(); i++) {
+                    final NamedPlayer p1 = players.get(i);
+                    for (int j = i + 1; j < players.size(); j++) {
+                        final NamedPlayer p2 = players.get(j);
+                        final Integer p1Points = stats.getPointsFor(p1.getName());
+                        final Integer p2Points = stats.getPointsFor(p2.getName());
 
-                    final int p1WinningPoints = p1Points - p2Points;
+                        final int p1WinningPoints = p1Points - p2Points;
 
-                    overallStats.add(p1.getName(), p1WinningPoints);
-                    overallStats.add(p2.getName(), -p1WinningPoints);
+                        overallStats.add(p1.getName(), p1WinningPoints);
+                        overallStats.add(p2.getName(), -p1WinningPoints);
+                    }
+                }
+            } else {
+                for (final NamedPlayer p1 : players) {
+                    overallStats.add(p1.getName(), stats.getPointsFor(p1.getName()));
                 }
             }
 

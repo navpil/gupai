@@ -42,6 +42,6 @@ public class HandHelperTest {
     }
 
     private HandHelper getHelperForRules(RuleSet.TrickType type) {
-        return new HandHelper(new RuleSet(type, false, true));
+        return new HandHelper(new RuleSet(type, false, false, false, false));
     }
 }
