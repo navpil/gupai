@@ -174,4 +174,23 @@ public class HandHelper {
         return RANKING.get(upper) > RANKING.get(lower);
     }
 
+    public boolean isValidHand(List<Domino> hand) {
+        if (hand.isEmpty()) {
+            return false;
+        } if (hand.size() == 1) {
+            return true;
+        } else {
+            final HashSet<Domino> handSet = new HashSet<>(hand);
+            if (handSet.size() == 1) {
+                //Equal tiles, which makes a civil pair
+                return true;
+            }
+            for (Set<Domino> special : SPECIALS) {
+                if (special.containsAll(handSet)) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

@@ -32,4 +32,11 @@ public class Table {
     public int getTrickCount(int current) {
         return playerToTrickCount.getOrDefault(current, new MutableInteger()).getCount();
     }
+
+    public List<Trick> extractTricks() {
+        final ArrayList<Trick> result = new ArrayList<>(tricks);
+        tricks.clear();
+        playerToTrickCount.clear();
+        return result;
+    }
 }

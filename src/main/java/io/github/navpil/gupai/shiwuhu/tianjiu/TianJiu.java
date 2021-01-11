@@ -6,7 +6,6 @@ import io.github.navpil.gupai.fishing.CircularInteger;
 import io.github.navpil.gupai.fishing.tsungshap.RunManySimulations;
 import io.github.navpil.gupai.jielong.Stats;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -15,10 +14,13 @@ public class TianJiu {
 
     public static void main(String[] args) {
         final List<Domino> deck = ChineseDominoSet.create();
-        final ArrayList<Player> players = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            players.add(new RandomComputerPlayer("Comp-" + i));
-        }
+
+        List<Player> players = List.of(
+                new RandomComputerPlayer("Jack"),
+                new RealPlayer("Panas"),
+                new RandomComputerPlayer("Jim"),
+                new RandomComputerPlayer("John")
+        );
 
         final TianJiu tianJiu = new TianJiu();
         if (false) {

@@ -1,10 +1,13 @@
 package io.github.navpil.gupai.shiwuhu.tianjiu;
 
 import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.util.CombineCollection;
+import io.github.navpil.gupai.util.ZippedCollection;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Trick {
 
@@ -54,14 +57,23 @@ public class Trick {
         return latestHighest.size();
     }
 
+    public List<Domino> getAllDominos() {
+        final List<Collection<Domino>> collect = new CombineCollection<>(List.of(beatEntries, discardEntries)).stream().map(Entry::getTiles).collect(Collectors.toList());
+        return new ArrayList<>(new ZippedCollection<>(collect));
+    }
+
     private static class Entry {
 
         private final int playerIndex;
-        private final Collection<Domino> lead;
+        private final Collection<Domino> tiles;
 
-        public Entry(int playerIndex, Collection<Domino> lead) {
+        public Entry(int playerIndex, Collection<Domino> tiles) {
             this.playerIndex = playerIndex;
-            this.lead = lead;
+            this.tiles = tiles;
+        }
+
+        public Collection<Domino> getTiles() {
+            return tiles;
         }
     }
 }

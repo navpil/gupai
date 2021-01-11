@@ -3,7 +3,12 @@ package io.github.navpil.gupai;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public class ConsoleInput {
 
@@ -35,6 +40,55 @@ public class ConsoleInput {
                 System.out.println(errorMessage);
             }
         }
+    }
+
+    public <T> int choice(List<T> choices, boolean zeroAllowed, String question) {
+        final StringBuilder sb = new StringBuilder(question).append("\n");
+        if (zeroAllowed) {
+            sb.append("0) None\n");
+        }
+        for (int i = 0; i < choices.size(); i++) {
+            sb.append(i + 1).append(") ").append(choices.get(i)).append("\n");
+        }
+        return readInt(
+                i -> i >= (zeroAllowed ? 0 : 1) && i <= choices.size(),
+                sb.toString(),
+                "Invalid input"
+        );
+    }
+
+    public <T> List<T> multiChoice(List<T> choices, boolean zeroAllowed, String question) {
+        final StringBuilder sb = new StringBuilder(question).append("\n");
+        sb.append("Choose several separated by comma").append("\n");
+        if (zeroAllowed) {
+            sb.append("0) None\n");
+        }
+        for (int i = 0; i < choices.size(); i++) {
+            sb.append(i + 1).append(") ").append(choices.get(i)).append("\n");
+        }
+
+        Predicate<String> validate = (s) -> {
+            if (zeroAllowed && "0".equals(s)) {
+                return true;
+            }
+            final HashSet<String> validValues = new HashSet<>();
+            for (int i = 1; i <= choices.size(); i++) {
+                validValues.add("" + i);
+            }
+            final List<String> values = Arrays.asList(s.split(","));
+            //Do not allow duplicates, do not allow empty values, has to contains strictly integers separated by commas
+            return new HashSet<>(values).size() == values.size() && !values.isEmpty() && validValues.containsAll(values);
+        };
+
+        final String values = readString(
+                validate,
+                sb.toString(),
+                "Invalid input"
+        );
+        if ("0".equals(values)) {
+            return Collections.emptyList();
+        }
+        return Arrays.stream(values.split(",")).map(Integer::parseInt).map(i -> i-1).map(choices::get).collect(Collectors.toList());
     }
 
     public String readString(Predicate<String> successTest, String prompt, String errorMessage) {

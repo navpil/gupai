@@ -24,13 +24,13 @@ Still need to think of which tiles to put down - this moment is not present in S
 
 KuPai is made as a TianJiu rules modification.
 
-Todo:
+TianJiu can have better AI, but random strategy seems to work very well against an unexperienced player.
+I'm leaving AI as is for now, since I don't know what the strategy should be anyway. 
 
- - TianJiu 2 players cat and mouse
+Done:
 
-In progress:
-
- - TianJiu: improve AI, add real player
+ - TianJiu 2 players Mouse Moving
+ - TianJiu, KuPai
  
 ShiWuHu can be adjusted to have a human player
 

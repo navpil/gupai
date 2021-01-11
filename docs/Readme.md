@@ -90,7 +90,7 @@ When 3 players play:
    - Wen (without 51) + 'Supreme Pair' + Nines
    - Wen + Nines
 
-When 2 play: the cat and the mouse, described by MinFanXin
+When 2 play: Mouse moving (老鼠搬家) , described by MinFanXin
 
 Some descriptions and videos involve betting, but I don't know how this looks like.
 Some 3 player variants involve 4 players, where one player rests - this is not implemented.
@@ -128,7 +128,7 @@ Pairs are (from high to low):
  - Kongs (Heaven/Earth + 8 point tile)
  - Sum of the points divide by ten remainder (Gee Joon tiles both can be 3 or 6 here)
 
-Equals are split by High domino (only). GeeGoon tiles have no value for evaluating ties (i.e. they are both lower than five).
+Equals are split by High domino (only). Gee Joon tiles have no value for evaluating ties (i.e. they are both lower than five).
 If High domino cannot be used for a split, then the dealer wins.
 If one hand loses and one wins - that's a push, player takes his bet back.
 
@@ -225,7 +225,7 @@ Gee Joon tiles cannot fish each other, as in Tiu-U.
 
 Variations:
  - Gee Joon can fish each other
- - Gee Goon and all sixes can fish each other
+ - Gee Joon and all sixes can fish each other
  - 64 and 55 can fish each other
  - 66 and 11 can fish each other
 

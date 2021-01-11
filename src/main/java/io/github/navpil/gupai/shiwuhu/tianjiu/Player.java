@@ -17,6 +17,6 @@ public interface Player extends NamedPlayer {
 
     Collection<Domino> beat(Collection<Domino> lead);
 
-    Collection<Domino> discard(Collection<Domino> discard);
+    Collection<Domino> discard(Collection<Domino> lead);
 
 }
