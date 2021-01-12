@@ -42,7 +42,7 @@ public class ConsoleInput {
         }
     }
 
-    public <T> int choice(List<T> choices, boolean zeroAllowed, String question) {
+    public <T> T choice(List<T> choices, boolean zeroAllowed, String question) {
         final StringBuilder sb = new StringBuilder(question).append("\n");
         if (zeroAllowed) {
             sb.append("0) None\n");
@@ -50,11 +50,15 @@ public class ConsoleInput {
         for (int i = 0; i < choices.size(); i++) {
             sb.append(i + 1).append(") ").append(choices.get(i)).append("\n");
         }
-        return readInt(
+        final int choice = readInt(
                 i -> i >= (zeroAllowed ? 0 : 1) && i <= choices.size(),
                 sb.toString(),
                 "Invalid input"
         );
+        if (choice == 0) {
+            return null;
+        }
+        return choices.get(choice - 1);
     }
 
     public <T> List<T> multiChoice(List<T> choices, boolean zeroAllowed, String question) {

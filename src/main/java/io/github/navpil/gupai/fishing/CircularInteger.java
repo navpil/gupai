@@ -18,4 +18,13 @@ public class CircularInteger {
         current = (current + 1) % size;
         return current;
     }
+
+    public int prev() {
+        if (current == 0) {
+            current = size - 1;
+        } else {
+            current--;
+        }
+        return current;
+    }
 }

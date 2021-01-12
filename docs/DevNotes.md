@@ -24,21 +24,15 @@ The games here are mostly modification of a TianJiu game.
 All next games will benefit from a better AI, but not all information is available for the players.
 For example in the TianJiu players do not have information about dominoes already played face up.
 
-### ShiWuHu
-
-ShiWuHu uses a 84 (4x21) deck of cards, so it's not strictly a GuPai game and made mostly for research purposes.
+**ShiWuHu** uses a 84 (4x21) deck of cards, so it's not strictly a GuPai game and made mostly for research purposes.
 ShiWuHu points calculation is quite basic.
 I'm not sure how to exactly calculate points - so for the trick version I calculate the number of Hu, but for the 
 get-rid version I simply give 1 point to a winner.
 
-### TianJiu
-
-TianJiu can have better AI, but random strategy seems to work very well against an unexperienced player.
+**TianJiu** can have better AI, but random strategy seems to work very well against an unexperienced player.
 I'm leaving AI as is for now, since I don't know what the strategy should be anyway.
 
-### KuPai
-
-KuPai is made as a TianJiu rules modification.
+**KuPai** is made as a TianJiu rules modification.
 
 Done:
 
@@ -52,7 +46,7 @@ Not in plans:
 
 ## Gambling games
 
-Kol-ye-si seems to give a preference to a player, not a banker, maybe there is no point in improving the AI. 
+**Kol-ye-si** seems to give a preference to a player, not a banker, maybe there is no point in improving the AI. 
 Same probably goes for DaLing.
 
 Make all games to use RunGamblingGame
@@ -85,25 +79,28 @@ Included games:
  
 ## Draw and discard games
 
-Small MahJong looks like an invented game and I'm not sure people actually play it.
+**Small MahJong** looks like an invented game and I'm not sure people actually play it.
 Nevertheless, I have included it, and maybe I will include more AIs in the future.
 Need to add a calculation of a discard for a computer player.
 Also there can be different strategies in which discard to take.
 Winning hands are picked at random - can it happen that the same set of dominoes yield different winning hands?
 Actually the game can last very few rounds - maybe the given Computer players are good enough already.
 
-Try including more strategy for KapShap computer player.
+Try including more strategy for **KapShap** computer player.
 
-Ho-hpai now has only Random Computer player and only an EYE fix for broken game.
+**Ho-hpai** now has only Random Computer player and only an EYE fix for broken game.
 Should include more AI variation and probably other fixes (maybe include those into a separate game - Tok)
+
+**Jjak-mat-chu-gi** is too restrictive, only 14% of games are won when 4 players play, 53% when 3 play and 88% when 2 play
+With the 'offer-to-all' rule, meaning that all the players are offered a discard, winning rate for 4 players is 90%.
 
 Todo list:
 
- - Jjak-mat-chu-gi (3 classic pairs) + blind game variation(?)
  - Tok (?): MahJong variation of Ho-hpai 
  
 Included games:
 
+ - Jjak-mat-chu-gi (3 classic pairs)
  - KapTaiShap
  - KapShap
  - Small Mahjong
@@ -123,4 +120,4 @@ Not in plans:
 
  - Open the pagoda
  - Turtle
-   
+ - Memento (create pairs out of the tiles)
