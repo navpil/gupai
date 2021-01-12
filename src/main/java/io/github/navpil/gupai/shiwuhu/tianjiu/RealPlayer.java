@@ -36,7 +36,7 @@ public class RealPlayer extends AbstractPlayer {
         List<Domino> dominos;
         do {
             dominos = consoleInput.multiChoice(this.dominos, true, "Choose how to beat a " + lead);
-        } while (!(dominos.isEmpty() || handHelper.canBeat(lead, dominos)));
+        } while (!(dominos.isEmpty() || (handHelper.isValidHand(dominos) && handHelper.canBeat(lead, dominos))));
         return dominoesReturned(dominos);
     }
 

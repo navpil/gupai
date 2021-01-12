@@ -11,11 +11,29 @@ import java.util.stream.Collectors;
 
 public class Trick {
 
+    /**
+     * The highest cards yet put to the trick (those that should be beaten)
+     */
     private Collection<Domino> latestHighest;
+
+    /**
+     * Entries which were placed face up
+     */
     private List<Entry> beatEntries = new ArrayList<>();
+
+    /**
+     * Entries which were placed face down
+     */
     private List<Entry> discardEntries = new ArrayList<>();
     private final HandHelper handHelper;
 
+    /**
+     * The trick starts with someone leading to it
+     *
+     * @param current player No
+     * @param lead cards which are put
+     * @param ruleSet rule set to use
+     */
     public Trick(int current, Collection<Domino> lead, RuleSet ruleSet) {
         this.latestHighest = lead;
         beatEntries.add(new Entry(current, lead));
@@ -62,9 +80,18 @@ public class Trick {
         return new ArrayList<>(new ZippedCollection<>(collect));
     }
 
+    /**
+     * Helper class, records what cards were put by which player
+     */
     private static class Entry {
 
+        /**
+         * Who played the cards
+         */
         private final int playerIndex;
+        /**
+         * What cards were played
+         */
         private final Collection<Domino> tiles;
 
         public Entry(int playerIndex, Collection<Domino> tiles) {

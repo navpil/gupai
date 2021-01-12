@@ -144,7 +144,7 @@ public class TianJiu {
                 int playersWin;
                 if (i == whoGoesFirst && playerTrickCount < 4) {
                     //special banker double calculation, but only if banker has less than 4 tricks, because
-                    //if banker has more than 4 tricks, winner will have to pay him doubles, which will actually make
+                    //if banker has more than 4 tricks, winner will have to pay him multiplied, which may make
                     //him lose money.
                     //The rule that bankers multiplier does not apply when other player won the last trick, but banker
                     //has more than 4 tricks is not often mentioned, but it makes a lot of sense and is described on

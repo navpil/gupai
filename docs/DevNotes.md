@@ -19,20 +19,32 @@ Included games:
 
 ## Trick taking games
 
-Already have ShiWuHu, after adjusting a bit, TianJiu can be created. 
-Still need to think of which tiles to put down - this moment is not present in ShiWuHu.
+The games here are mostly modification of a TianJiu game.
 
-KuPai is made as a TianJiu rules modification.
+All next games will benefit from a better AI, but not all information is available for the players.
+For example in the TianJiu players do not have information about dominoes already played face up.
+
+### ShiWuHu
+
+ShiWuHu uses a 84 (4x21) deck of cards, so it's not strictly a GuPai game and made mostly for research purposes.
+ShiWuHu points calculation is quite basic.
+I'm not sure how to exactly calculate points - so for the trick version I calculate the number of Hu, but for the 
+get-rid version I simply give 1 point to a winner.
+
+### TianJiu
 
 TianJiu can have better AI, but random strategy seems to work very well against an unexperienced player.
-I'm leaving AI as is for now, since I don't know what the strategy should be anyway. 
+I'm leaving AI as is for now, since I don't know what the strategy should be anyway.
+
+### KuPai
+
+KuPai is made as a TianJiu rules modification.
 
 Done:
 
  - TianJiu 2 players Mouse Moving
  - TianJiu, KuPai
- 
-ShiWuHu can be adjusted to have a human player
+ - ShiWuHu
 
 Not in plans:
 

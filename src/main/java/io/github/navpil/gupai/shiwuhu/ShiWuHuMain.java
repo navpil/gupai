@@ -30,16 +30,18 @@ public class ShiWuHuMain {
 //        testSuccessRate(stringHandFunction);
 
         List<Player> players = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 3; i++) {
             players.add(new ComputerPlayer("Comp-" + i, strategy));
         }
+        players.add(new HumanPlayer("Jim"));
 
+        final RuleSet rules = new RuleSet(true, RuleSet.WinningCondition.GET_RID_ON_LAST_TRICK);
         new RunManySimulations().runManySimulations(
                 ChineseDominoSet.shiWuHuSet(),
                 players,
-                new RuleSet(true, RuleSet.WinningCondition.GET_RID_ON_LAST_TRICK),
+                rules,
                 10,
-                (dominos, players1, ruleSet, whoGoesFirst) -> statsFrom(runGame(false, dominos, ruleSet, players1,whoGoesFirst))
+                (dominos, players1, ruleSet, whoGoesFirst) -> statsFrom(runGame(true, dominos, ruleSet, players1,whoGoesFirst), rules)
         );
     }
 
@@ -186,9 +188,13 @@ public class ShiWuHuMain {
         return new WhoWon(winningPlayer, maxHu);
     }
 
-    private static Stats statsFrom(WhoWon whoWon) {
+    private static Stats statsFrom(WhoWon whoWon, RuleSet rules) {
         final Stats stats = new Stats();
-        stats.put(whoWon.getHandName(), whoWon.getMaxHu());
+        if (rules.getWinningCondition() == RuleSet.WinningCondition.TRICKS) {
+            stats.put(whoWon.getHandName(), whoWon.getMaxHu());
+        } else {
+            stats.put(whoWon.getHandName(), 1);
+        }
         return stats;
     }
 

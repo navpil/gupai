@@ -13,6 +13,11 @@ public class RuleSet {
         NONE;
     }
 
+    /**
+     * When a player has won a trick, but he hasn't reached 15 Hu (possible only in TRICK winning condition) - what to
+     * do next? There are two possible outcomes - stop the game with no one won (this setting is set to true) or to
+     * continue the game with the next player with cards leading a card to a trick (set to false).
+     */
     private final boolean breakOnEmptyLead;
     private final WinningCondition winningCondition;
 

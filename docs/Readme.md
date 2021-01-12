@@ -1,6 +1,12 @@
 # Games played with Chinese dominoes
 
-Chinese dominoes are called GuPai 骨牌, Korean dominoes are called GolPae 골패
+Chinese dominoes are called GuPai 骨牌, Korean dominoes are called GolPae 골패.
+
+Most of the information comes from Wikipedia (English and Chinese), Baiku (chinese analogue to the google/wikipedia),
+[pagat.com](https://www.pagat.com/domino/), letters from Mr. MinFanXin (闵凡信老师), 
+[HuaBaoLeiDa blog](http://blog.sina.com.cn/u/1654037892) and Culin's book "CHINESE GAMES WITH DICE AND DOMINOES" from 1895.
+
+Other sources are mentioned in the games description.
 
 ## Connecting games
 
@@ -9,7 +15,6 @@ Main game is JieLong.
 DingNiu is the most complex variation - therefore it is done separately.
 
 JieLong, CeDeng and Kkoriput-igi differ only in set composition, player number and points calculation.
-Only CeDeng point calculation is missing.
 
 Source: [Wikipedia](https://zh.wikipedia.org/wiki/%E6%8E%A5%E9%BE%8D_(%E4%B8%AD%E5%9C%8B%E9%AA%A8%E7%89%8C))
 
@@ -63,9 +68,6 @@ Source: [Wenku Baidu](https://wenku.baidu.com/view/ae426c0dfc4ffe473368ab39?pcf=
 
 ## Trick taking games
 
-Already have ShiWuHu, after adjusting a bit, TianJiu can be created. 
-Still need to think of which tiles to put down - this moment is not present in ShiWuHu.
-
 ### TianJiu (TienGow) 天九 (Heaven Nine)
 
 Basic trick taking game.
@@ -94,6 +96,20 @@ When 2 play: Mouse moving (老鼠搬家) , described by MinFanXin
 
 Some descriptions and videos involve betting, but I don't know how this looks like.
 Some 3 player variants involve 4 players, where one player rests - this is not implemented.
+
+### LaoShuBanJia 老鼠搬家 (Mouse Moving)
+
+TianJiu adaptation for 2 players, described by MinFanXin.
+
+Each player is dealt 8 tiles.
+Then the game is played as usual.
+After 8 tricks are taken, players are dealt next 8 tiles, so initial woodpile is empty.
+Then the game is played as usual.
+
+After the two initial games, players take their oldest tricks as a new dealt tiles - 8 each, or less if someone has less
+than 4 tricks.
+For example if a player A has only 3 tricks (6 tiles) then each of the players gets 6 tiles, not 8.
+Game continues this way until one player has no more tiles.
 
 ### KuPai 古牌 (Ancient Tiles)
 
