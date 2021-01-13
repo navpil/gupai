@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.fishing.tsungshap;
 
-import io.github.navpil.gupai.dominos.DominoUtil;
 import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.dominos.DominoUtil;
 
 import java.util.Collection;
 import java.util.HashSet;
@@ -19,8 +19,35 @@ public class TsungShapRuleSet {
      */
     private final int pairsCost;
 
+    /**
+     * Under classic rules a player is given a single domino and then he decides what to do with it.
+     * This does not leave much space for thought and the game is based predominantly on luck.
+     * German Spieldomino variation gives a player four tiles into a hand, so he can decide which one to move and which
+     * one to discard.
+     * This gives a player more possibilities.
+     *
+     * This boolean actually is not used anywhere, because it made no sense in creating a single simulation which would
+     * use the boolean, because the mechanics are pretty different.
+     */
+    private final boolean fourTilesInHand;
+
     public static TsungShapRuleSet classic() {
-        return new TsungShapRuleSet(true, -1);
+        return new TsungShapRuleSet(true, -1, false);
+    }
+
+    /**
+     * Spiel domino says that 4 tiles should get into a hand and then be replenished.
+     *
+     * This makes a game more interesting. It makes sense to fix pair cost at some level, because they are much easier
+     * to form in this variation and are too expensive.
+     *
+     * Second put being not obligatory actually makes sense, because a first player has a slight advantage and making
+     * second put obligatory makes this advantage even higher.
+     *
+     * @return optimal rules for the SpielDomino TsungShap variation
+     */
+    public static TsungShapRuleSet spieldomino() {
+        return new TsungShapRuleSet(false, 50, true);
     }
 
     /**
@@ -31,16 +58,21 @@ public class TsungShapRuleSet {
      * @return
      */
     public static TsungShapRuleSet poorPairs() {
-        return new TsungShapRuleSet(true, 50);
+        return new TsungShapRuleSet(true, 50, false);
     }
 
-    public TsungShapRuleSet(boolean secondPutObligatory, int pairsCost) {
+    public TsungShapRuleSet(boolean secondPutObligatory, int pairsCost, boolean fourTilesInHand) {
         this.secondPutObligatory = secondPutObligatory;
         this.pairsCost = pairsCost;
+        this.fourTilesInHand = fourTilesInHand;
     }
 
     public boolean isSecondPutObligatory() {
         return secondPutObligatory;
+    }
+
+    public boolean isFourTilesInHand() {
+        return fourTilesInHand;
     }
 
     public boolean validPair(Collection<Domino> pair) {

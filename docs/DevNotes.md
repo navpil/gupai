@@ -65,18 +65,19 @@ Included games:
 
 ## Fishing games
 
-Provide more AI players for Tiu-U - now there is only one.
-As for TsungShap (classic) - it is difficult to provide more players - there are almost no choices to make.
+Provide more AI players for **Tiu-U** - now there is only one.
 
-Todo list:
-  
- - TsungShap Spieltdomino (4 cards) variation
+As for **TsungShap** (classic) - it is difficult to provide more players - there are almost no choices to make.
+
+**SpielDomino TsungShap** lacks the strategy of discarding a tile.
+I'm not sure what the strategy should actually be, so I'm leaving it as is for now.
 
 Included games:
 
  - Tiu-U (two rule sets, plus mixed)
  - Tsung Shap
- 
+ - TsungShap Spieltdomino (4 cards) variation
+  
 ## Draw and discard games
 
 **Small MahJong** looks like an invented game and I'm not sure people actually play it.
