@@ -28,8 +28,10 @@ public class Table {
 
     public void apply(String name, Catch c) {
         if (c.getFish().isEmpty()) {
+            //discard
             pool.add(c.getBait());
         } else {
+            //fish caught
             remove(c.getFish());
             if (!catches.containsKey(name)) {
                 catches.put(name, new TreeBag<>());

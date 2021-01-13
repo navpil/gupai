@@ -14,6 +14,7 @@ public class Util {
         for (Domino bait : baits) {
             for (Domino fish : pool) {
                 if (ruleSet.canCatch(bait, fish)) {
+                    //Allow to catch one fish or three fish, there is no ability to catch 2 fish
                     boolean canCatchThree = false;
                     final HashBag<Domino> triplet = HashBag.of(fish, fish, fish);
                     if (bait.equals(fish)) {

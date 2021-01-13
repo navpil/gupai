@@ -44,21 +44,7 @@ public class RealPlayer implements Player {
     public Catch fish(Bag<Domino> pool) {
         System.out.println("Your catch is " + table.getCatch(name));
         System.out.println("Table contains these dominoes " + pool);
-        final StringBuilder sb = new StringBuilder("Which domino will you use as a bait?\n");
-        int counter = 0;
-        final Domino[] dominos = new Domino[this.dominos.size()];
-        for (Domino domino : this.dominos) {
-            dominos[counter++] = domino;
-            sb.append(counter).append(") ").append(domino).append("\n");
-        }
-        final int size = this.dominos.size();
-        final String prompt = sb.toString();
-        final int baitIndex = consoleInput.readInt(
-                (i) -> i > 0 && i <= size,
-                prompt,
-                "Invalid input"
-        );
-        final Domino bait = dominos[baitIndex - 1];
+        final Domino bait = consoleInput.choice(new ArrayList<>(dominos), false, "Which domino will you use as a bait?");
         return internalCatch(pool, bait, true);
     }
 
@@ -76,18 +62,7 @@ public class RealPlayer implements Player {
         } else if (catches.size() == 1) {
             c = catches.iterator().next();
         } else {
-            final ArrayList<Catch> catchList = new ArrayList<>(catches);
-            final StringBuilder sb = new StringBuilder("What would you like to catch?\n");
-            for (int i = 0; i < catchList.size(); i++) {
-                sb.append(i + 1).append(") ").append(catchList.get(i)).append("\n");
-            }
-            final String prompt = sb.toString();
-            final int catchIndex = consoleInput.readInt(
-                    i -> i > 0 && i <= catchList.size(),
-                    prompt,
-                    "Invalid input"
-            );
-            c = catchList.get(catchIndex - 1);
+            c = consoleInput.choice(new ArrayList<>(catches), false, "What would you like to catch?");
         }
         if (ownBait) {
             dominos.remove(bait);

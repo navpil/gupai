@@ -13,7 +13,20 @@ public interface Player extends NamedPlayer {
 
     String getName();
 
+    /**
+     * Fish with the bait from hand
+     *
+     * @param pool pool where to fish from
+     * @return catch which includes bait and fish
+     */
     Catch fish(Bag<Domino> pool);
 
+    /**
+     * Fish with the bait from woodpile
+     *
+     * @param pool pool where to fish from
+     * @param bait given bait to fish with
+     * @return catch which includes bait and fish
+     */
     Catch fish(Bag<Domino> pool, Domino bait);
 }

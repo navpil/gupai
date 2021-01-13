@@ -6,6 +6,7 @@ import io.github.navpil.gupai.util.Bag;
 import io.github.navpil.gupai.util.HashBag;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -15,10 +16,13 @@ public class RuleSet {
 
     //Positive Exceptions:
 
+    //Please note - under every circumstances 42, 33 and 51 can catch each other.
+    // the geeJoon rules below consider only the 21 tile
+
     //42 and 21 can catch each other
     private final boolean geeJoonMatch;
 
-    //42, 21, 51, 33 can catch each other
+    //21 can catch 42, 51, 33 and vice versa
     private final boolean geeJoonsMatchSixes;
 
     //11 and 66 can catch each other
@@ -28,6 +32,14 @@ public class RuleSet {
 
     //55 and 64 cannot catch each other, even though they both score 10 points
     private final boolean plumsReadHeadDiffer;
+
+    /**
+     * Makes the triple catch restricted only to the tiles which do not match any other.
+     *
+     * Please note, that while [6:5] can never be caught by anything else, all other tiles may be caught,
+     * depending on the positive/negative restrictions imposed.
+     */
+    private final boolean tripleCatchRestricted;
 
     //Mixed pairs worth more points only if One Wen and both Wu are present
     //With the restriction [6:6],[6:3],[6:3] count as small fish (only one Wu is present)
@@ -56,11 +68,12 @@ public class RuleSet {
         SHI_WU_HU
     }
 
-    public RuleSet(boolean geeJoonMatch, boolean geeJoonsMatchSixes, boolean heavenEarthMatch, boolean plumsReadHeadDiffer, boolean oneWenTwoWuRestriction, int deckSize, PointsCalculation pointsCalculation, int allTianJiuBonus, int allJunBonus, int allSupremeBonus) {
+    public RuleSet(boolean geeJoonMatch, boolean geeJoonsMatchSixes, boolean heavenEarthMatch, boolean plumsReadHeadDiffer, boolean tripleCatchRestricted, boolean oneWenTwoWuRestriction, int deckSize, PointsCalculation pointsCalculation, int allTianJiuBonus, int allJunBonus, int allSupremeBonus) {
         this.geeJoonMatch = geeJoonMatch;
         this.geeJoonsMatchSixes = geeJoonsMatchSixes;
         this.heavenEarthMatch = heavenEarthMatch;
         this.plumsReadHeadDiffer = plumsReadHeadDiffer;
+        this.tripleCatchRestricted = tripleCatchRestricted;
         this.oneWenTwoWuRestriction = oneWenTwoWuRestriction;
         this.deckSize = deckSize;
         this.pointsCalculation = pointsCalculation;
@@ -74,7 +87,7 @@ public class RuleSet {
      * @return rule set according to Culin
      */
     public static RuleSet culin() {
-        return new RuleSet(true, false, false, false, false, 64, PointsCalculation.CULIN, 0, 0, 0);
+        return new RuleSet(true, false, false, false, false, false, 64, PointsCalculation.CULIN, 0, 0, 0);
     }
 
     /**
@@ -86,7 +99,7 @@ public class RuleSet {
      * @return rule set according to Alone in the Fart blog post
      */
     public static RuleSet alone() {
-        return new RuleSet(false, false, false, true, true, 84, PointsCalculation.SHI_WU_HU, 300, 300, 300);
+        return new RuleSet(false, false, false, true, true, true, 84, PointsCalculation.SHI_WU_HU, 300, 300, 300);
     }
 
     /**
@@ -96,12 +109,33 @@ public class RuleSet {
      * @return Alone in the Fart rule set adjusted to
      */
     public static RuleSet mixed() {
-        return new RuleSet(false, false, false, true, false, 64, PointsCalculation.SHI_WU_HU, 300, 300, 200);
+        return new RuleSet(false, false, false, true, true, false, 64, PointsCalculation.SHI_WU_HU, 300, 300, 200);
     }
 
+    /**
+     * Aloneinthefart blog post says that only these dominoes can be caught 3 together:
+     * 66, 11, 56, 55, 64, 21, these are chosen because they cannot be caught by anything else.
+     *
+     * @param fish fish is allowed to be caught as a triplet
+     * @return true if triplets are allowed, false otherwise.
+     */
     public boolean tripleCatchAllowedFor(Domino fish) {
-        if (pointsCalculation == PointsCalculation.SHI_WU_HU) {
-            return Set.of(66, 11, 56, 55, 64, 21).stream().map(Domino::of).collect(Collectors.toSet()).contains(fish);
+        if (tripleCatchRestricted) {
+            final HashSet<Integer> set = new HashSet<>();
+            set.add(65);
+            if (!geeJoonMatch && !geeJoonsMatchSixes) {
+                //[2:1] can only match itself
+                set.add(21);
+            }
+            if (!heavenEarthMatch) {
+                set.add(11);
+                set.add(66);
+            }
+            if (plumsReadHeadDiffer) {
+                set.add(55);
+                set.add(64);
+            }
+            return set.stream().map(Domino::of).collect(Collectors.toSet()).contains(fish);
         }
         return true;
     }
@@ -213,7 +247,7 @@ public class RuleSet {
             strictComparison(supremes, supremeSet, bigFishCount, smallFishCount);
             allSupremes = deckSize == 64 ? supremes.size() == 4 : supremes.size()==8;
 
-            //Jun
+            //Jun - 4 of the same domino (4x[5:5], 4x[6:5], 4x[6:4] are 3 types of Jun)
             MutableInteger junCount = new MutableInteger();
             getJunCount(plumsJun, bigFishCount, smallFishCount, junCount);
             getJunCount(axesJun, bigFishCount, smallFishCount, junCount);
@@ -239,6 +273,15 @@ public class RuleSet {
         }
     }
 
+    /**
+     * Set should contain civil (eye) and any of the military tiles
+     *
+     * @param toCheck dominoes which may fulfill the 1-Wen-1-Wu restriction
+     * @param eye domino which has to be present
+     * @param kickers some of these dominoes have to be present in the combination
+     * @param successCount mutable integer which increases if the check was successful, usually that's a big or middle fish count
+     * @param smallFishCount mutable integer which increases if the check was unsuccessful, usualy that's a smallFishCount
+     */
     private void lenientComparison(Bag<Domino> toCheck, Domino eye, Set<Domino> kickers, MutableInteger successCount, MutableInteger smallFishCount) {
         boolean containsAnyKicker = false;
         for (Domino kicker : kickers) {
@@ -251,6 +294,14 @@ public class RuleSet {
         }
     }
 
+    /**
+     * Set should contain civil and both military tiles
+     *
+     * @param toCheck dominoes which may fulfill the 1-Wen-2-Wu restriction
+     * @param expected set to be compared to
+     * @param successCount mutable integer which increases if the check was successful, usually that's a big or middle fish count
+     * @param smallFishCount mutable integer which increases if the check was unsuccessful, usualy that's a smallFishCount
+     */
     private void strictComparison(Bag<Domino> toCheck, Set<Domino> expected, MutableInteger successCount, MutableInteger smallFishCount) {
         if (toCheck.containsAll(expected)) {
             successCount.add(toCheck.size());
@@ -259,6 +310,14 @@ public class RuleSet {
         }
     }
 
+    /**
+     * Checks whether we have a Jun (4 equal tiles of 55, 64 or 65)
+     *
+     * @param jun check these dominoes
+     * @param bigFishCount mutable integer which increases if the check was successful
+     * @param smallFishCount mutable integer which increases if the check was unsuccessful, usualy that's a smallFishCount
+     * @param junCount mutable integer which increases if the jun was successful - 3 Juns result in a bonus
+     */
     private void getJunCount(Bag<Domino> jun, MutableInteger bigFishCount, MutableInteger smallFishCount, MutableInteger junCount) {
         if (jun.size() == 4) {
             bigFishCount.add(4);

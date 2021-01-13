@@ -23,6 +23,7 @@ public class TsungShapComputerPlayer implements TsungShapPlayer {
     public TsungShapMove chooseMove(Domino domino, LinkedList<Domino> row) {
         TsungShapMove move = handHelper.fetchMaxMove(domino, row);
         if (move == null) {
+            //This is a pretty arbitrary thing
             return new TsungShapMove(TsungShapMove.Type.DISCARD, DominoUtil.getPipPoints(domino) > 7 ? TsungShapMove.Side.LEFT : TsungShapMove.Side.RIGHT, domino);
         }
         return move;

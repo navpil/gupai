@@ -11,6 +11,10 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * AI player which tries to catch the best possible Catch, but does not really think much into the future, so
+ * it does not try to collect Juns for example.
+ */
 public class ComputerPlayer implements Player {
 
     private final String name;

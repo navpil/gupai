@@ -8,8 +8,16 @@ import java.util.Collection;
 import java.util.Objects;
 
 public class Catch {
-    private Domino bait;
-    private Bag<Domino> fish;
+
+    /**
+     * Bait to catch a fish with, cannot be null
+     */
+    private final Domino bait;
+    /**
+     * Caught fish.
+     * Can be empty - which means that a bait is discarded into the pool
+     */
+    private final Bag<Domino> fish;
 
     public Catch(Domino bait, Bag<Domino> fish) {
         //bait can never be null

@@ -68,6 +68,7 @@ Included games:
 Provide more AI players for **Tiu-U** - now there is only one.
 
 As for **TsungShap** (classic) - it is difficult to provide more players - there are almost no choices to make.
+The discard tile is pretty arbitrary but is not random - maybe this should be changed.
 
 **SpielDomino TsungShap** lacks the strategy of discarding a tile.
 I'm not sure what the strategy should actually be, so I'm leaving it as is for now.
@@ -94,6 +95,7 @@ Should include more AI variation and probably other fixes (maybe include those i
 
 **Jjak-mat-chu-gi** is too restrictive, only 14% of games are won when 4 players play, 53% when 3 play and 88% when 2 play
 With the 'offer-to-all' rule, meaning that all the players are offered a discard, winning rate for 4 players is 90%.
+Should I add the KapShap-like rule 'offer-any-tile'?
 
 Todo list:
 
