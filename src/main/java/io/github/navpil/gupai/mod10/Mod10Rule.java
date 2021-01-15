@@ -16,11 +16,17 @@ public enum Mod10Rule {
     KOL_YE_SI(false, false),
 
     /**
-     * 0 is high
+     * 0 is high (meaning is equal to 10)
      */
     DA_LING(true, true),
+
     /**
-     * Pai gow and Tau ngau rules.
+     * 0 is high, but supremes are not wild (for bankers pair calculation only)
+     */
+    DA_LING_BANKER(false, true),
+
+    /**
+     * Pai gow and Tau ngau rules. Supremes are wild, but 0 is low
      */
     TAU_NGAU(true, false);
 
@@ -33,7 +39,6 @@ public enum Mod10Rule {
         this.geeJoonWild = geeJoonWild;
         this.zeroHigh = zeroHigh;
     }
-
 
     public Points getPoints(Domino domino) {
         return getPoints(List.of(domino));
@@ -66,6 +71,11 @@ public enum Mod10Rule {
         return SUPREMES.contains(domino);
     }
 
+    /**
+     * Because Supremes may be wild, same combination may be divisible by 10 and also may cost 6 points.
+     *
+     * For example [2:2] [2:1] [4:2] is divisible by 10 (4 + 3 + 3) and may cost 6 points (4 + 6 + 6)
+     */
     public static class Points {
 
         private final List<Integer> sums;
@@ -76,12 +86,33 @@ public enum Mod10Rule {
             this.zeroHigh = zeroHigh;
         }
 
+        /**
+         * Finds the maximum possible value of the possible sums
+         *
+         * @return maximum possible value
+         */
         public Integer getMax() {
             return sums.stream().map(i -> i % 10).map(i -> zeroHigh && i == 0  ? 10 : i).max(Integer::compareTo).orElseThrow();
         }
 
+        /**
+         * Checks if a combination is divisible by 10
+         *
+         * @return true if divisible by 10, false otherwise
+         */
         public boolean isMod10() {
             return sums.stream().map(i -> i % 10).anyMatch(i -> i == 0);
+        }
+
+        /**
+         * Checks if a combination can be exactly equal to the provided point.
+         * Used in DaLing - exact point game.
+         *
+         * @param point point to check against
+         * @return true if it can match, false otherwise
+         */
+        public boolean canBeExactly(int point) {
+            return sums.stream().map(i -> i % 10).map(i -> zeroHigh && i == 0  ? 10 : i).anyMatch(i -> i == point);
         }
 
     }

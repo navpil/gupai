@@ -62,6 +62,14 @@ public class ConsoleInput {
     }
 
     public <T> List<T> multiChoice(List<T> choices, boolean zeroAllowed, String question) {
+        return multiChoice(choices, zeroAllowed, question, (integer -> true));
+    }
+
+    public <T> List<T> multiChoice(List<T> choices, boolean zeroAllowed, String question, int sizeRestriction) {
+        return multiChoice(choices, zeroAllowed, question, (i) -> i == sizeRestriction);
+    }
+
+    private <T> List<T> multiChoice(List<T> choices, boolean zeroAllowed, String question, Predicate<Integer> sizeRestriction) {
         final StringBuilder sb = new StringBuilder(question).append("\n");
         sb.append("Choose several separated by comma").append("\n");
         if (zeroAllowed) {
@@ -81,7 +89,7 @@ public class ConsoleInput {
             }
             final List<String> values = Arrays.asList(s.split(","));
             //Do not allow duplicates, do not allow empty values, has to contains strictly integers separated by commas
-            return new HashSet<>(values).size() == values.size() && !values.isEmpty() && validValues.containsAll(values);
+            return new HashSet<>(values).size() == values.size() && !values.isEmpty() && validValues.containsAll(values) && sizeRestriction.test(values.size());
         };
 
         final String values = readString(
@@ -94,6 +102,8 @@ public class ConsoleInput {
         }
         return Arrays.stream(values.split(",")).map(Integer::parseInt).map(i -> i-1).map(choices::get).collect(Collectors.toList());
     }
+
+
 
     public String readString(Predicate<String> successTest, String prompt, String errorMessage) {
         while (true) {

@@ -1,5 +1,6 @@
 package io.github.navpil.gupai.fishing;
 
+import io.github.navpil.gupai.dominos.DominoUtil;
 import io.github.navpil.gupai.jielong.player.MutableInteger;
 import io.github.navpil.gupai.dominos.Domino;
 import io.github.navpil.gupai.util.Bag;
@@ -185,7 +186,7 @@ public class RuleSet {
 
     public int calculatePoints(Collection<Domino> dominos) {
         if (pointsCalculation == PointsCalculation.CULIN) {
-            final int smallFish = dominos.stream().filter(d -> points(d) < 8).mapToInt(this::redPointsCount).reduce(Integer::sum).orElse(0);
+            final int smallFish = dominos.stream().filter(d -> points(d) < 8).mapToInt(DominoUtil::redPointsCount).reduce(Integer::sum).orElse(0);
             final int noOnes = (smallFish / 10) * 10;
             final int smallFishPoints = noOnes < smallFish ? noOnes + 10 : smallFish;
 
@@ -325,15 +326,6 @@ public class RuleSet {
         } else {
             smallFishCount.add(jun.size());
         }
-    }
-
-    private int redPointsCount(Domino d) {
-        final int[] pips = d.getPips();
-        return (isRed(pips[0]) ? pips[0] : 0) + (isRed(pips[1]) ? pips[1] : 0);
-    }
-
-    private boolean isRed(int pip) {
-        return pip == 1 || pip == 4;
     }
 
 }

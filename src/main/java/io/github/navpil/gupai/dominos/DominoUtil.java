@@ -60,4 +60,21 @@ public class DominoUtil {
         return d.getPips()[0] + d.getPips()[1];
     }
 
+    public static int redPointsCount(Domino d) {
+        final int[] pips = d.getPips();
+        if (d.is(6,6)) {
+            //[6:6] is drawn with 6 red pips
+            return 6;
+        }
+        return (isRed(pips[0]) ? pips[0] : 0) + (isRed(pips[1]) ? pips[1] : 0);
+    }
+
+    public static int blackPointsCount(Domino d) {
+        return getPipPoints(d) - redPointsCount(d);
+    }
+
+    private static boolean isRed(int pip) {
+        return pip == 1 || pip == 4;
+    }
+
 }

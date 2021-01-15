@@ -104,57 +104,8 @@ public class DaLingCalculation {
     }
 
     private static int mod10Points(Domino ... dominos) {
-        Points points = Points.create();
-        for (Domino domino : dominos) {
-            points = points.with(domino);
-        }
-        return points.resolve();
-    }
-
-    private static class Points {
-
-        private static final Set<Domino> geeJoon = Set.of(Domino.of(4,2), Domino.of(2,1));
-        private final List<Integer> sums;
-
-        private Points(List<Integer> sums) {
-            this.sums = sums;
-        }
-
-        public static Points create() {
-            return new Points(List.of(0));
-        }
-
-        public static Points create(Domino domino) {
-            return new Points(getPoints(domino));
-        }
-
-        private static List<Integer> getPoints(Domino domino) {
-            if (isGeeJoon(domino)) {
-                return List.of(3, 6);
-            } else {
-                return List.of(domino.getPips()[0] + domino.getPips()[1]);
-            }
-
-        }
-
-        public Points with(Domino domino) {
-            final ArrayList<Integer> newSum = new ArrayList<>();
-            for (Integer sum : this.sums) {
-                for (Integer oldPoints : getPoints(domino)) {
-                    newSum.add(sum + oldPoints);
-                }
-            }
-            return new Points(newSum);
-        }
-
-        public Integer resolve() {
-            return sums.stream().map(i -> i % 10).map(i -> i == 0 ? 10 : i).max(Integer::compareTo).orElseThrow();
-        }
-
-        private static boolean isGeeJoon(Domino domino) {
-            return geeJoon.contains(domino);
-        }
-
+        Mod10Rule.Points points = Mod10Rule.DA_LING.getPoints(Arrays.asList(dominos));
+        return points.getMax();
     }
 
 }

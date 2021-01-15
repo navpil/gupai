@@ -24,15 +24,47 @@ public class RunGamblingGame {
         }
     }
 
-    enum ChangeBanker {
-        TRUE, FALSE
+    public enum RunResult {
+        CHANGE_BANKER, KEEP_BANKER, STOP_THE_GAME;
     }
 
-    public interface SimulationFunction<X, Y> {
-        ChangeBanker runSimulation(List<Domino> dominos, List<X> players, Y ruleSet, int banker);
+    public interface SimulationFunctionWithRuleSet<X, Y> {
+        RunResult runSimulation(List<Domino> dominos, List<X> players, Y ruleSet, int banker);
     }
 
-    public  <T extends Gambler, RuleSet> List<T> runManyGames(List<Domino> deck, List<T> gamblers, int maxSimCount, RuleSet ruleSet, boolean casinoGame, SimulationFunction<T, RuleSet> simFunction) {
+    public interface SimulationFunction<X> {
+        RunResult runSimulation(List<Domino> dominos, List<X> players, int banker);
+    }
+
+    /**
+     * Allows to run several gambling games in a row
+     *
+     * @param deck deck to use (usually chinese deck of 32 dominoes)
+     * @param gamblers gamblers are players and a banker (if he is dedicated)
+     * @param maxSimCount maximum number of simulations to run
+     * @param casinoGame if set to true, game is CASINO and banker does not change, if set to false, game is FRIENDLY with a round robin banker
+     * @param simFunction function to run
+     * @param <T> player type
+     * @return players which are still in the game
+     */
+    public  <T extends Gambler> List<T> runManyGames(List<Domino> deck, List<T> gamblers, int maxSimCount, boolean casinoGame, SimulationFunction<T> simFunction) {
+        return runManyGames(deck, gamblers, maxSimCount, null, casinoGame, (dominos, players, ruleSet, banker) -> simFunction.runSimulation(dominos, players, banker));
+    }
+
+    /**
+     * Allows to run several gambling games in a row
+     *
+     * @param deck deck to use (usually chinese deck of 32 dominoes)
+     * @param gamblers gamblers are players and a banker (if he is dedicated)
+     * @param maxSimCount maximum number of simulations to run
+     * @param ruleSet rule set is simply passed to the simulation function, can be anything
+     * @param casinoGame if set to true, game is CASINO and banker does not change, if set to false, game is FRIENDLY with a round robin banker
+     * @param simFunction function to run
+     * @param <T> player type
+     * @param <RuleSet> rule set can be anything
+     * @return players which are still in the game
+     */
+    public  <T extends Gambler, RuleSet> List<T> runManyGames(List<Domino> deck, List<T> gamblers, int maxSimCount, RuleSet ruleSet, boolean casinoGame, SimulationFunctionWithRuleSet<T, RuleSet> simFunction) {
         List<T> players = new ArrayList<>(gamblers);
         int sim = maxSimCount;
         int banker = 0;
@@ -43,7 +75,10 @@ public class RunGamblingGame {
             }
             Collections.shuffle(deck);
 
-            final ChangeBanker changeBanker = simFunction.runSimulation(deck, players, ruleSet, banker);
+            final RunResult runResult = simFunction.runSimulation(deck, players, ruleSet, banker);
+            if (runResult == RunResult.STOP_THE_GAME) {
+                break game_loop;
+            }
 
             if (!casinoGame) {
                 System.out.println(players.get(banker).getName() + " got " + players.get(banker).getMoney());
@@ -59,7 +94,7 @@ public class RunGamblingGame {
                     break game_loop;
                 }
             } else {
-                int nextBanker = changeBanker == ChangeBanker.TRUE ? banker + 1 : banker;
+                int nextBanker = runResult == RunResult.CHANGE_BANKER ? banker + 1 : banker;
                 for (int i = 0; i <= banker; i++) {
                     if (players.get(i).isBankrupt()) {
                         nextBanker--;

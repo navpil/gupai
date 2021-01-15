@@ -49,15 +49,26 @@ Not in plans:
 **Kol-ye-si** seems to give a preference to a player, not a banker, maybe there is no point in improving the AI. 
 Same probably goes for DaLing.
 
+**DaLing** rules are not clear at all. 
+Therefore, at least two variations were created. 
+In a first one players should outrank the banker's hand. 
+Since banker is at a disadvantage in this game, game is better played as a non-casino (friendly) with a round-robin banker.
+There is no use of RED/BLACK game type described in the rules.
+The second variation is an *exact point* game where players should match the banker's hand exactly.
+It can be played in both casino and friendly way.
+This game already uses the RED/BLACK game type evaluation.
+Rules do not specify what should happen if no one matches banker's hands or what happens if several players are in a tie.
+Because of these uncertainties I had to create the rules I saw fit.
+
 Make all games to use RunGamblingGame
 
 Todo list:
 
  - PaiGow - This can be done as the last game, since it is not so difficult and it's actually popular.
- - DaLing (probability calculation included already)
 
 Included games:
  
+ - DaLing
  - Kol-ye-si, wishlist:
      - extract strategies of choosing the count and a stake
      - use genetic algorithm for finding out best stake strategy

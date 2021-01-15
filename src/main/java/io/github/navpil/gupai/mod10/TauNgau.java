@@ -7,14 +7,11 @@ import io.github.navpil.gupai.util.CollectionUtil;
 import io.github.navpil.gupai.util.HashBag;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 
 public class TauNgau {
@@ -101,30 +98,26 @@ public class TauNgau {
 
         @Override
         public Collection<Domino> discard() {
-            final ArrayList<Domino> dominoList = new ArrayList<>(dominos);
-            final StringBuilder sb = new StringBuilder("Which dominos you'd like to discard (strictly comma-separated)?\n");
-            for (int i = 0; i < dominoList.size(); i++) {
-                sb.append(i + 1).append(") ").append(dominoList.get(i)).append("\n");
-            }
+            List<Domino> discard;
+            do {
+                discard = consoleInput.multiChoice(new ArrayList<>(dominos), true, "Which dominos you'd like to discard (choose 3 or none)?");
+            } while (!discardIsValid(discard));
+            return withRemoved(discard);
+        }
 
-            final String discardAsString = consoleInput.readString((s) -> {
-                        if ("0".equals(s)) {
-                            return true;
-                        }
-                        final Set<String> validValues = Set.of("1", "2", "3", "4", "5");
-                        final List<String> values = Arrays.asList(s.split(","));
-                        final HashSet<String> set = new HashSet<>(values);
-                        return set.size() == 3 && validValues.containsAll(values);
-                    }, sb.toString(), "Invalid input"
-            );
-            final List<Integer> indexes = Arrays.stream(discardAsString.split(",")).map(Integer::parseInt).collect(Collectors.toList());
-            if (indexes.size() == 1) {
-                return Collections.emptyList();
-            } else {
-                final List<Domino> discard = indexes.stream().map(i -> dominoList.get(i - 1)).collect(Collectors.toList());
-                this.dominos.strictRemoveAll(discard);
-                return discard;
+        private Collection<Domino> withRemoved(List<Domino> discard) {
+            dominos.strictRemoveAll(discard);
+            return discard;
+        }
+
+        private boolean discardIsValid(List<Domino> discard) {
+            if (discard.isEmpty()) {
+                return true;
             }
+            if (discard.size() != 3) {
+                return false;
+            }
+            return Mod10Rule.TAU_NGAU.getPoints(discard).isMod10();
         }
     }
 
@@ -204,7 +197,7 @@ public class TauNgau {
         new RunGamblingGame().runManyGames(deck, gamblers, 100, null, true, (dominos, players, ruleSet, banker) -> runSimulation(dominos, players, banker));
     }
 
-    public static RunGamblingGame.ChangeBanker runSimulation(List<Domino> dominos, List<Player> players, int bankerIndex) {
+    public static RunGamblingGame.RunResult runSimulation(List<Domino> dominos, List<Player> players, int bankerIndex) {
 
         final HashMap<String, Integer> bets = new HashMap<>();
         final HashMap<String, Boolean> discards = new HashMap<>();
@@ -275,9 +268,9 @@ public class TauNgau {
         }
         System.out.println(players.stream().map(p -> p.getName() + ": " + p.getMoney()).collect(Collectors.toList()));
         if (bankerDiscarded) {
-            return RunGamblingGame.ChangeBanker.TRUE;
+            return RunGamblingGame.RunResult.CHANGE_BANKER;
         } else {
-            return RunGamblingGame.ChangeBanker.FALSE;
+            return RunGamblingGame.RunResult.KEEP_BANKER;
         }
 
     }
