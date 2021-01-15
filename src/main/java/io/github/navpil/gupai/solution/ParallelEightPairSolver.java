@@ -11,6 +11,10 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+/**
+ * Solves two Eight pairs in 2 threads in parallel - one for military pairs , one for civil pairs,
+ * whichever ends first
+ */
 public class ParallelEightPairSolver {
 
     public Solution solve(List<Triplet> triplets) {

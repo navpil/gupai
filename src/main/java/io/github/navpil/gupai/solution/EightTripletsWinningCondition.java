@@ -7,6 +7,9 @@ import io.github.navpil.gupai.Triplet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Eight triplets winning condition is that pairs in the middle should be all strictly civil or all strictly military
+ */
 public class EightTripletsWinningCondition implements WinningCondition {
 
     private final Set<Combination> expectedPairs;

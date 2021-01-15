@@ -1,10 +1,10 @@
 package io.github.navpil.gupai;
 
-public class Tuple {
+public class TripletEvaluation {
     private final Combination combination;
     private final Combination pairPotential;
 
-    public Tuple(Combination combination, Combination pairPotential) {
+    public TripletEvaluation(Combination combination, Combination pairPotential) {
         this.combination = combination;
         this.pairPotential = pairPotential;
     }

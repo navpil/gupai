@@ -7,6 +7,9 @@ import io.github.navpil.gupai.dominos.NoDomino;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Parses dominos from a string
+ */
 public class DominoParser {
 
     /**

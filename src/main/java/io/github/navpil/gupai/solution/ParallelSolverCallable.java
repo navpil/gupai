@@ -10,13 +10,16 @@ import java.util.concurrent.Executor;
 import java.util.concurrent.ExecutorCompletionService;
 import java.util.concurrent.Future;
 
-public class ParallelSolver2 implements Callable<Solution>{
+/**
+ * Will return the first successful result, if any exists
+ */
+public class ParallelSolverCallable implements Callable<Solution>{
 
     private final Executor e;
     private final Collection<? extends Callable<Solution>> solvers;
 
-    public ParallelSolver2(Executor e,
-                           Collection<? extends Callable<Solution>> solvers) {
+    public ParallelSolverCallable(Executor e,
+                                  Collection<? extends Callable<Solution>> solvers) {
         this.e = e;
         this.solvers = solvers;
 
@@ -24,6 +27,7 @@ public class ParallelSolver2 implements Callable<Solution>{
 
     public Solution call()
             throws InterruptedException {
+        //CompletionService will return tasks in order of completion
         CompletionService<Solution> ecs
                 = new ExecutorCompletionService<>(e);
         int n = solvers.size();

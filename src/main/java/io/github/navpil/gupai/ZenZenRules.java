@@ -14,6 +14,13 @@ public class ZenZenRules {
 
     private static final Map<Set<IDomino>, Combination> pairPotentialCache = new HashMap<>();
 
+    /**
+     * Pair potential means that these three dominoes contain a pair in them.
+     * In case one of the dominoes is NoDomino (three dominoes represent a pair) then the pair potential is none.
+     *
+     * @param dominoes 3 dominos to check whether they contain a pair
+     * @return Pair type
+     */
     public static Combination calculatePairPotential(List<IDomino> dominoes) {
         for (IDomino domino : dominoes) {
             if (domino.getPips().length == 0) {
@@ -34,6 +41,12 @@ public class ZenZenRules {
         return isPair(second, third);
     }
 
+    /**
+     * Calculate a combination from a given dominoes
+     *
+     * @param dominoes 3 dominoes
+     * @return pair or triplet type if any
+     */
     public static Combination calculateCombination(List<? extends IDomino> dominoes) {
         int totalSize = 0;
         for (IDomino dominoe : dominoes) {
@@ -148,7 +161,6 @@ public class ZenZenRules {
             }
             //This is a special case, because otherwise 3-3 3-3 1-1 may wrongly be considered as FIVE_POINTS (3-3-3 3+1+1)
             // or 6-6 6-6 4-4 be considered as SPLENDID (6-6-6 6+4+4)
-            //It's not clear whether above sequences are valid combinations, but I assume that no.
             return Combination.none;
         }
         number = findThreeRun(pips);

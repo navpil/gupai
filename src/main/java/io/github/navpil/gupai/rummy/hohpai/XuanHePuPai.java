@@ -239,7 +239,6 @@ public class XuanHePuPai {
             }
             //This is a special case, because otherwise 3-3 3-3 1-1 may wrongly be considered as FIVE_POINTS (3-3-3 3+1+1)
             // or 6-6 6-6 4-4 be considered as SPLENDID (6-6-6 6+4+4)
-            //It's not clear whether above sequences are valid combinations, but I assume that no.
             return Combination.none;
         }
         if (!includeFourteenAndFive) {

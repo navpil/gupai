@@ -20,6 +20,6 @@ public class CheckSupremeWithParsing {
         final List<Triplet> triplets = TripletParser.parse(s);
 
         final ExactPairWinningCondition exactPairWinningCondition = new ExactPairWinningCondition(Combination.SUPREME);
-        Visualizer.visualize(new ParallelSolver().solve(triplets, exactPairWinningCondition));
+        Visualizer.visualize(new ParallelSolver(6, 600).solve(triplets, exactPairWinningCondition));
     }
 }

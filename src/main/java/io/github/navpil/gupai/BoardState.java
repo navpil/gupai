@@ -1,19 +1,23 @@
 package io.github.navpil.gupai;
 
 import io.github.navpil.gupai.dominos.IDomino;
+import io.github.navpil.gupai.util.Bag;
 
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * Used to keep track of which boards were already analyzed
+ */
 public class BoardState {
 
-    private final HashSet<List<IDomino>> board;
+    private final HashSet<Bag<IDomino>> board;
 
     public BoardState(List<Triplet> triplets) {
         board = new HashSet<>();
         for (Triplet triplet : triplets) {
-            board.add(triplet.asList());
+            board.add(triplet.asBag());
         }
     }
 

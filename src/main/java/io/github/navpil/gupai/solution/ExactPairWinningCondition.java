@@ -6,6 +6,9 @@ import io.github.navpil.gupai.Triplet;
 
 import java.util.List;
 
+/**
+ * In order to win a pair in the middle should be exactly as a specified
+ */
 public class ExactPairWinningCondition implements WinningCondition {
 
     private final Combination expectedPair;

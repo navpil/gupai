@@ -2,6 +2,9 @@ package io.github.navpil.gupai;
 
 import java.util.Set;
 
+/**
+ * enum representing various combination types
+ */
 public enum Combination {
 
     none,

@@ -13,13 +13,46 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Predicate;
 
+/**
+ * A simplest solver
+ */
 public class Solver {
 
+    /**
+     * How many moves in succession can a solver make, which do not increase the number of valid combinations
+     * If set to 0 every next move should result in an additional combination.
+     *
+     * Why this is important - sometimes you may simply shuffle the tiles around, so that two valid combinations
+     * after the tile exchange are still two valid (even though different) combination.
+     * If the number is too high, then we are probably not moving too far, but when it's too low, some solutions
+     * can be missed
+     */
     private final int maxNoValueAdded;
+
+    /**
+     * How to compare move with each other and which move should have a preference
+     */
     private final Comparator<Move> moveComparator;
+
+    /**
+     * Simplest winning condition is that all triplets are valid, but there are more complex winning solutions
+     */
     private final Predicate<List<Triplet>> winningCondition;
+
+    /**
+     * Should we remember states, so that we don't try to evaluate a situation we saw before.
+     * Affects a memory usage
+     */
     private final boolean rememberState = true;
+
+    /**
+     * Remembered states
+     */
     private final Set<BoardState> states = new HashSet<>();
+
+    /**
+     * This flag is used in a concurrent environment
+     */
     private boolean stopExecution = false;
 
     public Solver() {

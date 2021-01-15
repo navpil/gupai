@@ -126,9 +126,9 @@ Todo list:
 
  - Five rows (strict, 5 generals, 2:1 escape)
 
-In progress: 
+Done: 
 
- - XiangShiFu - is computer driven, need to add a Player interaction 
+ - XiangShiFu 
 
 Not in plans:
 

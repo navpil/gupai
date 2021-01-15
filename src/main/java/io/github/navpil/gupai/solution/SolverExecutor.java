@@ -5,6 +5,9 @@ import io.github.navpil.gupai.Triplet;
 import java.util.List;
 import java.util.concurrent.Callable;
 
+/**
+ * Helper class to move solver into a concurrent environment
+ */
 public class SolverExecutor implements Callable<Solution> {
 
     private final Solver solver;

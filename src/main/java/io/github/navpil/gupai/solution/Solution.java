@@ -7,6 +7,9 @@ import io.github.navpil.gupai.Triplet;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Represents a solution with moves and initial triplets
+ */
 public class Solution {
 
     private final List<Move> moves;
