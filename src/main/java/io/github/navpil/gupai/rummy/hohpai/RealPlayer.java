@@ -22,7 +22,7 @@ public class RealPlayer extends AbstractPlayer {
     }
 
     @Override
-    public boolean hasWon() {
+    public boolean won() {
         final List<Hand> winningHands = getHands().stream().filter(Hand::isWinningHand).collect(Collectors.toList());
         if (winningHands.isEmpty()) {
             return false;
@@ -41,7 +41,7 @@ public class RealPlayer extends AbstractPlayer {
     }
 
     @Override
-    public Domino getDiscard() {
+    public Domino discard() {
         final int choice = choice(dominos, false, "Which domino would you like to discard?", consoleInput);
         return dominos.remove(choice - 1);
     }

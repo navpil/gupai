@@ -6,32 +6,138 @@ import io.github.navpil.gupai.dominos.Domino;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 public class XuanHePuPai {
 
     public enum Pairs {
-        NONE, CHINESE, KOREAN
+        CHINESE(
+                Set.of(
+                        militaries(63, 54),
+                        militaries(62, 53),
+                        militaries(43, 52),
+                        militaries(41, 32),
+                        militaries(42, 21)
+                )
+        ),
+
+        KOREAN(
+                Set.of(
+                        militaries(63, 62),
+                        militaries(53, 52),
+                        militaries(43, 42),
+                        militaries(41, 32),
+                        militaries(54, 21)
+                )
+        ),
+        NONE(
+                Collections.emptySet()
+        );
+
+        private final Set<Set<Domino>> militaries;
+        private final Map<Domino, Domino> otherMap;
+
+        Pairs(Set<Set<Domino>> militaries) {
+            this.militaries = militaries;
+            final HashMap<Domino, Domino> map = new HashMap<>();
+            for (Set<Domino> military : militaries) {
+                final Iterator<Domino> it = military.iterator();
+                final Domino one = it.next();
+                final Domino two = it.next();
+                map.put(one, two);
+                map.put(two, one);
+            }
+            otherMap = Collections.unmodifiableMap(map);
+        }
+
+        private static Set<Domino> militaries(int p1, int p2) {
+            return Set.of(Domino.of(p1), Domino.of(p2));
+        }
+
+
+        public boolean validPairCombination(Collection<Domino> dominoes) {
+            final List<Domino> civilsOnly = dominoes.stream().filter(Domino::isCivil).sorted().collect(Collectors.toList());
+            if (civilsOnly.size() % 2 != 0) {
+                return false;
+            }
+            for (int i = 0; i < civilsOnly.size(); i += 2) {
+                if (!civilsOnly.get(i).equals(civilsOnly.get(i + 1))) {
+                    return false;
+                }
+            }
+            final Set<Domino> militaries = new HashSet<>(dominoes.stream().filter(Domino::isMilitary).collect(Collectors.toSet()));
+            if (militaries.size() % 2 != 0) {
+                return false;
+            }
+            for (Set<Domino> military : this.militaries) {
+                final boolean b = militaries.removeAll(military);
+                if (b && militaries.size() % 2 != 0) {
+                    return false;
+                }
+            }
+            return true;
+        }
+
+        public Domino other(Domino domino) {
+            if (domino.isCivil()) {
+                return domino;
+            }
+            return otherMap.get(domino);
+        }
     }
 
+    /**
+     * Sok are COINCIDENCE and FIVE_SONS - sometimes not used in a Ho-Hpai game
+     */
     private final boolean includeSok;
+
+    /**
+     * Special Ho-Hpai combination (e.g. [3:1][3:2][3:3][3:4][3:5][3:6]
+     */
     private final boolean includeStraight;
+
+    /**
+     * According to Culin 3 pairs is a valid combination in Ho-Hpai, if I read him correctly
+     */
+    private final boolean includeThreePairs;
+
+    /**
+     * 2-2-3-3-6-6 may be replaced by 2-3-3-4-4-5 in some XiangShiFu rules
+     */
     private final boolean includeErSanKao;
+    /**
+     * 2-3-3-4-4-5 used in some XiangShiFu rules
+     */
     private final boolean includeMiddleFour;
+
+    /**
+     * Ho-hpai does not use SPLENDID and FIVE_POINTS
+     */
     private final boolean includeFourteenAndFive;
+
+    /**
+     * Which kind of pairs is used in a game - Korean, Chinese or none
+     */
     private final Pairs pairs;
 
     public XuanHePuPai(
             boolean includeSok,
             boolean includeStraight,
+            boolean includeThreePairs,
             boolean includeErSanKao,
             boolean includeMiddleFour,
             boolean includeFourteenAndFive,
             Pairs pairs) {
         this.includeSok = includeSok;
         this.includeStraight = includeStraight;
+        this.includeThreePairs = includeThreePairs;
         this.includeErSanKao = includeErSanKao;
         this.includeMiddleFour = includeMiddleFour;
         this.includeFourteenAndFive = includeFourteenAndFive;
@@ -39,7 +145,7 @@ public class XuanHePuPai {
     }
 
     public static XuanHePuPai hoHpai(boolean includeSok) {
-        return new XuanHePuPai(includeSok, true, true, false, false, Pairs.KOREAN);
+        return new XuanHePuPai(includeSok, true, true, true, false, false, Pairs.KOREAN);
     }
 
     public static XuanHePuPai hoHpai() {
@@ -47,11 +153,11 @@ public class XuanHePuPai {
     }
 
     public static XuanHePuPai xiangShiFu() {
-        return new XuanHePuPai(false, false, true, false, true, Pairs.CHINESE);
+        return new XuanHePuPai(false, false, false, true, false, true, Pairs.CHINESE);
     }
 
     public static XuanHePuPai xiangShiFuModern() {
-        return new XuanHePuPai(false, false, false, true, true, Pairs.CHINESE);
+        return new XuanHePuPai(false, false, false, false, true, true, Pairs.CHINESE);
     }
 
     public enum Combination {
@@ -83,6 +189,7 @@ public class XuanHePuPai {
 
         //Ho-hpai specials
         STRAIGHT,
+        THREE_PAIRS,
 
         //Pairs
         CIVIL_PAIR,
@@ -161,16 +268,23 @@ public class XuanHePuPai {
                 pips[counter++] = p[1];
             }
             return isTriplet(pips);
-        } else if (includeStraight && dominos.size() == 6) {
-            final List<Domino> doubles = dominos.stream().filter(DominoUtil::isDouble).collect(Collectors.toList());
-            if (doubles.size() == 1) {
-                final int pip = doubles.get(0).getPips()[0];
-                int[] pips = new int[7];
-                for (Domino domino : dominos) {
-                    pips[other(domino.getPips(), pip)]++;
+        } else if ((includeThreePairs || includeStraight) && dominos.size() == 6) {
+            if (includeStraight) {
+                final List<Domino> doubles = dominos.stream().filter(DominoUtil::isDouble).collect(Collectors.toList());
+                if (doubles.size() == 1) {
+                    final int pip = doubles.get(0).getPips()[0];
+                    int[] pips = new int[7];
+                    for (Domino domino : dominos) {
+                        pips[other(domino.getPips(), pip)]++;
+                    }
+                    if (Arrays.equals(pips, new int[]{0, 1, 1, 1, 1, 1, 1})) {
+                        return Combination.STRAIGHT;
+                    }
                 }
-                if (Arrays.equals(pips, new int[]{0, 1, 1, 1, 1, 1, 1})) {
-                    return Combination.STRAIGHT;
+            }
+            if (includeThreePairs) {
+                if (pairs.validPairCombination(dominos)) {
+                    return Combination.THREE_PAIRS;
                 }
             }
         } else if (pairs != Pairs.NONE && dominos.size() == 2) {

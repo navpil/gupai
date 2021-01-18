@@ -93,6 +93,15 @@ public abstract class AbstractBag<T> extends AbstractCollection<T> implements Ba
 
     protected abstract AbstractBag<T> constructorCall();
 
+    public <T> int count(T key) {
+        final MutableInteger mutableInteger = getMap().get(key);
+        if (mutableInteger == null) {
+            return 0;
+        } else {
+            return mutableInteger.getCount();
+        }
+    }
+
 
     private class BagIterator implements Iterator<T> {
 

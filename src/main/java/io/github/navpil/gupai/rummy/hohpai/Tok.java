@@ -1,4 +1,4 @@
-package io.github.navpil.gupai.rummy.jjakmatchugi;
+package io.github.navpil.gupai.rummy.hohpai;
 
 import io.github.navpil.gupai.ChineseDominoSet;
 import io.github.navpil.gupai.dominos.Domino;
@@ -7,42 +7,46 @@ import io.github.navpil.gupai.fishing.tsungshap.RunManySimulations;
 import io.github.navpil.gupai.jielong.Stats;
 import io.github.navpil.gupai.util.CombineCollection;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
-public class JjakMatChuGi {
+public class Tok {
 
     public static void main(String[] args) {
 
         boolean humanPlayerIncluded = false;
+
         final List<Player> players = List.of(
                 new CleverPlayer("Comp1"),
                 new CleverPlayer("Comp2"),
                 new CleverPlayer("Clever-Comp3"),
-                humanPlayerIncluded ? new HumanPlayer("Jim") : new CleverPlayer("Clever-Comp4")
+                humanPlayerIncluded ? new RealPlayer("Jim") : new CleverPlayer("Clever-Comp4")
         );
 
-        final JjakMatChuGi jjakMatChuGi = new JjakMatChuGi();
+        final Tok tok = new Tok();
         final int simCount = 1000;
         new RunManySimulations().runManySimulations(
                 ChineseDominoSet.create(),
                 players,
-                new RuleSet(RuleSet.Pairs.KOREAN, true, true),
+                RuleSet.withSok(),
                 simCount,
-                jjakMatChuGi::runSimulation,
+                tok::runSimulation,
                 RunManySimulations.PointsCalculationType.KEEP_AS_IS
         );
 
-        System.out.println("Out of " + simCount + " " + jjakMatChuGi.wonGames + " were won (" + (100.0 * jjakMatChuGi.wonGames / simCount) + "%)");
+        System.out.println("Out of " + simCount + " " + tok.wonGames + " were won (" + (100.0 * tok.wonGames / simCount) + "%)");
     }
 
     private int wonGames;
 
     private Stats runSimulation(List<Domino> dominos, List<? extends Player> players, RuleSet ruleSet, int whoGoesFirst) {
+        final XuanHePuPai xuanHePuPai = XuanHePuPai.hoHpai(ruleSet.useSok());
         final int cardsPerPlayer = 5;
         final LinkedList<Domino> woodpile = new LinkedList<>(dominos.subList(players.size() * cardsPerPlayer, dominos.size()));
-        final Table table = new Table(ruleSet);
+        final TokTable table = new TokTable(woodpile, ruleSet);
+
         for (int i = 0; i < players.size(); i++) {
             final Player player = players.get(i);
             final List<Domino> deal = dominos.subList(i * cardsPerPlayer, (i + 1) * cardsPerPlayer);
@@ -50,53 +54,30 @@ public class JjakMatChuGi {
             System.out.println("Player " + player.getName() + " was dealt " + deal);
             player.showTable(table);
         }
+
         final CircularInteger playerIndex = new CircularInteger(players.size(), whoGoesFirst);
-        boolean wonWithDiscard = false;
         boolean playerWon = false;
-        if (ruleSet.isForceShowPairs()) {
-            int i = 0;
-            for (Player player : players) {
-                Collection<Domino> extractedPairs = player.extractPairs();
-                if (!extractedPairs.isEmpty()) {
-                    System.out.println(player.getName() + " shown pairs: " + extractedPairs);
-                    table.addCombination(i, extractedPairs);
-                }
-                i++;
-            }
-        }
-        int lastDiscarded = 0;
         game_loop:
+
         while(!woodpile.isEmpty()) {
             final int current = playerIndex.current();
             Player player = players.get(current);
             boolean discardTaken = false;
             if (table.lastDiscard() != null) {
-                if (ruleSet.isOfferToAll()) {
-                    int playerCounter = 0;
-                    while (playerCounter < players.size() && !discardTaken) {
-                        Collection<Domino> combination = player.offer(table.lastDiscard());
-                        if (!combination.isEmpty()) {
-                            System.out.println(player.getName() + " took the " + table.lastDiscard() + " and created a combination " + combination);
-                            discardTaken = true;
-                            if (!isValid(combination, ruleSet)) {
-                                throw new IllegalStateException("Combination " + combination + " is invalid");
-                            }
-                            table.addCombination(playerIndex.current(), combination);
-                        }
-                        if (!discardTaken) {
-                            playerCounter++;
-                            player = players.get(playerIndex.next());
-                        }
-                    }
-                } else {
+                int playerCounter = 0;
+                while (playerCounter < players.size() && !discardTaken) {
                     Collection<Domino> combination = player.offer(table.lastDiscard());
                     if (!combination.isEmpty()) {
                         System.out.println(player.getName() + " took the " + table.lastDiscard() + " and created a combination " + combination);
                         discardTaken = true;
-                        if (!isValid(combination, ruleSet)) {
+                        if (!validCombination(combination, xuanHePuPai)) {
                             throw new IllegalStateException("Combination " + combination + " is invalid");
                         }
                         table.addCombination(playerIndex.current(), combination);
+                    }
+                    if (!discardTaken) {
+                        playerCounter++;
+                        player = players.get(playerIndex.next());
                     }
                 }
             }
@@ -107,41 +88,30 @@ public class JjakMatChuGi {
             }
             if (player.won()) {
                 playerWon = true;
-                final CombineCollection<Domino> winningHand = new CombineCollection<>(List.of(table.getCombinations(playerIndex.current()), player.getWinningHand()));
-                if (!isValid(winningHand, ruleSet)) {
+                final Hand winningHand1 = player.getWinningHand();
+                if (!winningHand1.isWinningHand()) {
+                    throw new IllegalStateException("Player has not won with " + winningHand1);
+                }
+                final CombineCollection<? extends Collection<Domino>> winningHand = new CombineCollection<>(List.of(table.getCombinations(playerIndex.current()), new ArrayList<>(winningHand1.getCombinations())));
+                if (!validCombinations(winningHand, xuanHePuPai)) {
                     throw new IllegalStateException("Combination " + winningHand + " is invalid");
                 } else {
-                    if (discardTaken) {
-                        wonWithDiscard = true;
-                    }
-                    System.out.println("Player " + player.getName() + " won with " + winningHand + (wonWithDiscard ? " from a discard ":""));
+                    System.out.println("Player " + player.getName() + " won with " + winningHand);
                     wonGames++;
                     break game_loop;
                 }
             }
-            if (ruleSet.isForceShowPairs()) {
-                Collection<Domino> extractedPairs = player.extractPairs();
-                if (!extractedPairs.isEmpty()) {
-                    System.out.println(player.getName() + " shown pairs: " + extractedPairs);
-                    table.addCombination(playerIndex.current(), extractedPairs);
-                }
-            }
             final Domino discard = player.discard();
             System.out.println(player.getName() + " discarded " + discard);
-            table.addDiscard(discard);
-            lastDiscarded = playerIndex.current();
+            table.discard(discard);
             playerIndex.next();
         }
         final Stats stats = new Stats();
         if (playerWon) {
             final int stakesWon = players.size() - 1;
             stats.put(players.get(playerIndex.current()).getName(), stakesWon);
-            if (wonWithDiscard) {
-                stats.put(players.get(lastDiscarded).getName(), -stakesWon);
-            } else {
-                for (int i = 0; i < players.size() - 1; i++) {
-                    stats.put(players.get(playerIndex.next()).getName(), -1);
-                }
+            for (int i = 0; i < players.size() - 1; i++) {
+                stats.put(players.get(playerIndex.next()).getName(), -1);
             }
         } else {
             System.out.println("No one won");
@@ -152,7 +122,15 @@ public class JjakMatChuGi {
         return stats;
     }
 
-    private static boolean isValid(Collection<Domino> combination, RuleSet ruleSet) {
-        return ruleSet.getPairsType().validPairCombination(combination);
+    public static boolean validCombinations(Collection<? extends Collection<Domino>> combination, XuanHePuPai ruleSet) {
+        for (Collection<Domino> c : combination) {
+            if (!validCombination(c, ruleSet)) {
+                return false;
+            }
+        }
+        return true;
+    }
+    private static boolean validCombination(Collection<Domino> combination, XuanHePuPai ruleSet) {
+        return ruleSet.evaluate(combination) != XuanHePuPai.Combination.none;
     }
 }

@@ -29,7 +29,7 @@ public class RandomPlayer extends AbstractPlayer {
 
 
     @Override
-    public Domino getDiscard() {
+    public Domino discard() {
 //        final Collection<Hand> hands = getHands();
 //        if (hands.isEmpty()) {
             return dominos.remove(random.nextInt(dominos.size()));

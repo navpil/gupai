@@ -33,8 +33,9 @@ public class DaLing {
 //                new ComputerPlayer("Comp-5", money, true)
                 new HumanPlayer("Mark", money)
         );
-        final DaLing daLing = new DaLing(RuleSet.macaoWithBanker());
-        new RunGamblingGame().runManyGames(deck, gamblers, 100, true, daLing::runSimulation);
+        final RuleSet ruleSet = RuleSet.macaoWithBanker();
+        final DaLing daLing = new DaLing(ruleSet);
+        new RunGamblingGame().runManyGames(deck, gamblers, 100, /*exact point game is best played with banker*/ruleSet.isExactPointGame(), daLing::runSimulation);
     }
 
     public static class PlayersGroup {

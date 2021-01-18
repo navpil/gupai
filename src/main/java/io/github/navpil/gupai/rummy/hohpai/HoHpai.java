@@ -16,12 +16,11 @@ public class HoHpai {
         //up to 6 can play with DRAW_FIRST rule
         //2 can also play, but same 24-tiles deck as for 3 players will apply
         final List<Player> players = List.of(
-            new RandomPlayer("Comp-1"),
-            new RandomPlayer("Comp-2"),
-            new RandomPlayer("Comp-3"),
-//            new RandomPlayer("Comp-4"),
-//            new RandomPlayer("Comp-5"),
-            new RealPlayer("Jim")
+            new CleverPlayer("Comp-1"),
+            new CleverPlayer("Comp-2"),
+            new CleverPlayer("Comp-3"),
+            new CleverPlayer("Comp-5")
+//            new RealPlayer("Jim")
         );
         final List<Domino> deck = ChineseDominoSet.create();
 
@@ -31,15 +30,21 @@ public class HoHpai {
             deck.removeAll(Domino.ofList(33, 44, 55, 66));
         }
 
+        final Simulation simulation = new Simulation(50);
+        final int simCount = 10000;
         final Stats stats = new RunManySimulations().runManySimulations(
                 deck,
                 players,
                 RuleSet.optimal(),
-                10,
-                Simulation::runSimulation
+                simCount,
+                simulation::runSimulation
         );
 
         System.out.println(stats);
+        System.out.println(simulation.getTotalRounds() * 1.0 / (simCount - simulation.getDeadends()));
+        System.out.println("Max total rounds: " + simulation.getMaxTotalRounds());
+        System.out.println(simulation.getDeadends() * 1.0 / simCount);
+        System.out.println(simulation.getDeadends());
     }
 
 

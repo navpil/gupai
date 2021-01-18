@@ -4,11 +4,24 @@ import io.github.navpil.gupai.fishing.CircularInteger;
 import io.github.navpil.gupai.dominos.Domino;
 import io.github.navpil.gupai.jielong.Stats;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class Simulation {
 
-    public static Stats runSimulation(List<Domino> dominos, List<Player> players, RuleSet ruleSet, int whoGoesFirst) {
+    private int totalRounds;
+    private int deadends;
+    private int maxTotalRounds;
+    private int [] maxTotalRoundsDistribution;
+
+    private final int cutoff;
+
+    public Simulation(int cutoff) {
+        this.cutoff = cutoff;
+        maxTotalRoundsDistribution = new int[cutoff];
+    }
+
+    public Stats runSimulation(List<Domino> dominos, List<Player> players, RuleSet ruleSet, int whoGoesFirst) {
         if (ruleSet.getGiveDiscardType() == RuleSet.GiveDiscardType.DISCARD_FIRST && players.size() > 5) {
             throw new IllegalStateException("Max players for DISCARD_FIRST type is 5");
         } else if (ruleSet.getGiveDiscardType() == RuleSet.GiveDiscardType.DRAW_FIRST && players.size() > 6) {
@@ -19,7 +32,7 @@ public class Simulation {
         int cardsPerPlayer = ruleSet.getGiveDiscardType() == RuleSet.GiveDiscardType.DISCARD_FIRST ? 6 : 5;
 
         //If table has an EYE, then table will take care of it itself
-        final Table table = new Table(dominos.subList(players.size() * cardsPerPlayer, dominos.size()), ruleSet);
+        final HoHpaiTable table = new HoHpaiTable(dominos.subList(players.size() * cardsPerPlayer, dominos.size()), ruleSet);
 
         for (int i = 0; i < players.size(); i++) {
             final Player player = players.get(i);
@@ -37,27 +50,42 @@ public class Simulation {
             if (round.current() == 0) {
                 roundNumber++;
                 System.out.println("---- Round " + roundNumber + " ----");
+                if (roundNumber >= cutoff) {
+                    deadends++;
+                    System.out.println(players);
+                    return new Stats();
+                }
             }
             Player player = players.get(currentPlayer.current());
 
             if (ruleSet.getGiveDiscardType() == RuleSet.GiveDiscardType.DRAW_FIRST) {
                 giveDomino(table, player);
                 Stats points = winCheck(table, player);
-                if (points != null) return points;
-            } else if (round.current() == 1) {
+                if (points != null) {
+                    totalRounds += roundNumber;
+                    maxTotalRounds = Math.max(maxTotalRounds, roundNumber);
+                    maxTotalRoundsDistribution[roundNumber]++;
+                    return points;
+                }
+            } else if (roundNumber == 1) {
                 //Special case for DISCARD_FIRST on a first round - check whether a player has a winning hand from start
                 Stats points = winCheck(table, player);
                 if (points != null) return points;
             }
 
-            final Domino discard = player.getDiscard();
+            final Domino discard = player.discard();
             System.out.println(player.getName() + " discarded " + discard);
-            table.add(discard);
+            table.discard(discard);
 
             if (ruleSet.getGiveDiscardType() == RuleSet.GiveDiscardType.DISCARD_FIRST) {
                 giveDomino(table, player);
                 Stats points = winCheck(table, player);
-                if (points != null) return points;
+                if (points != null){
+                    totalRounds += roundNumber;
+                    maxTotalRounds = Math.max(maxTotalRounds, roundNumber);
+                    maxTotalRoundsDistribution[roundNumber]++;
+                    return points;
+                }
             }
 
             currentPlayer.next();
@@ -65,14 +93,18 @@ public class Simulation {
         }
     }
 
-    private static void giveDomino(Table table, Player player) {
+    public int getDeadends() {
+        return deadends;
+    }
+
+    private static void giveDomino(HoHpaiTable table, Player player) {
         final Domino give = table.remove();
         System.out.println(player.getName() + " was given " + give);
         player.give(give);
     }
 
     private static Stats winCheck(Table table, Player player) {
-        if (player.hasWon()) {
+        if (player.won()) {
             System.out.println(player.getName() + " won with combinations " + player.getWinningHand());
             int points = new HandCalculator(table.getRuleSet()).calculatePoints(player.getWinningHand());
             return statsFor(player.getName(), points);
@@ -86,4 +118,11 @@ public class Simulation {
         return stats;
     }
 
+    public int getTotalRounds() {
+        return totalRounds;
+    }
+
+    public String getMaxTotalRounds() {
+        return maxTotalRounds + " ( " + Arrays.toString(maxTotalRoundsDistribution) + " )";
+    }
 }

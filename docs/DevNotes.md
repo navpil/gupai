@@ -101,17 +101,23 @@ Actually the game can last very few rounds - maybe the given Computer players ar
 
 Try including more strategy for **KapShap** computer player.
 
-**Ho-hpai** now has only Random Computer player and only an EYE fix for broken game.
-Should include more AI variation and probably other fixes (maybe include those into a separate game - Tok)
+**Ho-hpai** has only an EYE fix for broken game.
+There are four strategies for chossing a discard, including random strategy.
+Players may get into a zugzwang when no one accepts an offered tile.
+This does not happen often, less than 1 time per 1000 games, but still a fix is needed for the situation.
+To avoid a never ending game, a cutoff parameter was introduced - it will stop a game after some number of rounds.
+
+Wishlist:
+
+ - Introduce collecting straights and 3 pairs - current AI does not do that
+
+**Tok** reuses as much of the Ho-Hpai code as possible.
+Maybe it makes sense to introduce the Kap-Shap like rule 'offer-any-tile'?
 
 **Jjak-mat-chu-gi** is too restrictive, only 14% of games are won when 4 players play, 53% when 3 play and 88% when 2 play
 With the 'offer-to-all' rule, meaning that all the players are offered a discard, winning rate for 4 players is 90%.
 Should I add the KapShap-like rule 'offer-any-tile'?
 
-Todo list:
-
- - Tok (?): MahJong variation of Ho-hpai 
- 
 Included games:
 
  - Jjak-mat-chu-gi (3 classic pairs)
@@ -119,7 +125,8 @@ Included games:
  - KapShap
  - Small Mahjong
  - Ho-hpai
- 
+ - Tok: MahJong variation of Ho-hpai 
+  
 ## Single player games
 
 Todo list:

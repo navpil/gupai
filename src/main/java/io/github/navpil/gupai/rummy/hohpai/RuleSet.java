@@ -68,6 +68,10 @@ public class RuleSet {
         return new RuleSet(false, GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE, XuanHePuPai.Pairs.KOREAN);
     }
 
+    public static RuleSet withSok() {
+        return new RuleSet(true, GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE, XuanHePuPai.Pairs.KOREAN);
+    }
+
     public RuleSet(boolean useSok, GiveDiscardType giveDiscardType, BrokenGameFix fix, XuanHePuPai.Pairs pairs) {
         this.useSok = useSok;
         this.giveDiscardType = giveDiscardType;

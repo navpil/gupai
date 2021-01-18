@@ -10,7 +10,7 @@ public abstract class AbstractPlayer implements Player {
     private final String name;
     protected Table table;
     protected ArrayList<Domino> dominos;
-    private HandCalculator handCalculator;
+    protected HandCalculator handCalculator;
 
     public AbstractPlayer(String name) {
         this.name = name;
@@ -36,5 +36,13 @@ public abstract class AbstractPlayer implements Player {
     @Override
     public String getName() {
         return name;
+    }
+
+    @Override
+    public String toString() {
+        return "AbstractPlayer{" +
+                "name='" + name + '\'' +
+                ", dominos=" + dominos +
+                '}';
     }
 }

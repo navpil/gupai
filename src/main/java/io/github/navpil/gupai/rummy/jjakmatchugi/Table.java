@@ -12,7 +12,7 @@ public class Table {
     private final RuleSet ruleSet;
     private final Collection<Domino> discards = new ArrayList<>();
     private Domino lastDiscard;
-    private final Map<Integer, Collection<Domino>> dominoes = new HashMap<>();
+    private final Map<Integer, Collection<Domino>> combinations = new HashMap<>();
 
     public Table(RuleSet ruleSet) {
         this.ruleSet = ruleSet;
@@ -30,17 +30,17 @@ public class Table {
     }
 
     public void addCombination(int current, Collection<Domino> combination) {
-        if (!dominoes.containsKey(current)) {
-            dominoes.put(current, new ArrayList<>());
+        if (!combinations.containsKey(current)) {
+            combinations.put(current, new ArrayList<>());
         }
-        dominoes.get(current).addAll(combination);
+        combinations.get(current).addAll(combination);
     }
 
     public Collection<Domino> getCombinations(int player) {
-        if (!dominoes.containsKey(player)) {
-            dominoes.put(player, new ArrayList<>());
+        if (!combinations.containsKey(player)) {
+            combinations.put(player, new ArrayList<>());
         }
-        return dominoes.get(player);
+        return combinations.get(player);
     }
 
     public RuleSet getRuleSet() {

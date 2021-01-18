@@ -15,7 +15,6 @@ import java.util.Set;
 
 public class HandCalculator {
 
-    private final RuleSet ruleSet;
     private final XuanHePuPai xuanHePuPai;
     private static final Set<XuanHePuPai.Combination> PAIRS = Set.of(
             XuanHePuPai.Combination.CIVIL_PAIR,
@@ -30,7 +29,6 @@ public class HandCalculator {
 
     public HandCalculator(RuleSet ruleSet) {
         xuanHePuPai = XuanHePuPai.hoHpai(ruleSet.useSok());
-        this.ruleSet = ruleSet;
     }
 
     public int calculatePoints(Hand winningHand) {
@@ -135,42 +133,7 @@ public class HandCalculator {
                 }
             }
         }
-
-        if (ruleSet.getPairs() != XuanHePuPai.Pairs.NONE) {
-            final List<Domino> firstPair = findPair(dominos);
-            if (!firstPair.isEmpty()) {
-                final ArrayList<Domino> dominoCopy = new ArrayList<>(dominos);
-                for (Domino domino : firstPair) {
-                    dominoCopy.remove(domino);
-                }
-                final List<Domino> secondPair = findPair(dominoCopy);
-                if (secondPair.isEmpty()) {
-                    hands.add(new Hand(List.of(firstPair), dominoCopy));
-                } else {
-                    for (Domino domino : secondPair) {
-                        dominoCopy.remove(domino);
-                    }
-                    if (PAIRS.contains(xuanHePuPai.evaluate(dominoCopy))) {
-                        hands.add(new Hand(List.of(firstPair, secondPair, dominoCopy), Collections.emptyList()));
-                    } else {
-                        hands.add(new Hand(List.of(firstPair, secondPair), dominoCopy));
-                    }
-
-                }
-            }
-        }
         return hands;
     }
 
-    private List<Domino> findPair(List<Domino> dominos) {
-        for (int i = 0; i < dominos.size(); i++) {
-            for (int j = i + 1; j < dominos.size(); j++) {
-                final List<Domino> possiblePair = List.of(dominos.get(i), dominos.get(j));
-                if (xuanHePuPai.evaluate(possiblePair) != XuanHePuPai.Combination.none) {
-                    return possiblePair;
-                }
-            }
-        }
-        return Collections.emptyList();
-    }
 }

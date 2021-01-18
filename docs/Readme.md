@@ -504,6 +504,12 @@ If a player completes a hand from the "wall", everyone pays him.
 If a player completes a hand by the tile discarded by the previous player, only that player pays him.
 Players can agree that finishing the game by a discarded tile is forbidden.
 
+#### Broken rules fix
+
+The rule that only the previous discard can be taken is very restrictive.
+This results in very few games won in a 4-player game.
+The fix is to introduce the MahJong-like 'offer-to-all' rule. 
+
 #### Blind game variation
 
 Since the game relies mostly on luck, tiles can be put face down to introduce the guessing/memory element into the game.
