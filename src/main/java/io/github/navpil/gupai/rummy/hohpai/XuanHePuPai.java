@@ -294,13 +294,13 @@ public class XuanHePuPai {
             }
             if (pair.get(0).isMilitary()) {
                 if (pairs == Pairs.KOREAN) {
-                    if (KOREAN_MILITARY_PAIRS.get(pair.get(0)).equals(pair.get(1))) {
+                    if (pair.get(1).equals(KOREAN_MILITARY_PAIRS.get(pair.get(0)))) {
                         return Combination.MILITARY_KOREAN_PAIR;
                     }
                 } else {
-                    if (CHINESE_MILITARY_PAIRS.get(pair.get(0)).equals(pair.get(1))) {
+                    if (pair.get(1).equals(CHINESE_MILITARY_PAIRS.get(pair.get(0)))) {
                         return Combination.MILITARY_CHINESE_PAIR;
-                    } else if (SUPREME_PAIR.get(pair.get(0)).equals(pair.get(1))) {
+                    } else if (pair.get(1).equals(SUPREME_PAIR.get(pair.get(0)))) {
                         return Combination.SUPREME_PAIR;
                     }
                 }

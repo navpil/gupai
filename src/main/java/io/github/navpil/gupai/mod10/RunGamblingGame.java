@@ -70,6 +70,7 @@ public class RunGamblingGame {
         int banker = 0;
         game_loop:
         while (players.size() > 1 && sim-- > 0) {
+            System.out.println("---------" + (maxSimCount - sim) + "-------------");
             if (!casinoGame) {
                 System.out.println(players.get(banker).getName() + " is a Banker");
             }
@@ -105,6 +106,7 @@ public class RunGamblingGame {
                 banker = (nextBanker) % players.size();
             }
         }
+        System.out.println("----------END-----------");
 
         if (casinoGame) {
             final List<T> won = new ArrayList<>();

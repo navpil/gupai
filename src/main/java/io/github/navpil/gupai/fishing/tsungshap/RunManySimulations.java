@@ -12,15 +12,23 @@ public class RunManySimulations {
         WITH_EACH_OTHER, KEEP_AS_IS
     }
 
-    public interface SimulationFunction<X, Y> {
+    public interface SimulationFunctionWithRuleSet<X, Y> {
         Stats runSimulation(List<Domino> dominos, List<X> players, Y ruleSet, int whoGoesFirst);
     }
 
-    public <T extends NamedPlayer, RuleSet> Stats runManySimulations(List<Domino> deck, List<T> players, RuleSet rules, int simCount, SimulationFunction<T, RuleSet> f) {
+    public interface SimulationFunction<X> {
+        Stats runSimulation(List<Domino> dominos, List<X> players, int whoGoesFirst);
+    }
+
+    public  <Player extends NamedPlayer> Stats runManySimulations(List<Domino> deck, List<Player> players, int maxSimCount, SimulationFunction<Player> simFunction, PointsCalculationType pointsCalculationType) {
+        return runManySimulations(deck, players, null, maxSimCount, (d, p, rs, pc) -> simFunction.runSimulation(d, p, pc), pointsCalculationType);
+    }
+
+    public <T extends NamedPlayer, RuleSet> Stats runManySimulations(List<Domino> deck, List<T> players, RuleSet rules, int simCount, SimulationFunctionWithRuleSet<T, RuleSet> f) {
         return runManySimulations(deck, players, rules, simCount, f, PointsCalculationType.WITH_EACH_OTHER);
     }
 
-    public <T extends NamedPlayer, RuleSet> Stats runManySimulations(List<Domino> deck, List<T> players, RuleSet rules, int simCount, SimulationFunction<T, RuleSet> f, PointsCalculationType pointsCalculationType) {
+    public <T extends NamedPlayer, RuleSet> Stats runManySimulations(List<Domino> deck, List<T> players, RuleSet rules, int simCount, SimulationFunctionWithRuleSet<T, RuleSet> f, PointsCalculationType pointsCalculationType) {
         Stats overallStats = new Stats();
         for (NamedPlayer player : players) {
             overallStats.put(player.getName(), 0);

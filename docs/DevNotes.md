@@ -62,10 +62,6 @@ Because of these uncertainties I had to create the rules I saw fit.
 
 Make all games to use RunGamblingGame
 
-Todo list:
-
- - PaiGow - This can be done as the last game, since it is not so difficult and it's actually popular.
-
 Included games:
  
  - DaLing
@@ -73,6 +69,7 @@ Included games:
      - extract strategies of choosing the count and a stake
      - use genetic algorithm for finding out best stake strategy
  - Tau Ngau
+ - PaiGow (+ Small PaiGow)
 
 ## Fishing games
 

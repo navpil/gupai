@@ -122,7 +122,7 @@ public class Tok {
         return stats;
     }
 
-    public static boolean validCombinations(Collection<? extends Collection<Domino>> combination, XuanHePuPai ruleSet) {
+    private static boolean validCombinations(Collection<? extends Collection<Domino>> combination, XuanHePuPai ruleSet) {
         for (Collection<Domino> c : combination) {
             if (!validCombination(c, ruleSet)) {
                 return false;
