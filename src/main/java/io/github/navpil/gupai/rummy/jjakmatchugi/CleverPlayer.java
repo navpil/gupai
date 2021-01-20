@@ -1,6 +1,7 @@
 package io.github.navpil.gupai.rummy.jjakmatchugi;
 
 import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.Pairs;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -14,10 +15,10 @@ public class CleverPlayer extends AbstractPlayer {
 
     @Override
     public Collection<Domino> offer(Domino offer) {
-        final RuleSet.Pairs pairsType = table.getRuleSet().getPairsType();
+        final Pairs pairsType = table.getRuleSet().getPairsType();
         for (Domino domino : dominos) {
             final List<Domino> combination = List.of(domino, offer);
-            if (pairsType.validPairCombination(combination)) {
+            if (pairsType.validAllPairsCombination(combination)) {
                 dominos.remove(domino);
                 return combination;
             }
@@ -28,7 +29,7 @@ public class CleverPlayer extends AbstractPlayer {
     @Override
     public Domino discard() {
         final HashSet<Domino> deadTiles = new HashSet<>(table.allDeadTiles());
-        final RuleSet.Pairs pairsType = table.getRuleSet().getPairsType();
+        final Pairs pairsType = table.getRuleSet().getPairsType();
         for (Domino domino : this.dominos) {
             if (deadTiles.contains(pairsType.other(domino))) {
                 return removed(domino);

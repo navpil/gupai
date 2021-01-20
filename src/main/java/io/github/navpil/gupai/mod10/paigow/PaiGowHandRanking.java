@@ -1,8 +1,9 @@
 package io.github.navpil.gupai.mod10.paigow;
 
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.mod10.Mod10Rule;
-import io.github.navpil.gupai.XuanHePuPai;
+import io.github.navpil.gupai.XuanHePaiPu;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -96,11 +97,11 @@ public enum PaiGowHandRanking {
      * @return ranking
      */
     public int getOveralRanking(PaiGowPair pair) {
-        final XuanHePuPai.Combination combination = XuanHePuPai.xiangShiFu().evaluate(pair.getDominos());
-        if (combination == XuanHePuPai.Combination.SUPREME_PAIR) {
+        final CombinationType combination = XuanHePaiPu.xiangShiFu().evaluate(pair.getDominos());
+        if (combination == CombinationType.SUPREME_PAIR) {
             return 36;
         }
-        if (combination == XuanHePuPai.Combination.CIVIL_PAIR || combination == XuanHePuPai.Combination.MILITARY_CHINESE_PAIR) {
+        if (combination.isPair()) {
             return 10 + RANKING.get(pair.get(0));
         }
         if (isWong(pair)) {

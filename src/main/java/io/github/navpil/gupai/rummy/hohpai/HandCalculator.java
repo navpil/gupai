@@ -1,7 +1,8 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.DominoUtil;
-import io.github.navpil.gupai.XuanHePuPai;
+import io.github.navpil.gupai.XuanHePaiPu;
 import io.github.navpil.gupai.util.CollectionUtil;
 import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.util.HashBag;
@@ -16,21 +17,16 @@ import java.util.Set;
 
 public class HandCalculator {
 
-    private final XuanHePuPai xuanHePuPai;
-    private static final Set<XuanHePuPai.Combination> PAIRS = Set.of(
-            XuanHePuPai.Combination.CIVIL_PAIR,
-            XuanHePuPai.Combination.MILITARY_KOREAN_PAIR,
-            XuanHePuPai.Combination.MILITARY_CHINESE_PAIR,
-            XuanHePuPai.Combination.SUPREME_PAIR
-    );
+    private final XuanHePaiPu xuanHePaiPu;
+
     //1-2-3 and 4-5-6
-    private static final Set<XuanHePuPai.Combination> THREES = Set.of(
-            XuanHePuPai.Combination.BIG_THREE,
-            XuanHePuPai.Combination.SMALL_THREE
+    private static final Set<CombinationType> THREES = Set.of(
+            CombinationType.BIG_THREE,
+            CombinationType.SMALL_THREE
     );
 
     public HandCalculator(RuleSet ruleSet) {
-        xuanHePuPai = XuanHePuPai.hoHpai(ruleSet.useSok());
+        xuanHePaiPu = ruleSet.getXuanHePaiPu();
     }
 
     public int calculatePoints(Hand winningHand) {
@@ -41,11 +37,15 @@ public class HandCalculator {
             return 0;
         }
         if (winningHand.getCombinations().size() == 1) {
-            final Collection<Domino> straight = winningHand.getCombinations().iterator().next();
-            if (xuanHePuPai.evaluate(straight) != XuanHePuPai.Combination.STRAIGHT) {
+            final Collection<Domino> sixDominoesCombo = winningHand.getCombinations().iterator().next();
+            final CombinationType combinationType = xuanHePaiPu.evaluate(sixDominoesCombo);
+            if (combinationType == CombinationType.THREE_PAIRS) {
+                return 4;
+            }
+            if (combinationType != CombinationType.STRAIGHT) {
                 return 0;
             }
-            final Domino domino = straight.stream().filter(DominoUtil::isDouble).findAny().orElseThrow(() -> new IllegalStateException("Should have a double in straight, but it has none: " + straight));
+            final Domino domino = sixDominoesCombo.stream().filter(DominoUtil::isDouble).findAny().orElseThrow(() -> new IllegalStateException("Should have a double in straight, but it has none: " + sixDominoesCombo));
             switch (domino.getPips()[0]) {
                 case 2:
                     return 5;
@@ -58,20 +58,20 @@ public class HandCalculator {
         } else if (winningHand.getCombinations().size() == 2) {
 
             final ArrayList<? extends Collection<Domino>> combinations = new ArrayList<>(winningHand.getCombinations());
-            final XuanHePuPai.Combination firstCombination = xuanHePuPai.evaluate(combinations.get(0));
-            final XuanHePuPai.Combination secondCombination = xuanHePuPai.evaluate(combinations.get(1));
+            final CombinationType firstCombination = xuanHePaiPu.evaluate(combinations.get(0));
+            final CombinationType secondCombination = xuanHePaiPu.evaluate(combinations.get(1));
 
             final HashBag<Domino> allTiles = new HashBag<>();
             allTiles.addAll(combinations.get(0));
             allTiles.addAll(combinations.get(1));
 
             //Sanity check
-            if (firstCombination == XuanHePuPai.Combination.none || secondCombination == XuanHePuPai.Combination.none) {
+            if (firstCombination == CombinationType.none || secondCombination == CombinationType.none) {
                 return 0;
             }
             //Calculate special cases first
             //Two dragons count as 3
-            if (firstCombination == XuanHePuPai.Combination.DRAGON && secondCombination == XuanHePuPai.Combination.DRAGON) {
+            if (firstCombination == CombinationType.DRAGON && secondCombination == CombinationType.DRAGON) {
                 final Optional<Domino> anyCivilTile = allTiles.stream().filter(Domino::isCivil).findAny();
                 if (anyCivilTile.isPresent()) {
                     return 3;
@@ -80,9 +80,9 @@ public class HandCalculator {
                     return 5;
                 }
             } else if (firstCombination == secondCombination) {
-                if (firstCombination == XuanHePuPai.Combination.ER_SAN_KAO
-                        || firstCombination == XuanHePuPai.Combination.SMALL_THREE
-                        || firstCombination == XuanHePuPai.Combination.BIG_THREE
+                if (firstCombination == CombinationType.ER_SAN_KAO
+                        || firstCombination == CombinationType.SMALL_THREE
+                        || firstCombination == CombinationType.BIG_THREE
                 ) {
                     //According to Culin only doubles count
                     if (allTiles.stream().allMatch(DominoUtil::isDouble)) {
@@ -101,15 +101,6 @@ public class HandCalculator {
             }
             //Most general case
             return 2;
-        } else if (winningHand.getCombinations().size() == 3) {
-            //Pairs:
-            for (Collection<Domino> pair : winningHand.getCombinations()) {
-                //Technically they all should be valid pairs, otherwise they would not get here, but still let's check
-                if (!PAIRS.contains(xuanHePuPai.evaluate(pair))) {
-                    return 0;
-                }
-                return 4;
-            }
         }
         return 0;
     }
@@ -117,18 +108,18 @@ public class HandCalculator {
     public Collection<Hand> handPermutations(List<Domino> dominos) {
         final HashSet<Hand> hands = new HashSet<>();
 
-        final XuanHePuPai.Combination combination = xuanHePuPai.evaluate(dominos);
-        if (combination != XuanHePuPai.Combination.none) {
+        final CombinationType combination = xuanHePaiPu.evaluate(dominos);
+        if (combination != CombinationType.none) {
             hands.add(new Hand(List.of(dominos), Collections.emptyList()));
         }
 
         final Collection<Collection<Domino>> permutations = CollectionUtil.allPermutations(dominos, 3);
 
         for (Collection<Domino> permutation : permutations) {
-            if (xuanHePuPai.evaluate(permutation) != XuanHePuPai.Combination.none) {
+            if (xuanHePaiPu.evaluate(permutation) != CombinationType.none) {
                 final HashBag<Domino> otherTriplet = new HashBag<>(dominos);
                 otherTriplet.strictRemoveAll(permutation);
-                if (xuanHePuPai.evaluate(otherTriplet) != XuanHePuPai.Combination.none) {
+                if (xuanHePaiPu.evaluate(otherTriplet) != CombinationType.none) {
                     hands.add(new Hand(List.of(permutation, otherTriplet), Collections.emptyList()));
                 } else {
                     hands.add(new Hand(List.of(permutation), otherTriplet));

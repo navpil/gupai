@@ -153,6 +153,6 @@ public class JjakMatChuGi {
     }
 
     private static boolean isValid(Collection<Domino> combination, RuleSet ruleSet) {
-        return ruleSet.getPairsType().validPairCombination(combination);
+        return ruleSet.getPairsType().validAllPairsCombination(combination);
     }
 }

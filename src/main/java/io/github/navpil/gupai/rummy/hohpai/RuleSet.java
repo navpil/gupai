@@ -1,12 +1,11 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
-import io.github.navpil.gupai.XuanHePuPai;
+import io.github.navpil.gupai.XuanHePaiPu;
 
 public class RuleSet {
 
     private final GiveDiscardType giveDiscardType;
     private final BrokenGameFix fix;
-    private final XuanHePuPai.Pairs pairs;
 
     //Technically it does not matter what goes first - DISCARD and then DRAW or vice versa
     // but more players can play if they first draw and then discard
@@ -65,25 +64,28 @@ public class RuleSet {
         }
     }
 
-    private final boolean useSok;
+    private final XuanHePaiPu xuanHePaiPu;
 
-    public static RuleSet optimal() {
-        return new RuleSet(false, GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE, XuanHePuPai.Pairs.KOREAN);
+    public static RuleSet hoHpai() {
+        return new RuleSet(XuanHePaiPu.hoHpai(false), GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE);
     }
 
     public static RuleSet withSok() {
-        return new RuleSet(true, GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE, XuanHePuPai.Pairs.KOREAN);
+        return new RuleSet(XuanHePaiPu.hoHpai(true), GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE);
     }
 
-    public RuleSet(boolean useSok, GiveDiscardType giveDiscardType, BrokenGameFix fix, XuanHePuPai.Pairs pairs) {
-        this.useSok = useSok;
+    public static RuleSet tok() {
+        return new RuleSet(XuanHePaiPu.tok(), GiveDiscardType.DRAW_FIRST, BrokenGameFix.KEEP_AN_EYE);
+    }
+
+    public RuleSet(XuanHePaiPu xuanHePaiPu, GiveDiscardType giveDiscardType, BrokenGameFix fix) {
+        this.xuanHePaiPu = xuanHePaiPu;
         this.giveDiscardType = giveDiscardType;
         this.fix = fix;
-        this.pairs = pairs;
     }
 
-    public boolean useSok() {
-        return useSok;
+    public XuanHePaiPu getXuanHePaiPu() {
+        return xuanHePaiPu;
     }
 
     public GiveDiscardType getGiveDiscardType() {
@@ -94,7 +96,4 @@ public class RuleSet {
         return fix;
     }
 
-    public XuanHePuPai.Pairs getPairs() {
-        return pairs;
-    }
 }

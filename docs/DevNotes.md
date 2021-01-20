@@ -104,6 +104,8 @@ Players may get into a zugzwang when no one accepts an offered tile.
 This does not happen often, less than 1 time per 1000 games, but still a fix is needed for the situation.
 To avoid a never ending game, a cutoff parameter was introduced - it will stop a game after some number of rounds.
 
+I decided that the mysterious *tăi-să-ttai* combination is a single combination of the 3 pairs. 
+
 Wishlist:
 
  - Introduce collecting straights and 3 pairs - current AI does not do that
@@ -125,6 +127,10 @@ Included games:
  - Tok: MahJong variation of Ho-hpai 
   
 ## Single player games
+
+**XiangShiFu** uses modern combinations, so 2-3-3-4-4-5 instead of 2-2-3-3-6-6.
+It should be configurable.
+If the 2-2-3-3-6-6 is used, then player should not get a dead pair in the layout.
 
 Todo list:
 

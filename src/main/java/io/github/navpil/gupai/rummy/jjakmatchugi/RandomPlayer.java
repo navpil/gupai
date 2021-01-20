@@ -20,7 +20,7 @@ public class RandomPlayer extends AbstractPlayer {
     public Collection<Domino> offer(Domino offer) {
         final ArrayList<Domino> dominos = new ArrayList<>(this.dominos);
         dominos.add(offer);
-        if (table.getRuleSet().getPairsType().validPairCombination(dominos)) {
+        if (table.getRuleSet().getPairsType().validAllPairsCombination(dominos)) {
             this.dominos.clear();
             return dominos;
         }

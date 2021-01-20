@@ -1,8 +1,9 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
 import io.github.navpil.gupai.ChineseDominoSet;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.Domino;
-import io.github.navpil.gupai.XuanHePuPai;
+import io.github.navpil.gupai.XuanHePaiPu;
 import io.github.navpil.gupai.jielong.player.MutableInteger;
 import io.github.navpil.gupai.util.CollectionUtil;
 import io.github.navpil.gupai.util.HashBag;
@@ -53,11 +54,11 @@ public class CleverPlayer extends AbstractPlayer {
     @Override
     public Collection<Domino> offer(Domino lastDiscard) {
         final Collection<Collection<Domino>> collections = CollectionUtil.allPermutations(dominos, 2);
-        final XuanHePuPai xuanHePuPai = XuanHePuPai.hoHpai(table.getRuleSet().useSok());
+        final XuanHePaiPu xuanHePaiPu =table.getRuleSet().getXuanHePaiPu();
         for (Collection<Domino> collection : collections) {
             final ArrayList<Domino> withDomino = new ArrayList<>(collection);
             withDomino.add(lastDiscard);
-            if (xuanHePuPai.evaluate(withDomino) != XuanHePuPai.Combination.none) {
+            if (xuanHePaiPu.evaluate(withDomino) != CombinationType.none) {
                 for (Domino domino : withDomino) {
                     this.dominos.remove(domino);
                 }
@@ -152,13 +153,13 @@ public class CleverPlayer extends AbstractPlayer {
         for (Domino d : dominos) {
             allAvailableDominoes.remove(d);
         }
-        final XuanHePuPai xuanHePuPai = XuanHePuPai.hoHpai(table.getRuleSet().useSok());
+        final XuanHePaiPu xuanHePaiPu = table.getRuleSet().getXuanHePaiPu();
         final Collection<Collection<Domino>> allPairs = CollectionUtil.allPermutations(dominos, 2);
         for (Collection<Domino> pair : allPairs) {
             for (Domino d : allAvailableDominoes) {
                 final ArrayList<Domino> combo = new ArrayList<>(pair);
                 combo.add(d);
-                if (xuanHePuPai.evaluate(combo) != XuanHePuPai.Combination.none) {
+                if (xuanHePaiPu.evaluate(combo) != CombinationType.none) {
                     for (Domino domino : pair) {
                         dominoStrenghts.get(domino).add(1);
                     }
@@ -201,7 +202,7 @@ public class CleverPlayer extends AbstractPlayer {
             dominoStrenghts.put(domino, new MutableInteger());
         }
 
-        final XuanHePuPai xuanHePuPai = XuanHePuPai.hoHpai(table.getRuleSet().useSok());
+        final XuanHePaiPu xuanHePaiPu = table.getRuleSet().getXuanHePaiPu();
 
         hands.stream().flatMap(h -> h.getCombinations().stream()).flatMap(Collection::stream).forEach(d -> dominoStrenghts.get(d).add(10));
 
@@ -217,7 +218,7 @@ public class CleverPlayer extends AbstractPlayer {
             for (Domino d : allAvailableDominoes) {
                 final ArrayList<Domino> combo = new ArrayList<>(pair);
                 combo.add(d);
-                if (xuanHePuPai.evaluate(combo) != XuanHePuPai.Combination.none) {
+                if (xuanHePaiPu.evaluate(combo) != CombinationType.none) {
                     for (Domino domino : pair) {
                         dominoStrenghts.get(domino).add(1);
                     }

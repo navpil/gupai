@@ -14,7 +14,7 @@ public class HandCalculatorTest {
 
     @Test
     public void calculateStraightPoints() {
-        final HandCalculator handCalculator = new HandCalculator(RuleSet.optimal());
+        final HandCalculator handCalculator = new HandCalculator(RuleSet.hoHpai());
         final int[] pips = new int[6];
         for (int i = 1; i <= 6; i++) {
             for (int j = 1; j <= 6; j++) {
@@ -35,7 +35,7 @@ public class HandCalculatorTest {
 
     @Test
     public void calculateUsuals() {
-        final HandCalculator handCalculator = new HandCalculator(RuleSet.optimal());
+        final HandCalculator handCalculator = new HandCalculator(RuleSet.hoHpai());
         assertThat(handCalculator.calculatePoints(winningHand(12, 34, 56, 33, 31, 11))).isEqualTo(2);
     }
 
@@ -46,7 +46,7 @@ public class HandCalculatorTest {
          - 2 Full Dragons made purely of military tiles counts as 5
          - 1 Full Dragon counts as 1
          */
-        final HandCalculator handCalculator = new HandCalculator(RuleSet.optimal());
+        final HandCalculator handCalculator = new HandCalculator(RuleSet.hoHpai());
 
         //2 Full dragons should count 3
         assertThat(handCalculator.calculatePoints(winningHand(12, 34, 56, 13, 24, 56))).isEqualTo(3);
@@ -59,9 +59,9 @@ public class HandCalculatorTest {
 
     @Test
     public void testAllPairsAreWinningHand() {
-        final HandCalculator handCalculator = new HandCalculator(RuleSet.optimal());
+        final HandCalculator handCalculator = new HandCalculator(RuleSet.hoHpai());
         final Collection<Hand> hands = handCalculator.handPermutations(Domino.ofList(61, 61, 55, 55, 43, 42));
-        final List<Hand> collect = hands.stream().filter(Hand::isWinningHand).filter(h -> h.getCombinations().size() == 3).collect(Collectors.toList());
+        final List<Hand> collect = hands.stream().filter(Hand::isWinningHand).filter(h -> h.getCombinations().size() == 1).collect(Collectors.toList());
 
         assertThat(collect).isNotEmpty();
         assertThat(collect.size()).isEqualTo(1);
@@ -69,16 +69,16 @@ public class HandCalculatorTest {
 
     @Test
     public void testAllPairsCount4() {
-        final HandCalculator handCalculator = new HandCalculator(RuleSet.optimal());
+        final HandCalculator handCalculator = new HandCalculator(RuleSet.hoHpai());
         final Collection<Hand> hands = handCalculator.handPermutations(Domino.ofList(61, 61, 55, 55, 43, 42));
-        final List<Hand> collect = hands.stream().filter(Hand::isWinningHand).filter(h -> h.getCombinations().size() == 3).collect(Collectors.toList());
+        final List<Hand> collect = hands.stream().filter(Hand::isWinningHand).filter(h -> h.getCombinations().size() == 1).collect(Collectors.toList());
 
         assertThat(handCalculator.calculatePoints(collect.get(0))).isEqualTo(4);
     }
 
     @Test
     public void testMixedSpecialCase() {
-        final HandCalculator handCalculator = new HandCalculator(RuleSet.optimal());
+        final HandCalculator handCalculator = new HandCalculator(RuleSet.hoHpai());
         assertThat(handCalculator.calculatePoints(winningHand(11, 22, 33, 11, 22, 33))).isEqualTo(3);
         assertThat(handCalculator.calculatePoints(winningHand(44, 55, 66, 44, 55, 66))).isEqualTo(3);
         assertThat(handCalculator.calculatePoints(winningHand(22, 33, 66, 22, 33, 66))).isEqualTo(3);

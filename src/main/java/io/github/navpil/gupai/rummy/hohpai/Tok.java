@@ -1,8 +1,9 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
 import io.github.navpil.gupai.ChineseDominoSet;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.Domino;
-import io.github.navpil.gupai.XuanHePuPai;
+import io.github.navpil.gupai.XuanHePaiPu;
 import io.github.navpil.gupai.util.CircularInteger;
 import io.github.navpil.gupai.util.RunManySimulations;
 import io.github.navpil.gupai.util.Stats;
@@ -31,7 +32,7 @@ public class Tok {
         new RunManySimulations().runManySimulations(
                 ChineseDominoSet.create(),
                 players,
-                RuleSet.withSok(),
+                RuleSet.tok(),
                 simCount,
                 tok::runSimulation,
                 RunManySimulations.PointsCalculationType.KEEP_AS_IS
@@ -43,7 +44,7 @@ public class Tok {
     private int wonGames;
 
     private Stats runSimulation(List<Domino> dominos, List<? extends Player> players, RuleSet ruleSet, int whoGoesFirst) {
-        final XuanHePuPai xuanHePuPai = XuanHePuPai.hoHpai(ruleSet.useSok());
+        final XuanHePaiPu xuanHePaiPu = ruleSet.getXuanHePaiPu();
         final int cardsPerPlayer = 5;
         final LinkedList<Domino> woodpile = new LinkedList<>(dominos.subList(players.size() * cardsPerPlayer, dominos.size()));
         final TokTable table = new TokTable(woodpile, ruleSet);
@@ -71,7 +72,7 @@ public class Tok {
                     if (!combination.isEmpty()) {
                         System.out.println(player.getName() + " took the " + table.lastDiscard() + " and created a combination " + combination);
                         discardTaken = true;
-                        if (!validCombination(combination, xuanHePuPai)) {
+                        if (!validCombination(combination, xuanHePaiPu)) {
                             throw new IllegalStateException("Combination " + combination + " is invalid");
                         }
                         table.addCombination(playerIndex.current(), combination);
@@ -94,7 +95,7 @@ public class Tok {
                     throw new IllegalStateException("Player has not won with " + winningHand1);
                 }
                 final CombineCollection<? extends Collection<Domino>> winningHand = new CombineCollection<>(List.of(table.getCombinations(playerIndex.current()), new ArrayList<>(winningHand1.getCombinations())));
-                if (!validCombinations(winningHand, xuanHePuPai)) {
+                if (!validCombinations(winningHand, xuanHePaiPu)) {
                     throw new IllegalStateException("Combination " + winningHand + " is invalid");
                 } else {
                     System.out.println("Player " + player.getName() + " won with " + winningHand);
@@ -123,7 +124,7 @@ public class Tok {
         return stats;
     }
 
-    private static boolean validCombinations(Collection<? extends Collection<Domino>> combination, XuanHePuPai ruleSet) {
+    private static boolean validCombinations(Collection<? extends Collection<Domino>> combination, XuanHePaiPu ruleSet) {
         for (Collection<Domino> c : combination) {
             if (!validCombination(c, ruleSet)) {
                 return false;
@@ -131,7 +132,7 @@ public class Tok {
         }
         return true;
     }
-    private static boolean validCombination(Collection<Domino> combination, XuanHePuPai ruleSet) {
-        return ruleSet.evaluate(combination) != XuanHePuPai.Combination.none;
+    private static boolean validCombination(Collection<Domino> combination, XuanHePaiPu ruleSet) {
+        return ruleSet.evaluate(combination) != CombinationType.none;
     }
 }

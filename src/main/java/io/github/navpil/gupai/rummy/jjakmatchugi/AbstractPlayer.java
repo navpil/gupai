@@ -1,6 +1,7 @@
 package io.github.navpil.gupai.rummy.jjakmatchugi;
 
 import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.Pairs;
 import io.github.navpil.gupai.util.CombineCollection;
 
 import java.util.ArrayList;
@@ -35,7 +36,7 @@ public abstract class AbstractPlayer implements Player {
         if (dominos.isEmpty()) {
             return Collections.emptyList();
         }
-        if (table.getRuleSet().getPairsType().validPairCombination(dominos)) {
+        if (table.getRuleSet().getPairsType().validAllPairsCombination(dominos)) {
             winningHand = dominos;
         }
         return winningHand;
@@ -68,7 +69,7 @@ public abstract class AbstractPlayer implements Player {
             }
         }
         final Set<Domino> military = dominos.stream().filter(Domino::isMilitary).collect(Collectors.toSet());
-        final RuleSet.Pairs pairsType = table.getRuleSet().getPairsType();
+        final Pairs pairsType = table.getRuleSet().getPairsType();
         final HashSet<Domino> militaryCombinations = new HashSet<>();
         for (Domino domino : military) {
             final Domino other = pairsType.other(domino);

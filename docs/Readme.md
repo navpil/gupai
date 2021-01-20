@@ -356,11 +356,9 @@ Rules are the same, except that a winning hand consists of 8 tiles:
 
 42 tile always counts as 3 points
 
-### Ho-hpai
+### Ho-hpai 胡牌
 
-Korean game. Probably the same as Tok (톡) which is often mentioned on Korean websites.
-
-Korean sources describing Tok are inconsistent, e.g some mention 3 pairs, some mention 2 triplets. 
+Korean game. 
 
 #### Fixing Culin's description
 
@@ -489,9 +487,26 @@ Straights adjustment:
 
 Sources: [Korean whsohn12 blog](https://blog.naver.com/whsohn12/100185916542), [Culin](https://healthy.uwaterloo.ca/museum/Archives/Culin/Dice1893/hohpai.html)
 
-### Jjak-mat-chu-gi (짝맞추기)
+### Tok 톡
+
+Korean sources describing Tok are inconsistent, e.g some mention 3 pairs, some mention 2 triplets.
+
+According to descriptions the game is very similar to Ho-hpai, but it looks like MahJong.
+
+The only differences to Ho-hpai are:
+ 
+ - Tiles discard is similar to MahJong:
+     - tiles are discarded face up
+     - last discarded tile can be taken by any player to form a combination amd then that player continues with a game
+     - if the last discarded tile is not taken by anyone, then the tile becomes inaccessible for anyone in the future
+ - It is played with *sok* (*coincidence* and *five sons*)
+ - It is played without *tăi-să-ttai* combination (3 pairs) 
+
+### Jjak-mat-chu-gi 짝맞추기 (Making pairs)
 
 Korean game. 2-4 players.
+Is called Tjak-Ma-Tchi-Ki in Culin's book.
+Mistakenly called 짝맏추기 in Pagat website.  
 This game relies on luck more than other Mahjong-like games.
 
 Aim is to get 3 classic pairs, all players are dealt 5 tiles (except for the dealer who gets 6, but that's a technicality).
@@ -550,12 +565,9 @@ the currently discarded tile.
 
 ## Single player games
 
-XiangShiFu is already created - but is computer driven.
-Probably need to split into actual engine and computer solver.
+### XiangShiFu 相十副 (Watching Ten Sets)
 
-### XiangShiFu
-
-Combinations are:
+宣和牌谱 (XuanHePaiPu) combinations are:
 
 Three equal pips: 
  

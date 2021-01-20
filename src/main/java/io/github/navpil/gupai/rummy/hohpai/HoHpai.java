@@ -59,7 +59,7 @@ public class HoHpai {
         final Stats stats = new RunManySimulations().runManySimulations(
                 deck,
                 players,
-                RuleSet.optimal(),
+                RuleSet.hoHpai(),
                 simCount,
                 simulation::runSimulation
         );

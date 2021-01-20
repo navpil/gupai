@@ -3,92 +3,11 @@ package io.github.navpil.gupai;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-public class XuanHePuPai {
-
-    public enum Pairs {
-        CHINESE(
-                Set.of(
-                        militaries(63, 54),
-                        militaries(62, 53),
-                        militaries(43, 52),
-                        militaries(41, 32),
-                        militaries(42, 21)
-                )
-        ),
-
-        KOREAN(
-                Set.of(
-                        militaries(63, 62),
-                        militaries(53, 52),
-                        militaries(43, 42),
-                        militaries(41, 32),
-                        militaries(54, 21)
-                )
-        ),
-        NONE(
-                Collections.emptySet()
-        );
-
-        private final Set<Set<Domino>> militaries;
-        private final Map<Domino, Domino> otherMap;
-
-        Pairs(Set<Set<Domino>> militaries) {
-            this.militaries = militaries;
-            final HashMap<Domino, Domino> map = new HashMap<>();
-            for (Set<Domino> military : militaries) {
-                final Iterator<Domino> it = military.iterator();
-                final Domino one = it.next();
-                final Domino two = it.next();
-                map.put(one, two);
-                map.put(two, one);
-            }
-            otherMap = Collections.unmodifiableMap(map);
-        }
-
-        private static Set<Domino> militaries(int p1, int p2) {
-            return Set.of(Domino.of(p1), Domino.of(p2));
-        }
-
-
-        public boolean validPairCombination(Collection<Domino> dominoes) {
-            final List<Domino> civilsOnly = dominoes.stream().filter(Domino::isCivil).sorted().collect(Collectors.toList());
-            if (civilsOnly.size() % 2 != 0) {
-                return false;
-            }
-            for (int i = 0; i < civilsOnly.size(); i += 2) {
-                if (!civilsOnly.get(i).equals(civilsOnly.get(i + 1))) {
-                    return false;
-                }
-            }
-            final Set<Domino> militaries = new HashSet<>(dominoes.stream().filter(Domino::isMilitary).collect(Collectors.toSet()));
-            if (militaries.size() % 2 != 0) {
-                return false;
-            }
-            for (Set<Domino> military : this.militaries) {
-                final boolean b = militaries.removeAll(military);
-                if (b && militaries.size() % 2 != 0) {
-                    return false;
-                }
-            }
-            return true;
-        }
-
-        public Domino other(Domino domino) {
-            if (domino.isCivil()) {
-                return domino;
-            }
-            return otherMap.get(domino);
-        }
-    }
+public class XuanHePaiPu {
 
     /**
      * Sok are COINCIDENCE and FIVE_SONS - sometimes not used in a Ho-Hpai game
@@ -103,7 +22,7 @@ public class XuanHePuPai {
     /**
      * According to Culin 3 pairs is a valid combination in Ho-Hpai, if I read him correctly
      */
-    private final boolean includeThreePairs;
+    private final Pairs threePairsRule;
 
     /**
      * 2-2-3-3-6-6 may be replaced by 2-3-3-4-4-5 in some XiangShiFu rules
@@ -124,79 +43,60 @@ public class XuanHePuPai {
      */
     private final Pairs pairs;
 
-    public XuanHePuPai(
+    public XuanHePaiPu(
             boolean includeSok,
             boolean includeStraight,
-            boolean includeThreePairs,
+            Pairs threePairsRule,
             boolean includeErSanKao,
             boolean includeMiddleFour,
             boolean includeFourteenAndFive,
             Pairs pairs) {
         this.includeSok = includeSok;
         this.includeStraight = includeStraight;
-        this.includeThreePairs = includeThreePairs;
+        this.threePairsRule = threePairsRule;
         this.includeErSanKao = includeErSanKao;
         this.includeMiddleFour = includeMiddleFour;
         this.includeFourteenAndFive = includeFourteenAndFive;
         this.pairs = pairs;
     }
 
-    public static XuanHePuPai hoHpai(boolean includeSok) {
-        return new XuanHePuPai(includeSok, true, true, true, false, false, Pairs.KOREAN);
+    /**
+     * 3 Korean pairs are a valid combination, no splendid and five points, 2 tiles are not a valid combination, so no pairs.
+     * Includes HoHpai straights
+     *
+     * @param includeSok whether to include five sons and coincidence
+     * @return rules calculation for HoHpai
+     */
+    public static XuanHePaiPu hoHpai(boolean includeSok) {
+        return new XuanHePaiPu(includeSok, true, Pairs.KOREAN, true, false, false, Pairs.NONE);
     }
 
-    public static XuanHePuPai hoHpai() {
-        return hoHpai(true);
+    /**
+     * No splendid and five points, 2 tiles are not a valid combination, so no pairs
+     * Includes HoHpai straights.
+     *
+     * @return rules calculation for Tok
+     */
+    public static XuanHePaiPu tok() {
+        return new XuanHePaiPu(true, true, Pairs.NONE, true, false, false, Pairs.NONE);
     }
 
-    public static XuanHePuPai xiangShiFu() {
-        return new XuanHePuPai(false, false, false, true, false, true, Pairs.CHINESE);
+    /**
+     * Classical XiangShiFu, all XuanHePuPai triplets + chinese pairs
+     *
+     * @return classical XiangShiFu rules calculation
+     */
+    public static XuanHePaiPu xiangShiFu() {
+        return new XuanHePaiPu(false, false, Pairs.NONE, true, false, true, Pairs.CHINESE);
     }
 
-    public static XuanHePuPai xiangShiFuModern() {
-        return new XuanHePuPai(false, false, false, false, true, true, Pairs.CHINESE);
-    }
-
-    public enum Combination {
-
-        //ssang-syo - all different
-        DRAGON,
-
-        //tai-sam-tong
-        SPLIT,
-
-        //sok (coincidence and five sons)
-        FIVE_SONS,
-        COINCIDENCE,
-
-        //ssang-pyen (Doublets?)
-        ER_SAN_KAO,
-        //a-ki Child
-        SMALL_THREE,
-        //ro-in Old Man
-        BIG_THREE,
-
-
-        //MIDDLE_DRAGON -> used instead of er-san-kao
-        MIDDLE_DRAGON,
-
-        //Used in XiangShiFu - not used for HoHpai
-        FIVE_POINTS,
-        SPLENDID,
-
-        //Ho-hpai specials
-        STRAIGHT,
-        THREE_PAIRS,
-
-        //Pairs
-        CIVIL_PAIR,
-
-        MILITARY_CHINESE_PAIR,
-        SUPREME_PAIR,
-
-        MILITARY_KOREAN_PAIR,
-
-        none
+    /**
+     * Modern XiangShiFu, 2-3-6 is replaced with a middle dragon 2-3-3-4-4-5
+     *
+     * @return classical XiangShiFu rules calculation
+     */
+    public static XuanHePaiPu xiangShiFuModern() {
+        return new XuanHePaiPu(false, false, Pairs.NONE, false, true, true, Pairs.CHINESE);
     }
 
     /**
@@ -255,7 +155,7 @@ public class XuanHePuPai {
 
     }
 
-    public Combination evaluate(Collection<Domino> dominos) {
+    public CombinationType evaluate(Collection<Domino> dominos) {
         if (dominos.size() == 3) {
             int[] pips = new int[6];
             int counter = 0;
@@ -265,7 +165,7 @@ public class XuanHePuPai {
                 pips[counter++] = p[1];
             }
             return isTriplet(pips);
-        } else if ((includeThreePairs || includeStraight) && dominos.size() == 6) {
+        } else if ((threePairsRule != Pairs.NONE || includeStraight) && dominos.size() == 6) {
             if (includeStraight) {
                 final List<Domino> doubles = dominos.stream().filter(DominoUtil::isDouble).collect(Collectors.toList());
                 if (doubles.size() == 1) {
@@ -275,36 +175,75 @@ public class XuanHePuPai {
                         pips[other(domino.getPips(), pip)]++;
                     }
                     if (Arrays.equals(pips, new int[]{0, 1, 1, 1, 1, 1, 1})) {
-                        return Combination.STRAIGHT;
+                        return CombinationType.STRAIGHT;
                     }
                 }
             }
-            if (includeThreePairs) {
-                if (pairs.validPairCombination(dominos)) {
-                    return Combination.THREE_PAIRS;
-                }
+            if (threePairsRule.validAllPairsCombination(dominos)) {
+                return CombinationType.THREE_PAIRS;
             }
         } else if (pairs != Pairs.NONE && dominos.size() == 2) {
             final ArrayList<Domino> pair = new ArrayList<>(dominos);
             if (pair.get(0).isCivil() && pair.get(0).equals(pair.get(1))) {
-                return Combination.CIVIL_PAIR;
+                return getCivilPairType(pair.get(0));
             }
             if (pair.get(0).isMilitary()) {
                 if (pairs == Pairs.KOREAN) {
                     if (pair.get(1).equals(KOREAN_MILITARY_PAIRS.get(pair.get(0)))) {
-                        return Combination.MILITARY_KOREAN_PAIR;
+                        return CombinationType.MILITARY_KOREAN_PAIR;
                     }
                 } else {
                     if (pair.get(1).equals(CHINESE_MILITARY_PAIRS.get(pair.get(0)))) {
-                        return Combination.MILITARY_CHINESE_PAIR;
+                        return getMilitaryPairType(pair.get(0));
                     } else if (pair.get(1).equals(SUPREME_PAIR.get(pair.get(0)))) {
-                        return Combination.SUPREME_PAIR;
+                        return CombinationType.SUPREME_PAIR;
                     }
                 }
 
             }
         }
-        return Combination.none;
+        return CombinationType.none;
+    }
+
+    private CombinationType getMilitaryPairType(Domino domino) {
+        int pipSum = domino.getPips()[0] + domino.getPips()[1];
+        if (pipSum == 9) {
+            return CombinationType.NINES;
+        } else if (pipSum == 8) {
+            return CombinationType.EIGHTS;
+        } else if (pipSum == 7) {
+            return CombinationType.SEVENS;
+        } else if (pipSum == 5) {
+            return CombinationType.FIVES;
+        }
+        throw new IllegalArgumentException("This domino does not belong to any Military pair " + domino);
+    }
+
+    private CombinationType getCivilPairType(Domino domino) {
+        if (domino.is(6, 6)) {
+            return CombinationType.HEAVEN;
+        } else if (domino.is(1, 1)) {
+            return CombinationType.EARTH;
+        } else if (domino.is(4, 4)) {
+            return CombinationType.MAN;
+        } else if (domino.is(1, 3)) {
+            return CombinationType.HARMONY;
+        } else if (domino.is(5, 5)) {
+            return CombinationType.PLUM;
+        } else if (domino.is(3, 3)) {
+            return CombinationType.LONG_THREE;
+        } else if (domino.is(2, 2)) {
+            return CombinationType.BENCH;
+        } else if (domino.is(6, 5)) {
+            return CombinationType.AXE;
+        } else if (domino.is(6, 4)) {
+            return CombinationType.RED_HEAD;
+        } else if (domino.is(6, 1)) {
+            return CombinationType.LONG_LEGS;
+        } else if (domino.is(5, 1)) {
+            return CombinationType.BIG_HEAD;
+        }
+        throw new IllegalArgumentException("This domino does not belong to any Civil pair " + domino);
     }
 
     private int other(int[] pips, int pip) {
@@ -313,28 +252,28 @@ public class XuanHePuPai {
         return 0;
     }
 
-    private Combination isTriplet(int[] pips) {
+    private CombinationType isTriplet(int[] pips) {
         Arrays.sort(pips);
         if (includeErSanKao && exactly(pips, 2, 2, 3, 3, 6, 6)) {
-            return Combination.ER_SAN_KAO;
+            return CombinationType.ER_SAN_KAO;
         }
         if (includeMiddleFour && exactly(pips, 2, 3, 3, 4, 4, 5)) {
-            return Combination.MIDDLE_DRAGON;
+            return CombinationType.MIDDLE_DRAGON;
         }
         if (exactly(pips, 1, 1, 2, 2, 3, 3)) {
-            return Combination.SMALL_THREE;
+            return CombinationType.SMALL_THREE;
         }
         if (exactly(pips, 4, 4, 5, 5, 6, 6)) {
-            return Combination.BIG_THREE;
+            return CombinationType.BIG_THREE;
         }
         if (exactly(pips, 1, 2, 3, 4, 5, 6)) {
-            return Combination.DRAGON;
+            return CombinationType.DRAGON;
         }
         if (includeSok && fiveSons(pips)) {
-            return Combination.FIVE_SONS;
+            return CombinationType.FIVE_SONS;
         }
         if (split(pips)) {
-            return Combination.SPLIT;
+            return CombinationType.SPLIT;
         }
         int totalSum = 0;
         for (int pip : pips) {
@@ -343,28 +282,28 @@ public class XuanHePuPai {
         int number = findFourRun(pips);
         if (number > 0 && totalSum == number * 5) {
             if (!includeSok) {
-                return Combination.none;
+                return CombinationType.none;
             }
             if (totalSum == number * 5) {
-                return Combination.COINCIDENCE;
+                return CombinationType.COINCIDENCE;
             }
             //This is a special case, because otherwise 3-3 3-3 1-1 may wrongly be considered as FIVE_POINTS (3-3-3 3+1+1)
             // or 6-6 6-6 4-4 be considered as SPLENDID (6-6-6 6+4+4)
-            return Combination.none;
+            return CombinationType.none;
         }
         if (!includeFourteenAndFive) {
-            return Combination.none;
+            return CombinationType.none;
         }
         number = findThreeRun(pips);
         if (number > 0) {
             final int remainder = totalSum - (number * 3);
             if (remainder == 5) {
-                return Combination.FIVE_POINTS;
+                return CombinationType.FIVE_POINTS;
             } else if (remainder >= 14) {
-                return Combination.SPLENDID;
+                return CombinationType.SPLENDID;
             }
         }
-        return Combination.none;
+        return CombinationType.none;
     }
 
     private static int findFourRun(int[] pips) {

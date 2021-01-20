@@ -1,5 +1,6 @@
 package io.github.navpil.gupai.rummy.jjakmatchugi;
 
+import io.github.navpil.gupai.Pairs;
 import io.github.navpil.gupai.util.ConsoleInput;
 import io.github.navpil.gupai.Domino;
 
@@ -25,14 +26,14 @@ public class HumanPlayer extends AbstractPlayer {
 
     @Override
     public Collection<Domino> offer(Domino offer) {
-        final RuleSet.Pairs pairsType = table.getRuleSet().getPairsType();
+        final Pairs pairsType = table.getRuleSet().getPairsType();
         Collection<Domino> combination = new ArrayList<>();
         do {
             final Domino choice = consoleInput.choice(dominos, true, "Which pair you'd like to create with " + offer);
             if (choice == null) {
                 return Collections.emptyList();
             }
-        } while (!pairsType.validPairCombination(combination));
+        } while (!pairsType.validAllPairsCombination(combination));
         return removed(combination);
     }
 
