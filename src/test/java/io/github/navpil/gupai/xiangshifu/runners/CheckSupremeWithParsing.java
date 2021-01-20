@@ -3,7 +3,7 @@ package io.github.navpil.gupai.xiangshifu.runners;
 import io.github.navpil.gupai.xiangshifu.TripletParser;
 import io.github.navpil.gupai.xiangshifu.Visualizer;
 import io.github.navpil.gupai.xiangshifu.solution.ExactPairWinningCondition;
-import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.xiangshifu.solution.ParallelSolver;
 import io.github.navpil.gupai.xiangshifu.Triplet;
 
@@ -19,7 +19,7 @@ public class CheckSupremeWithParsing {
 
         final List<Triplet> triplets = TripletParser.parse(s);
 
-        final ExactPairWinningCondition exactPairWinningCondition = new ExactPairWinningCondition(Combination.SUPREME);
+        final ExactPairWinningCondition exactPairWinningCondition = new ExactPairWinningCondition(CombinationType.SUPREME_PAIR);
         Visualizer.visualize(new ParallelSolver(6, 600).solve(triplets, exactPairWinningCondition));
     }
 }

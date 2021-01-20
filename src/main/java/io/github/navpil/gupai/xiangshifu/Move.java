@@ -1,6 +1,7 @@
 package io.github.navpil.gupai.xiangshifu;
 
 import io.github.navpil.gupai.IDomino;
+import io.github.navpil.gupai.CombinationType;
 
 /**
  * Represents a move
@@ -21,16 +22,16 @@ public class Move implements Comparable<Move> {
     private Triplet secondCopy;
 
     //Current combinations and pair potentials
-    private final Combination combination1;
-    private final Combination pairPotential1;
-    private final Combination combination2;
-    private final Combination pairPotential2;
+    private final CombinationType combination1;
+    private final CombinationType pairPotential1;
+    private final CombinationType combination2;
+    private final CombinationType pairPotential2;
 
     //Future combinations and pair potentials
-    private final Combination futureCombination1;
-    private final Combination futurePairPotential1;
-    private final Combination futureCombination2;
-    private final Combination futurePairPotential2;
+    private final CombinationType futureCombination1;
+    private final CombinationType futurePairPotential1;
+    private final CombinationType futureCombination2;
+    private final CombinationType futurePairPotential2;
 
     /**
      * Move contains two triplets and two indexes
@@ -64,35 +65,35 @@ public class Move implements Comparable<Move> {
 
     }
 
-    public Combination getCombination1() {
+    public CombinationType getCombination1() {
         return combination1;
     }
 
-    public Combination getCombination2() {
+    public CombinationType getCombination2() {
         return combination2;
     }
 
-    public Combination getFutureCombination1() {
+    public CombinationType getFutureCombination1() {
         return futureCombination1;
     }
 
-    public Combination getFutureCombination2() {
+    public CombinationType getFutureCombination2() {
         return futureCombination2;
     }
 
-    public Combination getPairPotential1() {
+    public CombinationType getPairPotential1() {
         return pairPotential1;
     }
 
-    public Combination getPairPotential2() {
+    public CombinationType getPairPotential2() {
         return pairPotential2;
     }
 
-    public Combination getFuturePairPotential1() {
+    public CombinationType getFuturePairPotential1() {
         return futurePairPotential1;
     }
 
-    public Combination getFuturePairPotential2() {
+    public CombinationType getFuturePairPotential2() {
         return futurePairPotential2;
     }
 
@@ -101,7 +102,7 @@ public class Move implements Comparable<Move> {
      * @return true if move is valid, false otherwise
      */
     public boolean valid() {
-        return (!first.equals(second)) && (futureCombination1 != Combination.none && futureCombination2 != Combination.none);
+        return (!first.equals(second)) && (futureCombination1 != CombinationType.none && futureCombination2 != CombinationType.none);
     }
 
     /**
@@ -110,7 +111,7 @@ public class Move implements Comparable<Move> {
      * @return true if move adds value, false otherwise
      */
     public boolean addsValue() {
-        return combination1 == Combination.none || combination2 == Combination.none;
+        return combination1 == CombinationType.none || combination2 == CombinationType.none;
     }
 
     @Override

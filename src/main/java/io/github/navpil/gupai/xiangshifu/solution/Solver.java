@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.xiangshifu.solution;
 
 import io.github.navpil.gupai.xiangshifu.BoardState;
-import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.xiangshifu.Move;
 import io.github.navpil.gupai.xiangshifu.Triplet;
 
@@ -128,7 +128,7 @@ public class Solver {
 
     private static boolean finished(List<Triplet> triplets) {
         for (Triplet triplet : triplets) {
-            if (triplet.getCombination() == Combination.none) {
+            if (triplet.getCombination() == CombinationType.none) {
                 return false;
             }
         }

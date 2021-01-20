@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.xiangshifu.solution;
 
-import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.xiangshifu.Move;
 import io.github.navpil.gupai.xiangshifu.Triplet;
 
@@ -11,17 +11,17 @@ import java.util.List;
  */
 public class ExactPairWinningCondition implements WinningCondition {
 
-    private final Combination expectedPair;
+    private final CombinationType expectedPair;
 
-    public ExactPairWinningCondition(Combination expectedPair) {
+    public ExactPairWinningCondition(CombinationType expectedPair) {
         this.expectedPair = expectedPair;
     }
 
     @Override
     public boolean hasWon(List<Triplet> triplets) {
         for (Triplet triplet : triplets) {
-            final Combination combination = triplet.getCombination();
-            if (combination == Combination.none) {
+            final CombinationType combination = triplet.getCombination();
+            if (combination == CombinationType.none) {
                 return false;
             }
             if (combination.isPair() && !(combination == expectedPair)) {
@@ -80,7 +80,7 @@ public class ExactPairWinningCondition implements WinningCondition {
         return checkPair(move.getPairPotential1(), move.getPairPotential2());
     }
 
-    private boolean checkPair(Combination first, Combination second) {
+    private boolean checkPair(CombinationType first, CombinationType second) {
         return expectedPair.equals(first) || expectedPair.equals(second);
     }
 }

@@ -1,19 +1,21 @@
 package io.github.navpil.gupai.xiangshifu;
 
-public class TripletEvaluation {
-    private final Combination combination;
-    private final Combination pairPotential;
+import io.github.navpil.gupai.CombinationType;
 
-    public TripletEvaluation(Combination combination, Combination pairPotential) {
+public class TripletEvaluation {
+    private final CombinationType combination;
+    private final CombinationType pairPotential;
+
+    public TripletEvaluation(CombinationType combination, CombinationType pairPotential) {
         this.combination = combination;
         this.pairPotential = pairPotential;
     }
 
-    public Combination getCombination() {
+    public CombinationType getCombination() {
         return combination;
     }
 
-    public Combination getPairPotential() {
+    public CombinationType getPairPotential() {
         return pairPotential;
     }
 }

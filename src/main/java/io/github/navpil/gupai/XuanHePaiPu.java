@@ -68,7 +68,15 @@ public class XuanHePaiPu {
      * @return rules calculation for HoHpai
      */
     public static XuanHePaiPu hoHpai(boolean includeSok) {
-        return new XuanHePaiPu(includeSok, true, Pairs.KOREAN, true, false, false, Pairs.NONE);
+        return new XuanHePaiPu(
+                includeSok,
+                true,
+                Pairs.KOREAN,
+                true,
+                false,
+                false,
+                Pairs.NONE
+        );
     }
 
     /**
@@ -78,7 +86,15 @@ public class XuanHePaiPu {
      * @return rules calculation for Tok
      */
     public static XuanHePaiPu tok() {
-        return new XuanHePaiPu(true, true, Pairs.NONE, true, false, false, Pairs.NONE);
+        return new XuanHePaiPu(
+                true,
+                true,
+                Pairs.NONE,
+                true,
+                false,
+                false,
+                Pairs.NONE
+        );
     }
 
     /**
@@ -87,7 +103,14 @@ public class XuanHePaiPu {
      * @return classical XiangShiFu rules calculation
      */
     public static XuanHePaiPu xiangShiFu() {
-        return new XuanHePaiPu(false, false, Pairs.NONE, true, false, true, Pairs.CHINESE);
+        return new XuanHePaiPu(
+                true,
+                false,
+                Pairs.NONE,
+                true,
+                false,
+                true,
+                Pairs.CHINESE);
     }
 
     /**
@@ -96,7 +119,14 @@ public class XuanHePaiPu {
      * @return classical XiangShiFu rules calculation
      */
     public static XuanHePaiPu xiangShiFuModern() {
-        return new XuanHePaiPu(false, false, Pairs.NONE, false, true, true, Pairs.CHINESE);
+        return new XuanHePaiPu(
+                true,
+                false,
+                Pairs.NONE,
+                false,
+                true,
+                true,
+                Pairs.CHINESE);
     }
 
     /**

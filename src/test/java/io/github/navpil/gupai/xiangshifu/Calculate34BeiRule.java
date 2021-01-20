@@ -3,8 +3,7 @@ package io.github.navpil.gupai.xiangshifu;
 import io.github.navpil.gupai.ChineseDominoSet;
 import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.IDomino;
-import io.github.navpil.gupai.xiangshifu.Combination;
-import io.github.navpil.gupai.xiangshifu.ZenZenRules;
+import io.github.navpil.gupai.CombinationType;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -27,7 +26,7 @@ public class Calculate34BeiRule {
         int total = 0;
         System.out.println("SanTongSanSiBei: (should only be 39)");
         for (List<Domino> triplet : triplets) {
-            if (ZenZenRules.calculateCombination(triplet) == Combination.none && is34Bei(triplet)) {
+            if (XiangShiFuRules.calculateCombination(triplet) == CombinationType.none && is34Bei(triplet)) {
                 System.out.println((++total) + "" + triplet);
             }
         }

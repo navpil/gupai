@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.xiangshifu.runners;
 
-import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.xiangshifu.Triplet;
 import io.github.navpil.gupai.xiangshifu.TripletParser;
 import io.github.navpil.gupai.xiangshifu.Visualizer;
@@ -19,8 +19,8 @@ public class Main8 {
 
         System.out.println(triplets);
 
-        final Set<Combination> military = Set.of(Combination.NINES, Combination.EIGHTS, Combination.SEVENS, Combination.FIVES);
-        final Set<Combination> civil = Set.of(Combination.HEAVEN, Combination.EARTH, Combination.MAN, Combination.HARMONY);
+        final Set<CombinationType> military = Set.of(CombinationType.NINES, CombinationType.EIGHTS, CombinationType.SEVENS, CombinationType.FIVES);
+        final Set<CombinationType> civil = Set.of(CombinationType.HEAVEN, CombinationType.EARTH, CombinationType.MAN, CombinationType.HARMONY);
         final EightTripletsWinningCondition wc = new EightTripletsWinningCondition(military);
         Visualizer.visualize(new Solver(2, wc).solve(triplets));
 

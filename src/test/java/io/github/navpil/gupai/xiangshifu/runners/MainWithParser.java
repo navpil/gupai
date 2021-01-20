@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.xiangshifu.runners;
 
-import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.xiangshifu.Triplet;
 import io.github.navpil.gupai.xiangshifu.TripletParser;
 import io.github.navpil.gupai.xiangshifu.Visualizer;
@@ -17,7 +17,7 @@ public class MainWithParser {
 
         final List<Triplet> triplets = TripletParser.parse(n);
 
-        Visualizer.visualize(new Solver(1, new ExactPairWinningCondition(Combination.NINES)).solve(triplets));
+        Visualizer.visualize(new Solver(1, new ExactPairWinningCondition(CombinationType.NINES)).solve(triplets));
 
     }
 

@@ -1,20 +1,58 @@
-package io.github.navpil.gupai.xiangshifu.solution;
+package io.github.navpil.gupai.xiangshifu;
 
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.CombinationType;
+import io.github.navpil.gupai.XuanHePaiPu;
 import io.github.navpil.gupai.util.ConsoleInput;
-import io.github.navpil.gupai.xiangshifu.Move;
-import io.github.navpil.gupai.xiangshifu.Triplet;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Supplier;
 
-public class XiangShiFuHumanInteraction {
+public class XiangShiFu {
+
+    public enum GameType {
+        TEN_GROUPS,
+        EIGHT_GROUPS
+    }
+
+    public enum GroupsType {
+        CLASSIC,
+        MODERN
+    }
 
     public static void main(String[] args) {
-
         final ConsoleInput consoleInput = new ConsoleInput();
-        final List<Triplet> triplets = ChineseDominoSet.random10Triplets();
+        final GameType gameType = consoleInput.choice(Arrays.asList(GameType.values()), false, "Choose a game type");
+        final GroupsType groupsType = consoleInput.choice(Arrays.asList(GroupsType.values()), false, "Choose a groups type");
+
+        List<Triplet> triplets = prepareTheGame(gameType, groupsType);
+
+        runSimulation(triplets);
+
+    }
+
+    private static List<Triplet> prepareTheGame(GameType gameType, GroupsType groupsType) {
+        final XuanHePaiPu xuanHePaiPu = groupsType == GroupsType.CLASSIC ? XuanHePaiPu.xiangShiFu() : XuanHePaiPu.xiangShiFuModern();
+        XiangShiFuRules.changeRules(xuanHePaiPu);
+        final DeadSets deadSets = new DeadSets();
+
+        Supplier<List<Triplet>> supplier = gameType == GameType.TEN_GROUPS ? ChineseDominoSet::random10Triplets : ChineseDominoSet::random8Triplets;
+
+        List<Triplet> triplets;
+        if (groupsType == GroupsType.CLASSIC) {
+            do {
+                triplets = supplier.get();
+            } while (triplets.stream().map(Triplet::asBag).noneMatch(deadSets::isDeadSet));
+        } else {
+            triplets = supplier.get();
+        }
+        return triplets;
+    }
+
+    public static void runSimulation(List<Triplet> triplets) {
+        final ConsoleInput consoleInput = new ConsoleInput();
         LinkedList<Move> moves = new LinkedList<>();
 
         game_loop:
@@ -49,8 +87,7 @@ public class XiangShiFuHumanInteraction {
             } while (!(move != null && move.valid()));
             move.execute();
             moves.add(move);
-        } while (triplets.stream().allMatch(triplet -> triplet.getCombination() != Combination.none));
-
+        } while (triplets.stream().allMatch(triplet -> triplet.getCombination() != CombinationType.none));
     }
 
 }

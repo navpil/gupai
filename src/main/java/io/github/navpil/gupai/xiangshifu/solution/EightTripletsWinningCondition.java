@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.xiangshifu.solution;
 
-import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.xiangshifu.Move;
 import io.github.navpil.gupai.xiangshifu.Triplet;
 
@@ -12,28 +12,28 @@ import java.util.Set;
  */
 public class EightTripletsWinningCondition implements WinningCondition {
 
-    private final Set<Combination> expectedPairs;
+    private final Set<CombinationType> expectedPairs;
 
-    public EightTripletsWinningCondition(Set<Combination> pairs) {
+    public EightTripletsWinningCondition(Set<CombinationType> pairs) {
         assert pairs.size() == 4;
         this.expectedPairs = pairs;
     }
 
     public static WinningCondition createCivil() {
-        final Set<Combination> civil = Set.of(Combination.HEAVEN, Combination.EARTH, Combination.MAN, Combination.HARMONY);
+        final Set<CombinationType> civil = Set.of(CombinationType.HEAVEN, CombinationType.EARTH, CombinationType.MAN, CombinationType.HARMONY);
         return new EightTripletsWinningCondition(civil);
     }
 
     public static WinningCondition createMilitary() {
-        final Set<Combination> military = Set.of(Combination.NINES, Combination.EIGHTS, Combination.SEVENS, Combination.FIVES);
+        final Set<CombinationType> military = Set.of(CombinationType.NINES, CombinationType.EIGHTS, CombinationType.SEVENS, CombinationType.FIVES);
         return new EightTripletsWinningCondition(military);
     }
 
     @Override
     public boolean hasWon(List<Triplet> triplets) {
         for (Triplet triplet : triplets) {
-            final Combination combination = triplet.getCombination();
-            if (combination == Combination.none) {
+            final CombinationType combination = triplet.getCombination();
+            if (combination == CombinationType.none) {
                 return false;
             }
             if (combination.isPair() && !(expectedPairs.contains(combination))) {
@@ -92,7 +92,7 @@ public class EightTripletsWinningCondition implements WinningCondition {
         return checkPair(move.getPairPotential1(), move.getPairPotential2());
     }
 
-    private boolean checkPair(Combination first, Combination second) {
+    private boolean checkPair(CombinationType first, CombinationType second) {
         return expectedPairs.contains(first) || expectedPairs.contains(second);
     }
 

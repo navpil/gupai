@@ -1,10 +1,12 @@
 package io.github.navpil.gupai.xiangshifu;
 
 import io.github.navpil.gupai.IDomino;
+import io.github.navpil.gupai.CombinationType;
 import io.github.navpil.gupai.util.Bag;
 import io.github.navpil.gupai.util.HashBag;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -20,18 +22,18 @@ import java.util.List;
 public class Triplet {
 
     private final List<IDomino> dominoes;
-    private transient Combination combinationCache = null;
+    private transient CombinationType combinationCache = null;
 
     //Copy constructor
     public Triplet(Triplet triplet) {
         this(triplet.dominoes);
     }
 
-    public Triplet(List<IDomino> dominoes) {
+    public Triplet(Collection<? extends IDomino> dominoes) {
         this.dominoes = sorted(dominoes);
     }
 
-    private static List<IDomino> sorted(List<IDomino> dominoes) {
+    private static List<IDomino> sorted(Collection<? extends IDomino> dominoes) {
         final ArrayList<IDomino> sortedDominos = new ArrayList<>(dominoes);
         Collections.sort(sortedDominos);
         return sortedDominos;
@@ -66,7 +68,7 @@ public class Triplet {
             }
         }
         newTriplet.add(replacement);
-        return new TripletEvaluation(ZenZenRules.calculateCombination(newTriplet), ZenZenRules.calculatePairPotential(newTriplet));
+        return new TripletEvaluation(XiangShiFuRules.calculateCombination(newTriplet), XiangShiFuRules.calculatePairPotential(newTriplet));
     }
 
     /**
@@ -74,9 +76,9 @@ public class Triplet {
      *
      * @return combination type
      */
-    public Combination getCombination() {
+    public CombinationType getCombination() {
         if (combinationCache == null) {
-            combinationCache = ZenZenRules.calculateCombination(dominoes);
+            combinationCache = XiangShiFuRules.calculateCombination(dominoes);
         }
         return combinationCache;
 
@@ -87,8 +89,8 @@ public class Triplet {
      *
      * @return pair combination which is maybe contained in a triplet
      */
-    public Combination getPairPotential() {
-        return ZenZenRules.calculatePairPotential(dominoes);
+    public CombinationType getPairPotential() {
+        return XiangShiFuRules.calculatePairPotential(dominoes);
     }
 
     /**
