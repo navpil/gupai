@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.rummy.jjakmatchugi;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.util.CombineCollection;
 
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
 package io.github.navpil.gupai.jielong.player.evaluators;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.jielong.Move;
 import io.github.navpil.gupai.jielong.TableVisibleInformation;
 import io.github.navpil.gupai.jielong.player.PlayerState;
-import io.github.navpil.gupai.jielong.SuanZhang;
+import io.github.navpil.gupai.jielong.dingniu.SuanZhang;
 
 import java.util.ArrayList;
 import java.util.Collection;

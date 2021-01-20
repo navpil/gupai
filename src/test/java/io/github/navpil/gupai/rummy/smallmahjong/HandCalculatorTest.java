@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.rummy.smallmahjong;
 
 import io.github.navpil.gupai.DominoParser;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

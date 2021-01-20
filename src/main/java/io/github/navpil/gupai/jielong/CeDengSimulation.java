@@ -2,7 +2,7 @@ package io.github.navpil.gupai.jielong;
 
 import io.github.navpil.gupai.jielong.player.evaluators.PipCounterMoveEvaluator;
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.jielong.player.Player;
 import io.github.navpil.gupai.jielong.player.PlayerFactory;
 import io.github.navpil.gupai.jielong.player.PriorityPlayer;

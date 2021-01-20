@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.mod10.daling;
 
-import io.github.navpil.gupai.ConsoleInput;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.util.ConsoleInput;
+import io.github.navpil.gupai.Domino;
 
 import java.util.List;
 

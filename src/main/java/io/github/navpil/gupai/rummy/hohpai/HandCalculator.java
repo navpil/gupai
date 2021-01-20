@@ -1,8 +1,9 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
-import io.github.navpil.gupai.dominos.DominoUtil;
+import io.github.navpil.gupai.DominoUtil;
+import io.github.navpil.gupai.XuanHePuPai;
 import io.github.navpil.gupai.util.CollectionUtil;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.util.HashBag;
 
 import java.util.ArrayList;

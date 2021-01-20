@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.jielong.player;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.jielong.player.evaluators.PriorityUtil;
 import io.github.navpil.gupai.jielong.player.evaluators.RarenessMoveEvaluator;
 import org.assertj.core.api.Assertions;

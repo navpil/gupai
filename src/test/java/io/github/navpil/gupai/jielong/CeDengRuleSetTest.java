@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.jielong;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.jielong.player.PriorityPlayer;
 import org.junit.Test;
 

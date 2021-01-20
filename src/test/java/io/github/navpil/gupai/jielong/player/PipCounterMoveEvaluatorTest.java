@@ -2,10 +2,10 @@ package io.github.navpil.gupai.jielong.player;
 
 import io.github.navpil.gupai.ChineseDominoSet;
 import io.github.navpil.gupai.DominoParser;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.jielong.Dragon;
 import io.github.navpil.gupai.jielong.Move;
-import io.github.navpil.gupai.jielong.NoopSuanZhang;
+import io.github.navpil.gupai.jielong.dingniu.NoopSuanZhang;
 import io.github.navpil.gupai.jielong.TableVisibleInformation;
 import io.github.navpil.gupai.jielong.player.evaluators.MoveEvaluator;
 import io.github.navpil.gupai.jielong.player.evaluators.PipCounterMoveEvaluator;

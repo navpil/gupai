@@ -1,5 +1,6 @@
 package io.github.navpil.gupai;
 
+import io.github.navpil.gupai.xiangshifu.Combination;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

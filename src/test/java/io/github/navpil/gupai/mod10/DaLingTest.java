@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.mod10;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.mod10.daling.ComputerPlayer;
 import io.github.navpil.gupai.mod10.daling.DaLing;
 import io.github.navpil.gupai.mod10.daling.DaLingHand;

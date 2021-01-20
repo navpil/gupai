@@ -1,5 +1,6 @@
 package io.github.navpil.gupai.jielong;
 
+import io.github.navpil.gupai.jielong.dingniu.GraphSuanZhang;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

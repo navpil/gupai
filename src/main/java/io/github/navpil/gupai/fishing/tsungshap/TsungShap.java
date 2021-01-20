@@ -1,11 +1,12 @@
 package io.github.navpil.gupai.fishing.tsungshap;
 
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
-import io.github.navpil.gupai.fishing.CircularInteger;
+import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.util.CircularInteger;
 import io.github.navpil.gupai.fishing.tsungshap.fourtiles.Player;
-import io.github.navpil.gupai.jielong.Stats;
+import io.github.navpil.gupai.util.Stats;
 import io.github.navpil.gupai.util.HashBag;
+import io.github.navpil.gupai.util.RunManySimulations;
 
 import java.util.Collection;
 import java.util.LinkedList;

@@ -1,5 +1,6 @@
 package io.github.navpil.gupai.jielong;
 
+import io.github.navpil.gupai.jielong.dingniu.ClassicSuanZhang;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

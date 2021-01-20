@@ -1,7 +1,8 @@
 package io.github.navpil.gupai.mod10;
 
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.mod10.kolyesi.KolYeSiProbabilities;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

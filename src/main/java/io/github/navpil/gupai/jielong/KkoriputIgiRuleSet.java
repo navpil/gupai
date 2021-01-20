@@ -2,6 +2,7 @@ package io.github.navpil.gupai.jielong;
 
 import io.github.navpil.gupai.jielong.player.MutableInteger;
 import io.github.navpil.gupai.jielong.player.Player;
+import io.github.navpil.gupai.util.Stats;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,8 +34,8 @@ public class KkoriputIgiRuleSet implements RuleSet {
         }
 
         names.sort((n1, n2) -> {
-            final Integer p1 = stats.points.get(n1);
-            final Integer p2 = stats.points.get(n2);
+            final Integer p1 = stats.getPointsFor(n1);
+            final Integer p2 = stats.getPointsFor(n2);
             if (!p1.equals(p2)) {
                 return p1.compareTo(p2);
             }
@@ -42,8 +43,8 @@ public class KkoriputIgiRuleSet implements RuleSet {
         });
         final String winner = names.get(0);
 
-        final Integer minPoints = stats.points.values().stream().min(Integer::compareTo).get();
-        final Integer maxPoints = stats.points.values().stream().max(Integer::compareTo).get();
+        final Integer minPoints = stats.getPoints().values().stream().min(Integer::compareTo).get();
+        final Integer maxPoints = stats.getPoints().values().stream().max(Integer::compareTo).get();
         final HashMap<String, MutableInteger> points = new HashMap<>();
         for (String s : originalNameList) {
             points.put(s, new MutableInteger());
@@ -53,7 +54,7 @@ public class KkoriputIgiRuleSet implements RuleSet {
             List<String> losers = new ArrayList<>();
             boolean thirtyPointsAreLosers = minPoints < 30;
 
-            for (Map.Entry<String, Integer> e : stats.points.entrySet()) {
+            for (Map.Entry<String, Integer> e : stats.getPoints().entrySet()) {
                 if (e.getValue().equals(minPoints)) {
                     winners.add(e.getKey());
                 } else if (e.getValue().equals(maxPoints)) {
@@ -69,8 +70,8 @@ public class KkoriputIgiRuleSet implements RuleSet {
                         points.get(win).add(1);
                         points.get(loser).add(-1);
                     } else {
-                        final Integer winnerPoints = stats.points.get(win);
-                        final Integer loserPoints = stats.points.get(loser);
+                        final Integer winnerPoints = stats.getPointsFor(win);
+                        final Integer loserPoints = stats.getPointsFor(loser);
 
                         final int wonPoints = loserPoints - winnerPoints;
                         points.get(win).add(wonPoints);

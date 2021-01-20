@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.fishing.tsungshap.fourtiles;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.fishing.tsungshap.NamedPlayer;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShapMove;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShapTable;

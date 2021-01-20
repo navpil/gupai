@@ -1,5 +1,7 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
+import io.github.navpil.gupai.XuanHePuPai;
+
 public class RuleSet {
 
     private final GiveDiscardType giveDiscardType;

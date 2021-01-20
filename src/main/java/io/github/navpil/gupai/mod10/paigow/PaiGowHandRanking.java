@@ -1,8 +1,8 @@
 package io.github.navpil.gupai.mod10.paigow;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.mod10.Mod10Rule;
-import io.github.navpil.gupai.rummy.hohpai.XuanHePuPai;
+import io.github.navpil.gupai.XuanHePuPai;
 
 import java.util.HashMap;
 import java.util.Map;

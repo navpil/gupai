@@ -1,6 +1,7 @@
 package io.github.navpil.gupai;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.xiangshifu.BoardState;
+import io.github.navpil.gupai.xiangshifu.Triplet;
 import org.junit.Test;
 
 import java.util.HashSet;

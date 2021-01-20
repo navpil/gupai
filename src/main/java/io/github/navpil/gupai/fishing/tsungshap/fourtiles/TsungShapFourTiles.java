@@ -1,12 +1,12 @@
 package io.github.navpil.gupai.fishing.tsungshap.fourtiles;
 
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.fishing.tsungshap.NamedPlayer;
-import io.github.navpil.gupai.fishing.tsungshap.RunManySimulations;
+import io.github.navpil.gupai.util.RunManySimulations;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShap;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShapRuleSet;
-import io.github.navpil.gupai.jielong.Stats;
+import io.github.navpil.gupai.util.Stats;
 
 import java.util.List;
 

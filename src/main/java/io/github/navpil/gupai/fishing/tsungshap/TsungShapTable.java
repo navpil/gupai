@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.fishing.tsungshap;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.util.Bag;
 import io.github.navpil.gupai.util.HashBag;
 

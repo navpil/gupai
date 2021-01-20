@@ -1,8 +1,8 @@
 package io.github.navpil.gupai.jielong;
 
-import io.github.navpil.gupai.dominos.DominoUtil;
+import io.github.navpil.gupai.DominoUtil;
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 
 import java.util.Collection;
 

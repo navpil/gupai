@@ -1,10 +1,11 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
-import io.github.navpil.gupai.fishing.CircularInteger;
-import io.github.navpil.gupai.fishing.tsungshap.RunManySimulations;
-import io.github.navpil.gupai.jielong.Stats;
+import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.XuanHePuPai;
+import io.github.navpil.gupai.util.CircularInteger;
+import io.github.navpil.gupai.util.RunManySimulations;
+import io.github.navpil.gupai.util.Stats;
 import io.github.navpil.gupai.util.CombineCollection;
 
 import java.util.ArrayList;

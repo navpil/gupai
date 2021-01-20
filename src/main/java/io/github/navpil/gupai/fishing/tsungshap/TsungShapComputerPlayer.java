@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.fishing.tsungshap;
 
-import io.github.navpil.gupai.dominos.Domino;
-import io.github.navpil.gupai.dominos.DominoUtil;
+import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.DominoUtil;
 
 import java.util.LinkedList;
 

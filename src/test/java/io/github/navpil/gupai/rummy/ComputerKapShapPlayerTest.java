@@ -5,7 +5,7 @@ import io.github.navpil.gupai.rummy.kapshap.Mod10Pair;
 import io.github.navpil.gupai.rummy.kapshap.Ngan;
 import io.github.navpil.gupai.ChineseDominoSet;
 import io.github.navpil.gupai.DominoParser;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.rummy.kapshap.KapShapHand;
 import io.github.navpil.gupai.rummy.kapshap.KapShapPlayer;
 import io.github.navpil.gupai.rummy.kapshap.KapShapRuleset;

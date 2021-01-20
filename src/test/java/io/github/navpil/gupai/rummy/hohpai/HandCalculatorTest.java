@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.rummy.hohpai;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import org.junit.Test;
 
 import java.util.Collection;

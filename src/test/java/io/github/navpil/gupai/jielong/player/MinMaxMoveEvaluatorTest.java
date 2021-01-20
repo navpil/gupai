@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.jielong.player;
 
 import io.github.navpil.gupai.jielong.Move;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.jielong.player.evaluators.MinMaxMoveEvaluator;
 import io.github.navpil.gupai.jielong.player.evaluators.PriorityUtil;
 import org.assertj.core.api.Assertions;

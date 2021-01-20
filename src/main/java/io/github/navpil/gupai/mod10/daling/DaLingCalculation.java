@@ -1,13 +1,11 @@
 package io.github.navpil.gupai.mod10.daling;
 
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.mod10.Mod10Rule;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Set;
 
 public class DaLingCalculation {
 

@@ -1,7 +1,7 @@
 package io.github.navpil.gupai;
 
-import io.github.navpil.gupai.dominos.IDomino;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.xiangshifu.ZenZenRules;
 
 import java.util.Arrays;
 import java.util.HashSet;

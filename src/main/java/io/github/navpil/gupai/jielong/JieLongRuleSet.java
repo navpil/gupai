@@ -2,6 +2,7 @@ package io.github.navpil.gupai.jielong;
 
 import io.github.navpil.gupai.jielong.player.MutableInteger;
 import io.github.navpil.gupai.jielong.player.Player;
+import io.github.navpil.gupai.util.Stats;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -23,8 +24,8 @@ public class JieLongRuleSet implements RuleSet {
         }
 
         names.sort((n1, n2) -> {
-            final Integer p1 = stats.points.get(n1);
-            final Integer p2 = stats.points.get(n2);
+            final Integer p1 = stats.getPointsFor(n1);
+            final Integer p2 = stats.getPointsFor(n2);
             if (!p1.equals(p2)) {
                 return p1.compareTo(p2);
             }
@@ -42,8 +43,8 @@ public class JieLongRuleSet implements RuleSet {
             for (int j = i + 1; j < originalNameList.size(); j++) {
                 final String name2 = originalNameList.get(j);
 
-                final Integer player1Points = stats.points.get(name1);
-                final Integer player2Points = stats.points.get(name2);
+                final Integer player1Points = stats.getPointsFor(name1);
+                final Integer player2Points = stats.getPointsFor(name2);
 
                 final int player1WinningPoints = player2Points - player1Points;
 

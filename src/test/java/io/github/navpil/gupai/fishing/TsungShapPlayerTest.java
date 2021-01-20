@@ -4,7 +4,7 @@ import io.github.navpil.gupai.fishing.tsungshap.TsungShapComputerPlayer;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShapMove;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShapRuleSet;
 import io.github.navpil.gupai.DominoParser;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShapPlayer;
 import io.github.navpil.gupai.fishing.tsungshap.TsungShapTable;
 import org.assertj.core.api.Assertions;

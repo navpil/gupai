@@ -1,10 +1,10 @@
 package io.github.navpil.gupai.runners;
 
-import io.github.navpil.gupai.Visualizer;
-import io.github.navpil.gupai.solution.ParallelEightPairSolver;
-import io.github.navpil.gupai.solution.Solution;
-import io.github.navpil.gupai.Triplet;
-import io.github.navpil.gupai.TripletParser;
+import io.github.navpil.gupai.xiangshifu.Visualizer;
+import io.github.navpil.gupai.xiangshifu.solution.ParallelEightPairSolver;
+import io.github.navpil.gupai.xiangshifu.solution.Solution;
+import io.github.navpil.gupai.xiangshifu.Triplet;
+import io.github.navpil.gupai.xiangshifu.TripletParser;
 
 import java.util.List;
 

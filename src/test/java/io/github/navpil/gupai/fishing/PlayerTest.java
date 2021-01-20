@@ -1,7 +1,12 @@
 package io.github.navpil.gupai.fishing;
 
 import io.github.navpil.gupai.DominoParser;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.fishing.tiuu.Catch;
+import io.github.navpil.gupai.fishing.tiuu.ComputerPlayer;
+import io.github.navpil.gupai.fishing.tiuu.Player;
+import io.github.navpil.gupai.fishing.tiuu.RuleSet;
+import io.github.navpil.gupai.fishing.tiuu.Table;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

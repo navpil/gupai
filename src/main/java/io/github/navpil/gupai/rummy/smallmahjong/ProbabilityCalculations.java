@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.rummy.smallmahjong;
 
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 
 import java.util.ArrayList;
 import java.util.Collections;

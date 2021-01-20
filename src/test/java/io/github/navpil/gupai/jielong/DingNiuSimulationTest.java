@@ -1,6 +1,8 @@
 package io.github.navpil.gupai.jielong;
 
 import io.github.navpil.gupai.DominoParser;
+import io.github.navpil.gupai.jielong.dingniu.DingNiuSimulation;
+import io.github.navpil.gupai.jielong.dingniu.DingNiuStats;
 import io.github.navpil.gupai.jielong.player.Player;
 import io.github.navpil.gupai.jielong.player.PlayerFactory;
 import org.assertj.core.api.Assertions;
@@ -14,7 +16,7 @@ public class DingNiuSimulationTest {
 
     @Test
     public void resolveUnusualPoints() {
-        final Stats stats = new Stats();
+        final DingNiuStats stats = new DingNiuStats();
         stats.put("A", 0);
         stats.put("B", 0);
         stats.put("C", 0);
@@ -30,7 +32,7 @@ public class DingNiuSimulationTest {
 
     @Test
     public void resolveNormalPoints() {
-        final Stats stats = new Stats();
+        final DingNiuStats stats = new DingNiuStats();
         stats.put("A", 5);
         stats.put("B", 10);
         stats.put("C", 2);
@@ -46,7 +48,7 @@ public class DingNiuSimulationTest {
 
     @Test
     public void resolveWinningMatchPoints() {
-        final Stats stats = new Stats();
+        final DingNiuStats stats = new DingNiuStats();
         stats.put("A", 10);
         stats.put("B", 2);
         stats.put("C", 2);
@@ -62,7 +64,7 @@ public class DingNiuSimulationTest {
 
     @Test
     public void resolveLosingMatchPoints() {
-        final Stats stats = new Stats();
+        final DingNiuStats stats = new DingNiuStats();
         stats.put("A", 10);
         stats.put("B", 10);
         stats.put("C", 2);
@@ -91,14 +93,14 @@ public class DingNiuSimulationTest {
         Player Dima got -2 points
         Player MinMax got 12 points
 */
-        final Stats stats = new Stats();
-        stats.points.put("Dima", 7);
-        stats.points.put("MinMax", 2);
-        stats.points.put("Rare", 11);
-        stats.points.put("Combine", 14);
+        final DingNiuStats stats = new DingNiuStats();
+        stats.put("Dima", 7);
+        stats.put("MinMax", 2);
+        stats.put("Rare", 11);
+        stats.put("Combine", 14);
         stats.setSuanZhangPlayer(0);
-        final DingNiuSimulation.WinningStats winningStats = DingNiuSimulation.resolvePoints(stats, List.of("Dima", "MinMax", "Rare", "Combine"), 0);
-        Assertions.assertThat(winningStats.getPoints().get("Dima")).isEqualTo(-12);
+        final DingNiuSimulation.WinningStats winningDingNiuStats = DingNiuSimulation.resolvePoints(stats, List.of("Dima", "MinMax", "Rare", "Combine"), 0);
+        Assertions.assertThat(winningDingNiuStats.getPoints().get("Dima")).isEqualTo(-12);
 
     }
 

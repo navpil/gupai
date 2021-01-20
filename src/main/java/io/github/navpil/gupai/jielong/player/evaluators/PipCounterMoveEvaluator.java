@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.jielong.player.evaluators;
 
 import io.github.navpil.gupai.jielong.player.MutableInteger;
-import io.github.navpil.gupai.dominos.DominoUtil;
+import io.github.navpil.gupai.DominoUtil;
 import io.github.navpil.gupai.jielong.Move;
 import io.github.navpil.gupai.jielong.TableVisibleInformation;
 import io.github.navpil.gupai.jielong.player.PlayerState;

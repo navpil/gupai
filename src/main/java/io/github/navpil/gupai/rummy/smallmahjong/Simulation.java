@@ -1,8 +1,8 @@
 package io.github.navpil.gupai.rummy.smallmahjong;
 
-import io.github.navpil.gupai.jielong.Stats;
+import io.github.navpil.gupai.util.Stats;
 import io.github.navpil.gupai.util.CombineCollection;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 
 import java.util.Collection;
 import java.util.List;

@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.rummy.kapshap;
 
-import io.github.navpil.gupai.dominos.Pair;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Pair;
+import io.github.navpil.gupai.Domino;
 
 public class Mod10Pair extends Pair {
 

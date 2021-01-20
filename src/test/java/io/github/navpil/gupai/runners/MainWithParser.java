@@ -1,11 +1,11 @@
 package io.github.navpil.gupai.runners;
 
-import io.github.navpil.gupai.Combination;
-import io.github.navpil.gupai.Triplet;
-import io.github.navpil.gupai.TripletParser;
-import io.github.navpil.gupai.Visualizer;
-import io.github.navpil.gupai.solution.ExactPairWinningCondition;
-import io.github.navpil.gupai.solution.Solver;
+import io.github.navpil.gupai.xiangshifu.Combination;
+import io.github.navpil.gupai.xiangshifu.Triplet;
+import io.github.navpil.gupai.xiangshifu.TripletParser;
+import io.github.navpil.gupai.xiangshifu.Visualizer;
+import io.github.navpil.gupai.xiangshifu.solution.ExactPairWinningCondition;
+import io.github.navpil.gupai.xiangshifu.solution.Solver;
 
 import java.util.List;
 

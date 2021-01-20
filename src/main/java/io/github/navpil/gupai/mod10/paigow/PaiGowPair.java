@@ -1,6 +1,6 @@
 package io.github.navpil.gupai.mod10.paigow;
 
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 
 import java.util.ArrayList;
 import java.util.Collection;

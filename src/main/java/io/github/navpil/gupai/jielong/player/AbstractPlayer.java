@@ -1,7 +1,7 @@
 package io.github.navpil.gupai.jielong.player;
 
 import io.github.navpil.gupai.util.CombineCollection;
-import io.github.navpil.gupai.dominos.Domino;
+import io.github.navpil.gupai.Domino;
 
 import java.util.ArrayList;
 import java.util.Collection;

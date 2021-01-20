@@ -1,7 +1,5 @@
 package io.github.navpil.gupai.util;
 
-import io.github.navpil.gupai.fishing.CircularInteger;
-
 import java.util.AbstractCollection;
 import java.util.ArrayList;
 import java.util.Collection;
