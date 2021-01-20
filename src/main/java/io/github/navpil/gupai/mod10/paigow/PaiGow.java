@@ -1,8 +1,9 @@
 package io.github.navpil.gupai.mod10.paigow;
 
 import io.github.navpil.gupai.ChineseDominoSet;
+import io.github.navpil.gupai.Deck;
 import io.github.navpil.gupai.Domino;
-import io.github.navpil.gupai.util.PlayersGroup;
+import io.github.navpil.gupai.PlayersGroup;
 import io.github.navpil.gupai.mod10.RunGamblingGame;
 
 import java.util.LinkedHashMap;

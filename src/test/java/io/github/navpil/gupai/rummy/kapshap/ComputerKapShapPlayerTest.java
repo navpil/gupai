@@ -1,15 +1,8 @@
-package io.github.navpil.gupai.rummy;
+package io.github.navpil.gupai.rummy.kapshap;
 
-import io.github.navpil.gupai.rummy.kapshap.ComputerKapShapPlayer;
-import io.github.navpil.gupai.rummy.kapshap.Mod10Pair;
-import io.github.navpil.gupai.rummy.kapshap.Ngan;
 import io.github.navpil.gupai.ChineseDominoSet;
-import io.github.navpil.gupai.DominoParser;
 import io.github.navpil.gupai.Domino;
-import io.github.navpil.gupai.rummy.kapshap.KapShapHand;
-import io.github.navpil.gupai.rummy.kapshap.KapShapPlayer;
-import io.github.navpil.gupai.rummy.kapshap.KapShapRuleset;
-import io.github.navpil.gupai.rummy.kapshap.KapShapTableVisibleInformation;
+import io.github.navpil.gupai.DominoParser;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 

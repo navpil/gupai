@@ -3,7 +3,9 @@ package io.github.navpil.gupai.fishing.tsungshap;
 import io.github.navpil.gupai.util.ConsoleInput;
 import io.github.navpil.gupai.Domino;
 
+import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.List;
 
 public class TsungShapRealPlayer implements TsungShapPlayer {
 
@@ -23,30 +25,25 @@ public class TsungShapRealPlayer implements TsungShapPlayer {
     @Override
     public TsungShapMove chooseMove(Domino domino, LinkedList<Domino> row) {
 
-        String prompt = "Row is: \n" + row + "\n" +
-                "You were given this domino: " + domino + ", which move you want to make?\n" +
-                "1) Discard to the left\n" +
-                "2) Discard to the right\n" +
-                "3) Pair with left side\n" +
-                "4) Pair with right side\n" +
-                "5) Triplet with left side\n" +
-                "6) Triple with right side\n" +
-                "7) Triplet with both sides\n";
-        final int moveType = consoleInput.readInt(
-                (i) -> i >= 1 && i <= 7,
-                prompt,
-                "Invalid input"
-        );
-        switch (moveType) {
-            case 1: return new TsungShapMove(TsungShapMove.Type.DISCARD, TsungShapMove.Side.LEFT, domino);
-            case 2: return new TsungShapMove(TsungShapMove.Type.DISCARD, TsungShapMove.Side.RIGHT, domino);
-            case 3: return new TsungShapMove(TsungShapMove.Type.PAIR, TsungShapMove.Side.LEFT, domino);
-            case 4: return new TsungShapMove(TsungShapMove.Type.PAIR, TsungShapMove.Side.RIGHT, domino);
-            case 5: return new TsungShapMove(TsungShapMove.Type.TRIPLET, TsungShapMove.Side.LEFT, domino);
-            case 6: return new TsungShapMove(TsungShapMove.Type.TRIPLET, TsungShapMove.Side.RIGHT, domino);
-            case 7: return new TsungShapMove(TsungShapMove.Type.TRIPLET, TsungShapMove.Side.BOTH, domino);
+        final ArrayList<TsungShapMove> moves = new ArrayList<>(List.of(
+                new TsungShapMove(TsungShapMove.Type.DISCARD, TsungShapMove.Side.LEFT, domino),
+                new TsungShapMove(TsungShapMove.Type.DISCARD, TsungShapMove.Side.RIGHT, domino)
+        ));
+        if (row.size() > 0) {
+            moves.addAll(List.of(
+                    new TsungShapMove(TsungShapMove.Type.PAIR, TsungShapMove.Side.LEFT, domino),
+                    new TsungShapMove(TsungShapMove.Type.PAIR, TsungShapMove.Side.RIGHT, domino)
+            ));
         }
-        throw new IllegalStateException("Move type undefined: " + moveType);
+        if (row.size() > 1) {
+            moves.addAll(List.of(
+                    new TsungShapMove(TsungShapMove.Type.TRIPLET, TsungShapMove.Side.LEFT, domino),
+                    new TsungShapMove(TsungShapMove.Type.TRIPLET, TsungShapMove.Side.RIGHT, domino),
+                    new TsungShapMove(TsungShapMove.Type.TRIPLET, TsungShapMove.Side.BOTH, domino)
+            ));
+        }
+        return consoleInput.choice(moves, false, "Row is: \n" + row + "\n" +
+                "You were given this domino: " + domino + ", which move you want to make?\n");
     }
 
     @Override

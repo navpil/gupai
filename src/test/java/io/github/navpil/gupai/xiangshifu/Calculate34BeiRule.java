@@ -1,5 +1,8 @@
-package io.github.navpil.gupai;
+package io.github.navpil.gupai.xiangshifu;
 
+import io.github.navpil.gupai.ChineseDominoSet;
+import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.IDomino;
 import io.github.navpil.gupai.xiangshifu.Combination;
 import io.github.navpil.gupai.xiangshifu.ZenZenRules;
 

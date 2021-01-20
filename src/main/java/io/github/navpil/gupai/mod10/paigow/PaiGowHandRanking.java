@@ -55,10 +55,24 @@ public enum PaiGowHandRanking {
         RANKING.put(Domino.of(21), threeValue);
     }
 
+    /**
+     * Compares dominoes - which one is higher.
+     *
+     * @param o1 first domino
+     * @param o2 second domino
+     * @return -1 if first is lower (dominoes came in natural order), 1 if first is higher
+     */
     public int compareDominoes(Domino o1, Domino o2) {
         return RANKING.get(o1).compareTo(RANKING.get(o2));
     }
 
+    /**
+     * Compares pairs - which one is higher.
+     *
+     * @param o1 first pair
+     * @param o2 second pair
+     * @return -1 if first is lower (pairs came in natural order), 1 if first is higher
+     */
     public int comparePairs(PaiGowPair o1, PaiGowPair o2) {
         int rank1 = getOveralRanking(o1);
         int rank2 = getOveralRanking(o2);
@@ -74,6 +88,13 @@ public enum PaiGowHandRanking {
         return compareDominoes(normalizedPair(o1).get(0), normalizedPair(o2).get(0));
     }
 
+    /**
+     * Returns an arbitrarily chosen pair ranking - with Supreme ranking highest (36) and mod10[0] ranking the lowest (0).
+     * Does not resolve ties.
+     *
+     * @param pair pair to rank
+     * @return ranking
+     */
     public int getOveralRanking(PaiGowPair pair) {
         final XuanHePuPai.Combination combination = XuanHePuPai.xiangShiFu().evaluate(pair.getDominos());
         if (combination == XuanHePuPai.Combination.SUPREME_PAIR) {
@@ -91,6 +112,13 @@ public enum PaiGowHandRanking {
         return Mod10Rule.TAU_NGAU.getPoints(pair.getDominos()).getMax();
     }
 
+    /**
+     * Describes a PaiGow pair in a human understandable format.
+     * Returns one of: supreme, pair[x], wong, kong, mod10[x].
+     *
+     * @param pair pair to describe
+     * @return human readable description
+     */
     public String describe(PaiGowPair pair) {
         return describe(getOveralRanking(pair));
     }
@@ -126,10 +154,19 @@ public enum PaiGowHandRanking {
         return new PaiGowPair(pair.get(1), pair.get(0));
     }
 
-    public HandComparison compareHands(Hand o1, Hand o2) {
-        Hand o1Normal = normalizedHand(o1);
-        Hand o2Normal = normalizedHand(o2);
-        return new HandComparison(comparePairs(o1Normal.getFirst(), o2Normal.getFirst()), comparePairs(o1Normal.getSecond(), o2Normal.getSecond()));
+    /**
+     * Compares hands - which one is higher.
+     *
+     * If dealer should have an advantage on zeros, then banker's hand has to be passed as a second parameter
+     *
+     * @param hand first hand
+     * @param banker second hand
+     * @return Hand comparison, which may be resolved differently.
+     */
+    public HandComparison compareHands(Hand hand, Hand banker) {
+        Hand normalHand = normalizedHand(hand);
+        Hand normalBankers = normalizedHand(banker);
+        return new HandComparison(comparePairs(normalHand.getFirst(), normalBankers.getFirst()), comparePairs(normalHand.getSecond(), normalBankers.getSecond()));
     }
 
     private Hand normalizedHand(Hand hand) {
@@ -139,10 +176,19 @@ public enum PaiGowHandRanking {
         return new Hand(hand.getSecond(), hand.getFirst());
     }
 
+    /**
+     * Full normalization means that Hand will have higher pair coming first and both pairs will have higher domino coming first
+     *
+     * @param hand hand to normalize
+     * @return normalized hand
+     */
     public Hand fullyNormalize(Hand hand) {
         return normalizedHand(new Hand(normalizedPair(hand.getFirst()), normalizedPair(hand.getSecond())));
     }
 
+    /**
+     * Hand comparison can result differently, depending on how 0 are handled.
+     */
     public static class HandComparison {
 
         private final int high;
@@ -153,10 +199,20 @@ public enum PaiGowHandRanking {
             this.low = low;
         }
 
+        /**
+         * Simplest resolution when a banker has no advantage
+         *
+         * @return simple hand comparison
+         */
         public int resolve() {
             return high + low;
         }
 
+        /**
+         * Resolution when a banker has advantage
+         *
+         * @return banker's at advantage hand comparison
+         */
         public int resolveZeroesLow() {
             return zeroLow(high) + zeroLow(low);
         }

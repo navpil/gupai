@@ -1,7 +1,8 @@
-package io.github.navpil.gupai.mod10;
+package io.github.navpil.gupai.mod10.kolyesi;
 
 import io.github.navpil.gupai.ChineseDominoSet;
 import io.github.navpil.gupai.Domino;
+import io.github.navpil.gupai.mod10.Mod10Rule;
 import io.github.navpil.gupai.mod10.kolyesi.KolYeSiProbabilities;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -82,7 +83,7 @@ public class KolYeSiProbabilitiesTest {
     public void showWinningProbabilityDependingOnDealtTile() {
         double [] averages = new double[10];
         for (int i = 0; i < 10; i++) {
-            final int[] ints = KolYeSiProbabilities.calculateTripletsFrequencyFor(i);
+            final int[] ints = KolYeSiProbabilities.calculateTripletsFrequencyFor(i, Collections.emptyList());
             final double avg = avg(ints);
             averages[i] = avg;
             System.out.println(i + " : " + avg + ", " + Arrays.toString(ints));

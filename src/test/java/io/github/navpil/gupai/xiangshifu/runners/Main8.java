@@ -1,4 +1,4 @@
-package io.github.navpil.gupai.runners;
+package io.github.navpil.gupai.xiangshifu.runners;
 
 import io.github.navpil.gupai.xiangshifu.Combination;
 import io.github.navpil.gupai.xiangshifu.Triplet;

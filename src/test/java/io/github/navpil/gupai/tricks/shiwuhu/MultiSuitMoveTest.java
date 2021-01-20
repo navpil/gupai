@@ -1,4 +1,4 @@
-package io.github.navpil.gupai.tricks;
+package io.github.navpil.gupai.tricks.shiwuhu;
 
 import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.tricks.shiwuhu.MultiSuitMove;

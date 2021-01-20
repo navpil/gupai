@@ -1,5 +1,6 @@
-package io.github.navpil.gupai;
+package io.github.navpil.gupai.xiangshifu;
 
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.xiangshifu.BoardState;
 import io.github.navpil.gupai.xiangshifu.Triplet;
 import org.junit.Test;

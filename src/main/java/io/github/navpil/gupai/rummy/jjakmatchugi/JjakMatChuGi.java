@@ -28,7 +28,7 @@ public class JjakMatChuGi {
         new RunManySimulations().runManySimulations(
                 ChineseDominoSet.create(),
                 players,
-                new RuleSet(RuleSet.Pairs.KOREAN, true, true),
+                RuleSet.mahJongLike(),
                 simCount,
                 jjakMatChuGi::runSimulation,
                 RunManySimulations.PointsCalculationType.KEEP_AS_IS

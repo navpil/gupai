@@ -53,10 +53,21 @@ public class TsungShapMove {
 
     @Override
     public String toString() {
-        return "TsungShapMove{" +
-                "type=" + type +
-                ", side=" + side +
-                ", domino=" + domino +
-                '}';
+        final StringBuilder sb = new StringBuilder();
+        switch (type) {
+            case DISCARD: sb.append("Discard ").append(domino).append(" to");
+            break;
+            case PAIR: sb.append("Pair ").append(domino).append(" with");
+            break;
+            case TRIPLET: sb.append("Triplet ").append(domino).append(" with");
+            break;
+        }
+        switch (side) {
+            case LEFT:sb.append(" the left");break;
+            case RIGHT:sb.append(" the right");break;
+            case BOTH:sb.append(" both sides");break;
+        }
+
+        return sb.toString();
     }
 }

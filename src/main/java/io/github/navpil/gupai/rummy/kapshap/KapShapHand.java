@@ -9,6 +9,9 @@ import java.util.Objects;
 
 public class KapShapHand {
 
+    /**
+     * An "eye" - has to identical tiles
+     */
     private final Ngan ngan;
 
     private final List<Mod10Pair> pairs;

@@ -43,6 +43,7 @@ public class ComputerPlayer implements Player {
             this.winningHand = winningHand;
             return triplet;
         } else {
+            //For now only winning hands are used by the computer player
 //            final Hand hand = hands.stream().filter(h -> h.triplets.stream().anyMatch(t -> t.asBag().contains(lastDiscard) && validType(t, type))).findAny().orElse(null);
 //            if (hand != null) {
 //                final Triplet triplet = hand.triplets.stream().filter(t -> t.asBag().contains(lastDiscard)).findAny().get();

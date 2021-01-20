@@ -17,9 +17,18 @@ import java.util.Map;
 public class CleverPlayer extends AbstractPlayer {
 
     public enum DiscardType {
+        /**
+         * Will stubbornly keep all good dominoes and discard the worst one
+         */
         STUBBORN,
-        WEAK_FIRST,
-        STRONG_FIRST
+        /**
+         * Keeps the combination with BEST tiles, and removes the worst tile from the tiles which are not included in the combination
+         */
+        KEEP_STRONGEST,
+        /**
+         * Keeps the combination with RAREST tiles, and removes the worst tile from the tiles which are not included in the combination
+         */
+        KEEP_RAREST
     }
 
     private final DiscardType discardType;
@@ -29,7 +38,7 @@ public class CleverPlayer extends AbstractPlayer {
     }
 
     public CleverPlayer(String name, boolean stubborn) {
-        this(name, stubborn ? DiscardType.STUBBORN : DiscardType.WEAK_FIRST);
+        this(name, stubborn ? DiscardType.STUBBORN : DiscardType.KEEP_STRONGEST);
     }
     public CleverPlayer(String name, DiscardType discardType) {
         super(name);
@@ -73,7 +82,7 @@ public class CleverPlayer extends AbstractPlayer {
 
     @Override
     public Domino discard() {
-        final Domino worstDomino = DiscardType.STUBBORN == discardType ? findWorstDomino_old() : findWorstDomino();
+        final Domino worstDomino = DiscardType.STUBBORN == discardType ? findWorstDominoStubbornly() : findWorstDomino();
         dominos.remove(worstDomino);
         return worstDomino;
     }
@@ -89,7 +98,7 @@ public class CleverPlayer extends AbstractPlayer {
 
         if (!hands.isEmpty()) {
             HashSet<Collection<Domino>> combinations = new HashSet<>();
-            if (discardType == DiscardType.WEAK_FIRST) {
+            if (discardType == DiscardType.KEEP_STRONGEST) {
                 int strongestHand = 0;
                 for (Hand hand : hands) {
                     final Collection<Domino> singleCombination = hand.getCombinations().iterator().next();
@@ -103,15 +112,15 @@ public class CleverPlayer extends AbstractPlayer {
                     }
                 }
             } else {
-                int strongestHand = Integer.MAX_VALUE;
+                int rarestHand = Integer.MAX_VALUE;
                 for (Hand hand : hands) {
                     final Collection<Domino> singleCombination = hand.getCombinations().iterator().next();
                     final int handStrength = singleCombination.stream().map(dominoStrenghts::get).mapToInt(MutableInteger::getCount).sum();
-                    if (handStrength < strongestHand) {
-                        strongestHand = handStrength;
+                    if (handStrength < rarestHand) {
+                        rarestHand = handStrength;
                         combinations = new HashSet<>();
                         combinations.add(singleCombination);
-                    } else if (handStrength == strongestHand) {
+                    } else if (handStrength == rarestHand) {
                         combinations.add(singleCombination);
                     }
                 }
@@ -184,7 +193,7 @@ public class CleverPlayer extends AbstractPlayer {
         return list.get(0);
     }
 
-    private Domino findWorstDomino_old() {
+    private Domino findWorstDominoStubbornly() {
 
         final Collection<Hand> hands = getHands();
         final HashMap<Domino, MutableInteger> dominoStrenghts = new HashMap<>();
@@ -225,7 +234,7 @@ public class CleverPlayer extends AbstractPlayer {
         }
 
         int minValue = Integer.MAX_VALUE;
-        HashSet<Domino> worstDominos = null;
+        HashSet<Domino> worstDominos = new HashSet<>();
         for (Map.Entry<Domino, MutableInteger> dws : dominoStrenghts.entrySet()) {
             if (dws.getValue().getCount() < minValue) {
                 minValue = dws.getValue().getCount();
@@ -237,9 +246,6 @@ public class CleverPlayer extends AbstractPlayer {
         }
         final ArrayList<Domino> list = new ArrayList<>(worstDominos);
         Collections.shuffle(list);
-//        if (list.size() > 1) {
-//            throw new RuntimeException("YES!!");
-//        }
         return list.get(0);
     }
 }

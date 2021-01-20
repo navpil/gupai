@@ -2,10 +2,15 @@ package io.github.navpil.gupai.mod10.kolyesi;
 
 import io.github.navpil.gupai.Domino;
 
+/**
+ * Player who always puts the same stake and takes the same amount of dominoes
+ */
 public class FixedKolYeSiPlayer implements KolYeSiPlayer {
 
     private final String name;
+    //Fixed stake
     private final int stake;
+    //Fixed number of dominoes taken (1 or 2)
     private final int count;
     private int money;
 

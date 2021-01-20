@@ -8,8 +8,17 @@ import java.util.List;
 public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
 
     private final String name;
+
+    /**
+     * For which value we accept the push (for example we always have to accept the push for 9 and never for 0)
+     */
     private final int pushThreshold;
+
+    /**
+     * Used in stake calculation - having Wen in hand decreases the perfect pair in the bankers hand
+     */
     private final int bonusForWen;
+
     private int money;
     private Domino dealtDomino;
 
@@ -24,6 +33,8 @@ public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
     @Override
     public int stake(Domino domino, int minStake, int maxStake) {
 /*
+These are the expected values for every mod10 value domino has, sorted from low to high
+
  6 : 4.451612903225806
  8 : 4.451612903225806
  4 : 4.473118279569892
@@ -42,6 +53,9 @@ public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
 
         int maxPossibleStake = Math.min(money, maxStake);
 
+        /*
+        Arbitrary choices
+         */
         final int mod10 = getMod10(domino);
         switch (mod10) {
             case 6: case 8: case 4: return Math.min(minStake + bonus, maxPossibleStake);

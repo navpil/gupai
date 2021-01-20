@@ -1,4 +1,4 @@
-package io.github.navpil.gupai.util;
+package io.github.navpil.gupai;
 
 import io.github.navpil.gupai.fishing.tsungshap.NamedPlayer;
 

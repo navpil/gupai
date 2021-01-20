@@ -23,6 +23,7 @@ public class HandCalculator {
             XuanHePuPai.Combination.MILITARY_CHINESE_PAIR,
             XuanHePuPai.Combination.SUPREME_PAIR
     );
+    //1-2-3 and 4-5-6
     private static final Set<XuanHePuPai.Combination> THREES = Set.of(
             XuanHePuPai.Combination.BIG_THREE,
             XuanHePuPai.Combination.SMALL_THREE

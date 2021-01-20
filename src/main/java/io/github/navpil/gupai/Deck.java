@@ -1,10 +1,11 @@
-package io.github.navpil.gupai.mod10.paigow;
-
-import io.github.navpil.gupai.Domino;
+package io.github.navpil.gupai;
 
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * For simplified handling of domino dealing
+ */
 public class Deck {
 
     private final List<Domino> dominos;

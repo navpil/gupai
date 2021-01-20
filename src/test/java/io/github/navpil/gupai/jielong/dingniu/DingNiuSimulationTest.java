@@ -1,4 +1,4 @@
-package io.github.navpil.gupai.jielong;
+package io.github.navpil.gupai.jielong.dingniu;
 
 import io.github.navpil.gupai.DominoParser;
 import io.github.navpil.gupai.jielong.dingniu.DingNiuSimulation;

@@ -1,4 +1,4 @@
-package io.github.navpil.gupai;
+package io.github.navpil.gupai.xiangshifu.runners;
 
 import java.util.Arrays;
 import java.util.concurrent.Callable;

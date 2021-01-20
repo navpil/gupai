@@ -1,4 +1,4 @@
-package io.github.navpil.gupai.mod10;
+package io.github.navpil.gupai.mod10.daling;
 
 import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.mod10.daling.ComputerPlayer;

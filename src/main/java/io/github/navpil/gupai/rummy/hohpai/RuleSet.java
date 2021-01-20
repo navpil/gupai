@@ -9,6 +9,7 @@ public class RuleSet {
     private final XuanHePuPai.Pairs pairs;
 
     //Technically it does not matter what goes first - DISCARD and then DRAW or vice versa
+    // but more players can play if they first draw and then discard
     public enum GiveDiscardType {
         DISCARD_FIRST,
         DRAW_FIRST

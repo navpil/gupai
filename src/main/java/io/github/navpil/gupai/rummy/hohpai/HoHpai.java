@@ -11,11 +11,26 @@ import java.util.List;
 
 public class HoHpai {
 
+    /**
+     * Total rounds played
+     */
     private int totalRounds;
+    /**
+     * How many games came to a deadend with noone winning
+     */
     private int deadends;
+    /**
+     * Maximum amount of rounds played
+     */
     private int maxTotalRounds;
-    private int [] maxTotalRoundsDistribution;
+    /**
+     * Distribution of rounds played
+     */
+    private final int [] maxTotalRoundsDistribution;
 
+    /**
+     * How many rounds can be played before the game is forcefully stopped (50 is a good default)
+     */
     private final int cutoff;
 
     public static void main(String[] args) {
