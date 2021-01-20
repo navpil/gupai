@@ -15,7 +15,7 @@ public class KapShapHand {
     private final Ngan ngan;
 
     private final List<Mod10Pair> pairs;
-    private List<Domino> deadwood;
+    private final List<Domino> deadwood;
 
     public KapShapHand(Ngan ngan, List<Mod10Pair> pairs, List<Domino> deadwood) {
         this.ngan = ngan;
@@ -26,14 +26,6 @@ public class KapShapHand {
     }
     public KapShapHand(Ngan ngan, List<Mod10Pair> pairs) {
         this(ngan, pairs, Collections.emptyList());
-    }
-
-    public Ngan getNgan() {
-        return ngan;
-    }
-
-    public List<Mod10Pair> getPairs() {
-        return pairs;
     }
 
     public List<Domino> getDeadwood() {
