@@ -21,15 +21,11 @@ public class Main8 {
 
         final Set<CombinationType> military = Set.of(CombinationType.NINES, CombinationType.EIGHTS, CombinationType.SEVENS, CombinationType.FIVES);
         final Set<CombinationType> civil = Set.of(CombinationType.HEAVEN, CombinationType.EARTH, CombinationType.MAN, CombinationType.HARMONY);
-        final EightTripletsWinningCondition wc = new EightTripletsWinningCondition(military);
+        final EightTripletsWinningCondition wc = new EightTripletsWinningCondition(civil);
         Visualizer.visualize(new Solver(2, wc).solve(triplets));
 
 
-
-
-
     }
-
 
 
 }

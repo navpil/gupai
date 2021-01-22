@@ -2,14 +2,24 @@ package io.github.navpil.gupai;
 
 public enum CombinationType {
 
-    //ssang-syo - all different
+    /**
+     * BuTong, ssang-syo, all different, 123456
+     */
     DRAGON,
 
-    //tai-sam-tong
+    /**
+     * 3+3, tai-sam-tong
+     */
     SPLIT,
 
     //sok (coincidence and five sons)
+    /**
+     * Five sons, of sok type, x5 same
+     */
     FIVE_SONS,
+    /**
+     * 4xa, b,c; b+c = a, of sok type
+     */
     COINCIDENCE,
 
     //ssang-pyen (Doublets?)

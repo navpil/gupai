@@ -128,9 +128,11 @@ Included games:
   
 ## Single player games
 
-**XiangShiFu** uses modern combinations, so 2-3-3-4-4-5 instead of 2-2-3-3-6-6.
-It should be configurable.
+**XiangShiFu** can be configured to use 2-3-6 or mixed dragon.
 If the 2-2-3-3-6-6 is used, then player should not get a dead pair in the layout.
+Should include other winning conditions, such as Five dragons figthing for throne etc.
+Should add the PuzzleCreator which will create a set of triplets which definitely has a solution.
+For Five dragons start with an end posiiton and then create a start position from it. 
 
 Todo list:
 

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 /**
  * Represents 3 dominoes, though technically it can also represent a pair (+empty domino).
@@ -108,4 +109,16 @@ public class Triplet {
         return new HashBag<>(dominoes);
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Triplet triplet = (Triplet) o;
+        return Objects.equals(dominoes, triplet.dominoes);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(dominoes);
+    }
 }
