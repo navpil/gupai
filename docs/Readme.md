@@ -183,17 +183,17 @@ Wishlist:
  
 Sources: [Culin](https://healthy.uwaterloo.ca/museum/Archives/Culin/Dice1893/kolyesi.html)
 
-### DaLing 打零 (Beat Zeroes)
+### DaLing 打零 (Play Zeroes)
 
 Players put 3 bets - 1 tile bet, 2 tiles bet and 3 tiles bet.
 Banker takes 2 and 5 players take 6 tiles each.
 Players split their 6 tiles into three groups - 1 tile, 2 tiles and 3 tiles.
-Mod 10 calculation, but 0 is highest.
+Mod 10 calculation.
 Each group plays against the banker.
 
-It's not clear whether players have to match banker's hand or, similarly to other games, outrank it.
+Players have to match banker's hand.
 
-Sources: Macao book, [Video with DaLing shown](https://www.youtube.com/watch?v=PmtH7Ad4ayI&t=1s&ab_channel=%EB%8C%80%ED%95%9C%EB%AF%BC%EA%B5%AD%EB%86%80%EC%9D%B4KoreanGame)
+Sources: Macao book, [Video with DaLing shown](https://www.youtube.com/watch?v=nkopQTawTH8)
 
 ## Fishing games
 

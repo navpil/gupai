@@ -5,19 +5,7 @@ import io.github.navpil.gupai.mod10.Mod10Rule;
 import java.util.List;
 
 public class RuleSet {
-    /**
-     * Whether the bet is fixed to some predefined value and players cannot choose it
-     */
-    private final DaLingBet fixedBet;
-    /**
-     * How to calculate bankers pair - should the [2:1] and [4:2] be wild, or count 3 and 6 respectively
-     */
-    private final Mod10Rule bankersPairCalculation;
 
-    /**
-     * whether players have to match the banker's points exactly and not overrank it
-     */
-    private final boolean exactPointGame;
     /**
      * Whether banker will win all the stakes when no one can match his points (exact point game only)
      */
@@ -28,36 +16,36 @@ public class RuleSet {
     private final int bankerLossOnAbsoluteWinner;
 
 
-    public RuleSet(DaLingBet fixedBet, Mod10Rule bankersPairCalculation, boolean exactPointGame, boolean letBankerWinNonMatches, int bankerLossOnAbsoluteWinner) {
-        this.fixedBet = fixedBet;
-        this.bankersPairCalculation = bankersPairCalculation;
-        this.exactPointGame = exactPointGame;
+    public RuleSet(boolean letBankerWinNonMatches, int bankerLossOnAbsoluteWinner) {
         this.letBankerWinNonMatches = letBankerWinNonMatches;
         this.bankerLossOnAbsoluteWinner = bankerLossOnAbsoluteWinner;
     }
 
+    /**
+     * My ruleset with a banker winning pushes and losing to an absolute winner
+     *
+     * @return adjusted Macao rule set
+     */
     public static RuleSet macaoWithBanker() {
-        return new RuleSet(new DaLingBet(List.of(3, 7, 15)), Mod10Rule.DA_LING_BANKER, true, true, 5);
+        return new RuleSet(true, 5);
     }
 
+    /**
+     * Probably the most logical rule set, where banker wins or loses nothing, but simply provides the tiles.
+     * In case of several players winning - there is a push.
+     *
+     * @return ruleset as described in the Macao book
+     */
     public static RuleSet macao() {
-        return new RuleSet(new DaLingBet(List.of(3, 7, 15)), Mod10Rule.DA_LING_BANKER, true, false, 0);
-    }
-
-    public static RuleSet alternative() {
-        return new RuleSet(null, Mod10Rule.DA_LING, false, false, 0);
+        return new RuleSet(false, 0);
     }
 
     public DaLingBet getFixedBet() {
-        return fixedBet;
+        return new DaLingBet(List.of(3, 7, 15));
     }
 
     public Mod10Rule getBankersPairCalculation() {
-        return bankersPairCalculation;
-    }
-
-    public boolean isExactPointGame() {
-        return exactPointGame;
+        return Mod10Rule.DA_LING_BANKER;
     }
 
     public boolean isLetBankerWinNonMatches() {

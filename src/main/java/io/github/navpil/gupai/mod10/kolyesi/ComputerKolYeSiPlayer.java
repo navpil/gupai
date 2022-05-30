@@ -3,30 +3,24 @@ package io.github.navpil.gupai.mod10.kolyesi;
 import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.mod10.Mod10Rule;
 
-import java.util.List;
-
-public class ComputerKolYeSiPlayer implements KolYeSiPlayer {
-
-    private final String name;
+public class ComputerKolYeSiPlayer extends PlayerSkeletal {
 
     /**
      * For which value we accept the push (for example we always have to accept the push for 9 and never for 0)
      */
-    private final int pushThreshold;
+    private final int minAcceptable;
 
     /**
      * Used in stake calculation - having Wen in hand decreases the perfect pair in the bankers hand
      */
     private final int bonusForWen;
 
-    private int money;
     private Domino dealtDomino;
 
-    public ComputerKolYeSiPlayer(String name, int money, int pushThreshold, int bonusForWen) {
-        this.name = name;
-        this.money = money;
+    public ComputerKolYeSiPlayer(String name, int money, int minAcceptable, int bonusForWen) {
+        super(name, money);
 
-        this.pushThreshold = pushThreshold;
+        this.minAcceptable = minAcceptable;
         this.bonusForWen = bonusForWen;
     }
 
@@ -51,7 +45,7 @@ These are the expected values for every mod10 value domino has, sorted from low 
 
         int step = (maxStake - minStake) / 4;
 
-        int maxPossibleStake = Math.min(money, maxStake);
+        int maxPossibleStake = Math.min(getMoney(), maxStake);
 
         /*
         Arbitrary choices
@@ -73,29 +67,27 @@ These are the expected values for every mod10 value domino has, sorted from low 
     }
 
     @Override
-    public int dominoCount(Domino d1, Domino d2) {
-        final int bankersMod10 = geMod10(d1, d2);
+    public int dominoCount() {
 
-        final int[] pairs = KolYeSiProbabilities.calculatePairsFrequencyFor(dealtDomino, List.of(d1, d2));
-        final int[] triplets = KolYeSiProbabilities.calculateTripletsFrequencyFor(dealtDomino, List.of(d1, d2));
+        final int[] pairs = KolYeSiProbabilities.calculatePairsFrequencyFor(dealtDomino);
+        final int[] triplets = KolYeSiProbabilities.calculateTripletsFrequencyFor(dealtDomino);
 
-        int pairsSum = 29;//sum(pairs);
-        int tripletsSum = 406;//sum(triplets);
+        int pairsSum = 31;//sum(pairs);
+        int tripletsSum = 465;//sum(triplets);
 
-        int maxAcceptable = (bankersMod10 >= pushThreshold) ? bankersMod10 : bankersMod10 + 1;
         int acceptablePairs = 0;
         int acceptableTriplets = 0;
 
-        for (int i = 9; i >= maxAcceptable; i--) {
+        //Maybe not the best calculation available.
+        //We simply say what we still accept, and which pairs are acceptable for us
+        //For instance if we still accept 5, we check how many pairs are acceptable as 5 and how many triplets
+        //It would be better to somehow differentiate possibilites when there are 10 pairs for 9 and 1 for 8 and vice versa.
+        for (int i = 9; i >= minAcceptable; i--) {
             acceptablePairs += pairs[i];
             acceptableTriplets += triplets[i];
         }
 
         return (1.0 * acceptablePairs / pairsSum) > (1.0 * acceptableTriplets / tripletsSum) ? 1 : 2;
-    }
-
-    private int geMod10(Domino d1, Domino d2) {
-        return Mod10Rule.KOL_YE_SI.getPoints(List.of(d1, d2)).getMax();
     }
 
     private int sum(int[] ints) {
@@ -107,23 +99,4 @@ These are the expected values for every mod10 value domino has, sorted from low 
         return total;
     }
 
-    @Override
-    public void lose(int stake) {
-        money -= stake;
-    }
-
-    @Override
-    public void win(int stake) {
-        money += stake;
-    }
-
-    @Override
-    public int getMoney() {
-        return money;
-    }
-
-    @Override
-    public String getName() {
-        return name;
-    }
 }

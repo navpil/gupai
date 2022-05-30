@@ -4,7 +4,9 @@ import io.github.navpil.gupai.ChineseDominoSet;
 import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.mod10.Mod10Rule;
 import io.github.navpil.gupai.mod10.RunGamblingGame;
+import io.github.navpil.gupai.util.ConsoleOutput;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -13,18 +15,27 @@ import java.util.stream.Collectors;
 public class TauNgau {
 
     public static final Mod10Rule MOD_10_RULE = Mod10Rule.TAU_NGAU;
+    private static final ConsoleOutput CONSOLE = new ConsoleOutput(false, false);
 
     public static void main(String[] args) {
         final List<Domino> deck = ChineseDominoSet.create();
         final List<Player> gamblers = List.of(
                 new BankerPlayer("Banker"),
                 new ComputerPlayer("Comp-2", 100),
-                new RealPlayer("Jim", 100)
+                new ComputerPlayer("Comp-1", 100),
+                new ComputerPlayer("Comp-3", 100)
+//                new RealPlayer("Jim", 100)
         );
-        new RunGamblingGame().runManyGames(deck, gamblers, 100, null, true, (dominos, players, ruleSet, banker) -> runSimulation(dominos, players, banker));
+        ArrayList<Player> copy = new ArrayList<>(gamblers);
+        new RunGamblingGame().runManyGames(deck, gamblers, 100, null, true,
+                (dominos, players, ruleSet, banker) -> runSimulation(dominos, players, banker, TauNgauRuleSet.macaoFixed()));
+
+        for (Player player : copy) {
+            CONSOLE.sayAlways(player.getName() + " has " + player.getMoney());
+        }
     }
 
-    public static RunGamblingGame.RunResult runSimulation(List<Domino> dominos, List<Player> players, int bankerIndex) {
+    public static RunGamblingGame.RunResult runSimulation(List<Domino> dominos, List<Player> players, int bankerIndex, TauNgauRuleSet ruleSet) {
 
         final HashMap<String, Integer> bets = new HashMap<>();
         final HashMap<String, Boolean> discards = new HashMap<>();
@@ -35,7 +46,7 @@ public class TauNgau {
                 continue;
             }
             final Player player = players.get(i);
-            bets.put(player.getName(), player.placeBet());
+            bets.put(player.getName(), ruleSet.getFixedStake() > 0 ? ruleSet.getFixedStake() : player.placeBet());
         }
         //Deal
         for (int i = 0; i < players.size(); i++) {
@@ -44,18 +55,18 @@ public class TauNgau {
         //Discard
         for (final Player player : players) {
             Collection<Domino> discard = player.discard();
-            System.out.println(player.getName() + " discarded " + (discard.isEmpty() ? "nothing" : discard));
+            CONSOLE.say(player.getName() + " discarded " + (discard.isEmpty() ? "nothing" : discard));
             discards.put(player.getName(), !discard.isEmpty() && isValid(discard));
         }
 
         //Calculation
         final Player banker = players.get(bankerIndex);
         boolean bankerDiscarded = discards.get(banker.getName());
-        int bankerPoints = bankerDiscarded ? MOD_10_RULE.getPoints(banker.hand()).getMax() : -1;
+        int bankerPoints = bankerDiscarded ? ruleSet.getMod10Rule().getPoints(banker.hand()).getMax() : -1;
         if (bankerDiscarded) {
-            System.out.println("Banker has a hand of " + banker.hand());
+            CONSOLE.say("Banker has a hand of " + banker.hand());
         } else {
-            System.out.println("Banker did not discard");
+            CONSOLE.say("Banker did not discard");
         }
         for (int i = 0; i < players.size(); i++) {
             if (i == bankerIndex) {
@@ -64,36 +75,26 @@ public class TauNgau {
             final Player player = players.get(i);
             final boolean playerDiscarded = discards.get(player.getName());
             final Integer stake = bets.get(player.getName());
-            if (bankerDiscarded && playerDiscarded) {
-                final Integer playerPoints = MOD_10_RULE.getPoints(player.hand()).getMax();
-                System.out.println(player. getName() + " got " + player.hand());
-                if (playerPoints > bankerPoints) {
-                    player.win(stake);
-                    banker.lose(stake);
-                    System.out.println(player.getName() + " won");
-                } else if (bankerPoints > playerPoints) {
-                    player.lose(stake);
-                    banker.win(stake);
-                    System.out.println(player.getName() + " lost");
-                } else {
-                    System.out.println(player.getName() + " pushed");
-                }
+            CONSOLE.say(player.getName() + " has a hand of " + player.hand());
 
+            int multiplier = ruleSet.getCalculation().calculatePlayerWinning(
+                    playerDiscarded,
+                    bankerDiscarded,
+                    playerDiscarded ? ruleSet.getMod10Rule().getPoints(player.hand()).getMax() : -1,
+                    bankerPoints);
+
+            int wonAmount = stake * multiplier;
+            if (wonAmount > 0) {
+                CONSOLE.say(player.getName() + " won " + wonAmount);
+            } else if (wonAmount < 0) {
+                CONSOLE.say(player.getName() + " lost " + (-wonAmount));
             } else {
-                if (bankerDiscarded) {
-                    System.out.println(player.getName() + " did not discard, lost");
-                    player.lose(stake);
-                    banker.win(stake);
-                } else if (playerDiscarded) {
-                    System.out.println(player.getName() + " discarded, won");
-                    player.win(stake);
-                    banker.lose(stake);
-                } else {
-                    System.out.println(player.getName() + " did not discard, push");
-                }
+                CONSOLE.say(player.getName() + " pushed");
             }
+            player.win(wonAmount);
+            banker.lose(wonAmount);
         }
-        System.out.println(players.stream().map(p -> p.getName() + ": " + p.getMoney()).collect(Collectors.toList()));
+        CONSOLE.say("" + players.stream().map(p -> p.getName() + ": " + p.getMoney()).collect(Collectors.toList()));
         if (bankerDiscarded) {
             return RunGamblingGame.RunResult.CHANGE_BANKER;
         } else {

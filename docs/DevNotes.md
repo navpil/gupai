@@ -49,16 +49,26 @@ Not in plans:
 **Kol-ye-si** seems to give a preference to a player, not a banker, maybe there is no point in improving the AI. 
 Same probably goes for DaLing.
 
+Player has preference over banker.
+If min-max stakes are different at least x10 simplest computer player always wins.
+If stakes are fixed, then player has to deploy some cleverer techniques, but still wins.
+
+Random player loses.
+
 **DaLing** rules are not clear at all. 
-Therefore, at least two variations were created. 
-In a first one players should outrank the banker's hand. 
-Since banker is at a disadvantage in this game, game is better played as a non-casino (friendly) with a round-robin banker.
-There is no use of RED/BLACK game type described in the rules.
-The second variation is an *exact point* game where players should match the banker's hand exactly.
+The interpreted ruls are the *exact point* game where players should match the banker's hand exactly.
 It can be played in both casino and friendly way.
 This game already uses the RED/BLACK game type evaluation.
 Rules do not specify what should happen if no one matches banker's hands or what happens if several players are in a tie.
 Because of these uncertainties I had to create the rules I saw fit.
+
+**TauNgau** has two sets of rules.
+*pagat* rules as in Pagat.com website. There is no advantage over the player nor banker.
+*macao* rules as in Macao book give a slight preference to the player.
+
+Since Casino should always win, I've fixed the *macao* rules.
+
+In a friendly game *pagat* rules should be used - and the banker will be changed round-robin.
 
 Make all games to use RunGamblingGame
 

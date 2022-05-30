@@ -2,9 +2,11 @@ package io.github.navpil.gupai.mod10.kolyesi;
 
 import io.github.navpil.gupai.Domino;
 
-public class KolYeSiBanker implements KolYeSiPlayer {
+public class KolYeSiBanker extends PlayerSkeletal {
 
-    private int money;
+    public KolYeSiBanker() {
+        super("Banker", 0);
+    }
 
     @Override
     public int stake(Domino domino, int minStake, int maxStake) {
@@ -12,23 +14,8 @@ public class KolYeSiBanker implements KolYeSiPlayer {
     }
 
     @Override
-    public int dominoCount(Domino d1, Domino d2) {
+    public int dominoCount() {
         throw new UnsupportedOperationException();
-    }
-
-    @Override
-    public void lose(int stake) {
-        money -= stake;
-    }
-
-    @Override
-    public void win(int stake) {
-        money += stake;
-    }
-
-    @Override
-    public int getMoney() {
-        return money;
     }
 
     @Override
@@ -39,10 +26,5 @@ public class KolYeSiBanker implements KolYeSiPlayer {
     @Override
     public boolean isBankrupt() {
         return false;
-    }
-
-    @Override
-    public String getName() {
-        return "Banker";
     }
 }

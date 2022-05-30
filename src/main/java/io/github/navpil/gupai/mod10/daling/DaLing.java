@@ -23,19 +23,19 @@ public class DaLing {
 
     public static void main(String[] args) {
         final List<Domino> deck = ChineseDominoSet.create();
-        final int money = 500;
+        final int money = 100;
         final List<Player> gamblers = List.of(
                 new BankerPlayer("Banker"),
-                new ComputerPlayer("Comp-1", money, false),
-                new ComputerPlayer("Comp-2", money, false),
-                new ComputerPlayer("Comp-3", money, true),
-                new ComputerPlayer("Comp-4", money, true),
+                new ComputerPlayer("Comp-1", money),
+                new ComputerPlayer("Comp-2", money),
+                new ComputerPlayer("Comp-3", money),
+                new ComputerPlayer("Comp-4", money)
 //                new ComputerPlayer("Comp-5", money, true)
-                new HumanPlayer("Mark", money)
+//                new HumanPlayer("Mark", money)
         );
-        final RuleSet ruleSet = RuleSet.macaoWithBanker();
+        final RuleSet ruleSet = RuleSet.macao();
         final DaLing daLing = new DaLing(ruleSet);
-        new RunGamblingGame().runManyGames(deck, gamblers, 100, /*exact point game is best played with banker*/ruleSet.isExactPointGame(), daLing::runSimulation);
+        new RunGamblingGame().runManyGames(deck, gamblers, 100, /*exact point game is best played with banker*/true, daLing::runSimulation);
     }
 
     public static class PlayersGroup {
@@ -68,7 +68,8 @@ public class DaLing {
     public RunGamblingGame.RunResult runSimulation(List<Domino> deck, List<Player> allPlayers, int bankerIndex) {
 
         PlayersGroup playersGroup = new PlayersGroup(allPlayers, bankerIndex);
-        if (ruleSet.isExactPointGame() && !ruleSet.isLetBankerWinNonMatches() && playersGroup.getPlayers().size() == 1) {
+        //In an exact point game there is no point in playing for a single player if a banker cannot win anything
+        if (!ruleSet.isLetBankerWinNonMatches() && playersGroup.getPlayers().size() == 1) {
             return RunGamblingGame.RunResult.STOP_THE_GAME;
         }
         final ArrayList<Domino> dominos = new ArrayList<>(deck);
@@ -78,11 +79,7 @@ public class DaLing {
 
         //Bets
         for (Player player : playersGroup.getPlayers()) {
-            if (ruleSet.getFixedBet() != null) {
-                bets.put(player.getName(), ruleSet.getFixedBet());
-            } else {
-                bets.put(player.getName(), player.placeBets());
-            }
+            bets.put(player.getName(), ruleSet.getFixedBet());
         }
         //Deal
         final List<Domino> firstTwoDominos = dominos.subList(0, 2);
@@ -99,7 +96,7 @@ public class DaLing {
 
         //Decide on hands
         for (Player player : playersGroup.getPlayers()) {
-            DaLingHand hand = player.getHand(ruleSet.isExactPointGame() ? table : null);
+            DaLingHand hand = player.getHand(table);
             hands.put(player.getName(), hand);
         }
 
@@ -107,39 +104,9 @@ public class DaLing {
         int bankerPoints = table.getBankerPoints();
         System.out.println("Banker got " + bankersPair + " which results in " + bankerPoints);
 
-        if (ruleSet.isExactPointGame()) {
-            exactPointsCalculation(playersGroup, bets, hands, table);
-        } else {
-            usualPointsCalculation(playersGroup, bets, hands, bankerPoints);
-        }
+        exactPointsCalculation(playersGroup, bets, hands, table);
         System.out.println(allPlayers.stream().map(p -> p.getName() + ": " + p.getMoney()).collect(Collectors.toList()));
         return RunGamblingGame.RunResult.CHANGE_BANKER;
-    }
-
-    private void usualPointsCalculation(PlayersGroup group, HashMap<String, DaLingBet> bets, HashMap<String, DaLingHand> hands,int bankerPoints) {
-        Player banker = group.getBanker();
-        for (Player player : group.getPlayers()) {
-            final DaLingBet bet = bets.get(player.getName());
-            final DaLingHand hand = hands.get(player.getName());
-            for (int j = 0; j < 3; j++) {
-                final Integer stake = bet.getBet(j);
-                final Collection<Domino> dominoes = hand.getStack(j);
-                final Integer playerPoints = Mod10Rule.DA_LING.getPoints(dominoes).getMax();
-                System.out.println(player.getName() + " got " + dominoes + " (" + (j + 1) + ")");
-                if (playerPoints > bankerPoints) {
-                    player.win(stake);
-                    banker.lose(stake);
-                    System.out.println(player.getName() + " won");
-                } else if (bankerPoints > playerPoints) {
-                    player.lose(stake);
-                    banker.win(stake);
-                    System.out.println(player.getName() + " lost");
-                } else {
-                    System.out.println(player.getName() + " pushed");
-                }
-            }
-
-        }
     }
 
     private void exactPointsCalculation(PlayersGroup players, HashMap<String, DaLingBet> bets, HashMap<String, DaLingHand> hands, Table table) {
@@ -167,15 +134,15 @@ public class DaLing {
             System.out.println("Absolute winner " + name + " won all stakes with a hand " + hands.get(name));
         } else {
             for (int stackIndex = 0; stackIndex < 3; stackIndex++) {
-                final WinnerResult usualWinner = findUsualWinner(players, stackIndex, table, hands);
-                final Player bestPlayer = usualWinner.getWinner();
+                final WinnerResult winnerResult = findUsualWinner(players, stackIndex, table, hands);
+                final Player bestPlayer = winnerResult.getWinner();
                 if (ruleSet.isLetBankerWinNonMatches() && bestPlayer == null) {
                     for (Player player : players.getPlayers()) {
                         final Integer bet = bets.get(player.getName()).getBet(stackIndex);
                         banker.win(bet);
                         player.lose(bet);
                     }
-                } else if (!usualWinner.isPushed() && bestPlayer != null) {
+                } else if (!winnerResult.isPushed() && bestPlayer != null) {
                     int betSum = 0;
                     for (Player player : players.getPlayers()) {
                         final Integer betByPlayer = bets.get(player.getName()).getBet(stackIndex);
@@ -203,7 +170,9 @@ public class DaLing {
 
             final boolean canBeExactly = Mod10Rule.DA_LING.getPoints(part).canBeExactly(bankerPoints);
             if (canBeExactly) {
-                int currentPips = tableColor == Table.GameColor.RED ? part.stream().mapToInt(DominoUtil::redPointsCount).sum() : part.stream().mapToInt(DominoUtil::blackPointsCount).sum();
+                int currentPips = tableColor == Table.GameColor.RED ?
+                        part.stream().mapToInt(DominoUtil::redPointsCount).sum() :
+                        part.stream().mapToInt(DominoUtil::blackPointsCount).sum();
                 System.out.println(player.getName() + " got " + part + " (" + ("can match " + bankerPoints) + ") on " + tableColor + " table with pips " + currentPips);
                 if (currentPips > maxPips) {
                     pushed = false;

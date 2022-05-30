@@ -7,8 +7,6 @@ import java.util.List;
 
 public interface Player extends RunGamblingGame.Gambler {
 
-    DaLingBet placeBets();
-
     void deal(List<Domino> deal);
 
     DaLingHand getHand(Table table);

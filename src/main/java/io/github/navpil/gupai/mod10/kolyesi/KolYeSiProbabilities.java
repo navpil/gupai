@@ -18,6 +18,22 @@ public class KolYeSiProbabilities {
      * [2, 5 ..... ]
      *
      * @param domino domino to search probabilities for
+     * @return array with pair frequency per sum
+     */
+    public static int[] calculatePairsFrequencyFor(Domino domino) {
+        final int currentDominoMod10 = Mod10Rule.KOL_YE_SI.getPoints(domino).getMax();
+
+        return calculatePairsFrequencyFor(currentDominoMod10, Collections.emptyList());
+    }
+
+    /**
+     * What are the probabilities of getting a pair for a given domino per points sum.
+     *
+     * For example if the frequency for 0 points is 2 and for 1 point is 5, resulting array will start with
+     *
+     * [2, 5 ..... ]
+     *
+     * @param domino domino to search probabilities for
      * @param excluded dominoes not to search for a pair (unaccessible dominoes)
      * @return array with pair frequency per sum
      */
@@ -45,6 +61,23 @@ public class KolYeSiProbabilities {
         }
 
         return pairs;
+    }
+
+    /**
+     * What are the probabilities of getting a triplet for a given domino per points sum.
+     *
+     * For example if the frequency for 0 points is 2 and for 1 point is 5, resulting array will start with
+     *
+     * [2, 5 ..... ]
+     *
+     * @param domino domino to search probabilities for
+     * @return array with triplet frequency per sum
+     */
+    public static int[] calculateTripletsFrequencyFor(Domino domino) {
+
+        final int currentDominoMod10 = Mod10Rule.KOL_YE_SI.getPoints(domino).getMax();
+
+        return calculateTripletsFrequencyFor(currentDominoMod10, Collections.emptyList());
     }
 
     /**
