@@ -32,11 +32,13 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
     @Override
     public void deal(List<Domino> dominoes) {
         this.dominoes = new ArrayList<>(dominoes);
+        winningHand = null;
+        discard = null;
     }
 
     @Override
     public Domino offer(List<Domino> offer) {
-        final ArrayList<Domino> dominoesCopy = new ArrayList<>(dominoes);
+        System.out.println("Offered: " + offer + " and I have " + dominoes);
         final KapShapTableVisibleInformation table = KapShapTableVisibleInformation.copyOf(this.table);
         int maxPriority = -1;
         KapShapHand bestHand = null;
@@ -45,6 +47,7 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
 
         best_hand_loop:
         for (Domino domino : offer) {
+            final ArrayList<Domino> dominoesCopy = new ArrayList<>(dominoes);
             dominoesCopy.add(domino);
             table.remove(domino);
             final KapShapHand goodHand = getBestHand(dominoesCopy, table);
@@ -68,6 +71,7 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
                 priorities = List.of(tempPriorities.get(0), tempPriorities.get(1));
             } else {
                 if (goodHand.getDeadwood().size() > maxAllowedDeadWood) {
+                    table.add(domino);
                     continue best_hand_loop;
                 } else if (goodHand.getDeadwood().size() < maxAllowedDeadWood) {
                     maxAllowedDeadWood = goodHand.getDeadwood().size();
@@ -78,7 +82,7 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
                     wished = null;
                 }
 
-                priorities = getPriorities(goodHand.getDeadwood(), table, dominoes);
+                priorities = getPriorities(goodHand.getDeadwood(), table, dominoesCopy);
             }
             //If there is no deadwood, then this should have been a winning hand
             //noinspection OptionalGetWithoutIsPresent
@@ -97,13 +101,20 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
         if (bestHand == null) {
             return null;
         }
+        if (wished == null) {
+            return null;
+        }
 
+        final KapShapTableVisibleInformation possibleTable = KapShapTableVisibleInformation.copyOf(this.table);
+        possibleTable.remove(wished);
+        ArrayList<Domino> possibleOwnDominoes = new ArrayList<>(dominoes);
+        possibleOwnDominoes.add(wished);
         Domino discarded;
         if (bestHand.getDeadwood().isEmpty()) {
             //It may happen that hand consists only of pairs
-            discarded = findDeadliestDomino(dominoes);
+            discarded = findDeadliestDomino(possibleOwnDominoes, possibleTable, possibleOwnDominoes);
         } else {
-            discarded = findDeadliestDomino(bestHand.getDeadwood());
+            discarded = findDeadliestDomino(bestHand.getDeadwood(), possibleTable, possibleOwnDominoes);
         }
 
         //No point in taking a domino if it will be discarded later
@@ -129,9 +140,9 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
         }
         if (bestHand1.getDeadwood().isEmpty()) {
             //It may happen that hand consists only of pairs
-            discarded = findDeadliestDomino(dominoes);
+            discarded = findDeadliestDomino(dominoes, table, dominoes);
         } else {
-            discarded = findDeadliestDomino(bestHand1.getDeadwood());
+            discarded = findDeadliestDomino(bestHand1.getDeadwood(), table, dominoes);
         }
 
         discard = discarded;
@@ -153,7 +164,7 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
                 }
                 hands.add(hand);
             }
-            int minDeadWood = 10;
+            int minDeadWood = Integer.MAX_VALUE;
             for (KapShapHand hand : hands) {
                 minDeadWood = Math.min(hand.getDeadwood().size(), minDeadWood);
             }
@@ -197,19 +208,21 @@ public class ComputerKapShapPlayer implements KapShapPlayer {
         return discard;
     }
 
-    private Domino findDeadliestDomino(List<Domino> deadwood) {
+    private Domino findDeadliestDomino(List<Domino> deadwood, KapShapTableVisibleInformation table, List<Domino> ownDominos) {
         Domino discarded;
         //First sort by Civil, civil go last (so discarded later)
         deadwood.sort(CivilMilitaryComparator.INSTANCE.reversed());
 
-        List<Integer> priorities = getPriorities(deadwood, table, dominoes);
+        List<Integer> priorities = getPriorities(deadwood, table, ownDominos);
 
         final List<Domino> sortedDeadwood = PriorityUtil.sort(priorities, deadwood);
         discarded = sortedDeadwood.get(0);
         return discarded;
     }
 
-    private static List<Integer> getPriorities(List<Domino> deadwood, KapShapTableVisibleInformation table, List<Domino> dominoes) {
+    private static List<Integer> getPriorities(List<Domino> deadwood,
+                                               KapShapTableVisibleInformation table,
+                                               List<Domino> dominoes) {
         int [] frequencies = table.getTotalFrequencies();
 
         Collection<Domino> openDominoes = table.getOpenDominoes();

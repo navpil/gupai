@@ -21,14 +21,14 @@ public class TauNgau {
         final List<Domino> deck = ChineseDominoSet.create();
         final List<Player> gamblers = List.of(
                 new BankerPlayer("Banker"),
-                new ComputerPlayer("Comp-2", 100),
-                new ComputerPlayer("Comp-1", 100),
-                new ComputerPlayer("Comp-3", 100)
+                new ComputerPlayer("Comp-2", 1000),
+                new ComputerPlayer("Comp-1", 1000),
+                new ComputerPlayer("Comp-3", 1000)
 //                new RealPlayer("Jim", 100)
         );
         ArrayList<Player> copy = new ArrayList<>(gamblers);
-        new RunGamblingGame().runManyGames(deck, gamblers, 100, null, true,
-                (dominos, players, ruleSet, banker) -> runSimulation(dominos, players, banker, TauNgauRuleSet.macaoFixed()));
+        new RunGamblingGame().runManyGames(deck, gamblers, 10000, null, true,
+                (dominos, players, ruleSet, banker) -> runSimulation(dominos, players, banker, TauNgauRuleSet.macao()));
 
         for (Player player : copy) {
             CONSOLE.sayAlways(player.getName() + " has " + player.getMoney());

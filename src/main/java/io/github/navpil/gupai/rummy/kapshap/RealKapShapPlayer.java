@@ -34,6 +34,7 @@ public class RealKapShapPlayer implements KapShapPlayer {
     public void deal(List<Domino> dominoes) {
         this.dominos.clear();
         this.dominos.addAll(dominoes);
+        winningHand = null;
     }
 
     @Override

@@ -1,17 +1,29 @@
 package io.github.navpil.gupai.rummy.smallmahjong;
 
+import io.github.navpil.gupai.Domino;
 import io.github.navpil.gupai.util.Bag;
 import io.github.navpil.gupai.util.HashBag;
-import io.github.navpil.gupai.Domino;
 
 import java.util.Collection;
 import java.util.HashMap;
 
 public class Table {
 
+    final HashMap<String, Bag<Triplet>> winningTriplets = new HashMap<>();
     private HashBag<Domino> dominos = new HashBag<>();
     private Domino lastDiscard;
-    final HashMap<String, Bag<Triplet>> winningTriplets = new HashMap<>();
+
+    public HashBag<Domino> getAllVisibleDominoes() {
+        HashBag<Domino> visible = new HashBag<>();
+
+        visible.addAll(dominos);
+        for (Bag<Triplet> value : winningTriplets.values()) {
+            for (Triplet triplet : value) {
+                visible.addAll(triplet.asBag());
+            }
+        }
+        return visible;
+    }
 
     public Domino lastDiscard() {
         return lastDiscard;

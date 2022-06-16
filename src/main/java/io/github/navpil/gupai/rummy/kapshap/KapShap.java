@@ -11,10 +11,20 @@ public class KapShap {
 
     public static void main(String[] args) {
         final List<KapShapPlayer> players = List.of(
-                new RealKapShapPlayer("Jim"),
-                new ComputerKapShapPlayer("Third")
+//                new RealKapShapPlayer("Jim"),
+                new ComputerKapShapPlayer("Third"),
+                new ComputerKapShapPlayer("Second")
         );
-        final KapShapRuleset rules = new KapShapRuleset(KapShapRuleset.Offer.LAST, true, 1, 8, false);
+        //gin ~8.5
+        //classic ~6.47
+        //culin ~6.0
+        final KapShapRuleset rules = KapShapRuleset.ginKapShap();
+//        new KapShapRuleset(
+//                KapShapRuleset.Offer.LAST,
+//                false,//true,
+//                1,
+//                8,
+//                false);
         final Stats stats = new RunManySimulations().runManySimulations(ChineseDominoSet.create(), players, rules, 100, KapShap::runSimulation);
         System.out.println(stats);
     }
@@ -35,6 +45,7 @@ public class KapShap {
         final int firstI = players.size() * cardsPerPlayer;
         int dominoIndex = firstI;
 
+        int rounds = 0;
         while (dominoIndex < dominos.size() || rules.isContinueAfterDominoesEnd()) {
             System.out.println("\t\t--- " + dominoIndex + "(" + (dominoIndex - firstI  + 1) + ") ---");
             final KapShapPlayer player = players.get(currentPlayer);
@@ -56,7 +67,7 @@ public class KapShap {
 
                 if (player.hasWon()) {
                     System.out.println(player.getName() + " won with winning hand of " + player.getWinningHand());
-                    return statsFor(player.getName(), player.getWinningHand());
+                    return statsFor(player.getName(), player.getWinningHand()).withRounds(rounds);
                 }
                 final Domino discard = player.getDiscard();
                 table.add(discard);
@@ -72,7 +83,7 @@ public class KapShap {
 
                 if (player.hasWon()) {
                     System.out.println(player.getName() + " won with winning hand of " + player.getWinningHand());
-                    return statsFor(player.getName(), player.getWinningHand());
+                    return statsFor(player.getName(), player.getWinningHand()).withRounds(rounds);
 
                 }
                 final Domino discard = player.getDiscard();
@@ -81,11 +92,11 @@ public class KapShap {
             }
 
             currentPlayer = (currentPlayer + 1) % players.size();
-
+            rounds++;
         }
 
         System.out.println("No one win");
-        return new Stats();
+        return new Stats().deuceAdded();
     }
 
     private static Stats statsFor(String name, KapShapHand winningHand) {

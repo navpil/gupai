@@ -1,6 +1,7 @@
 package io.github.navpil.gupai.rummy.smallmahjong;
 
 import io.github.navpil.gupai.ChineseDominoSet;
+import io.github.navpil.gupai.util.ConsoleOutput;
 import io.github.navpil.gupai.util.RunManySimulations;
 import io.github.navpil.gupai.util.Stats;
 import io.github.navpil.gupai.util.CombineCollection;
@@ -11,17 +12,21 @@ import java.util.List;
 
 public class SmallMahJong {
 
+    private static ConsoleOutput out;
+
     public static void main(String [] args) {
         final List<Player> players = List.of(
                 new ComputerPlayer("Comp-1"),
                 new ComputerPlayer("Comp-2"),
-                new ComputerPlayer("Comp-3")
+                new ComputerPlayer("Comp-3"),
+                new ComputerPlayer("Comp-4")
 //                new RealPlayer("Jim")
         );
-
+        out = new ConsoleOutput(false, true);
         final List<Domino> deck = ChineseDominoSet.create();
-        new RunManySimulations().runManySimulations(deck, players, "NoRules", 100,
+        Stats noRules = new RunManySimulations().runManySimulations(deck, players, "NoRules", 100,
                 (dominos, players1, ruleSet, whoGoesFirst) -> SmallMahJong.runSimulation(dominos, players1, whoGoesFirst));
+        out.sayAlways("" + noRules);
     }
 
     public static Stats runSimulation(List<Domino> dominos, List<Player> players, int whoGoesFirst) {
@@ -33,13 +38,14 @@ public class SmallMahJong {
         for (int i = 0; i < players.size(); i++) {
             final Player player = players.get(i);
             final List<Domino> deal = dominos.subList(i * cardsPerPlayer, (i + 1) * cardsPerPlayer);
-            System.out.println("Player " + player.getName() + " was dealt " + deal);
+            out.say("Player " + player.getName() + " was dealt " + deal);
             player.deal(deal);
             player.showTable(table);
 
         }
         int currentDominoIndex = players.size() * cardsPerPlayer;
 
+        int rounds = 0;
         while (currentDominoIndex < dominos.size()) {
             Player player = players.get(currentPlayer);
             boolean tookDiscard = false;
@@ -98,43 +104,44 @@ public class SmallMahJong {
                 if (triplet != null) {
                     tookDiscard = true;
                     table.add(player.getName(), triplet);
-                    System.out.println(player.getName() + " chose to take " + table.lastDiscard() + " to form " + triplet);
+                    out.say(player.getName() + " chose to take " + table.lastDiscard() + " to form " + triplet);
                     table.remove(table.lastDiscard());
 
                     if (player.hasWon()) {
                         final Hand winningHand = player.getWinningHand();
                         final Collection<Triplet> tableTriplets = table.getTriplets(player.getName());
                         int points = HandCalculator.calculatePoints(player.getWinningHand(), tableTriplets, tookDiscard);
-                        System.out.println(player.getName() + " won with combinations " + new CombineCollection<>(List.of(winningHand.triplets, tableTriplets)));
-                        return statsFor(player.getName(), points);
+                        out.say(player.getName() + " won with combinations " + new CombineCollection<>(List.of(winningHand.triplets, tableTriplets)));
+                        return statsFor(player.getName(), points).withRounds(rounds);
                     } else if (onlyWinAllowed) {
                         throw new IllegalStateException("Player could only take a last discarded for winning");
                     }
                     final Domino discard = player.getDiscard();
                     table.add(discard);
-                    System.out.println(player.getName() + " discarded " + discard);
+                    out.say(player.getName() + " discarded " + discard);
                 }
             }
             if (!tookDiscard) {
                 final Domino give = dominos.get(currentDominoIndex);
                 currentDominoIndex++;
-                System.out.println(player.getName() + " was given " + give);
+                out.say(player.getName() + " was given " + give);
                 player.give(give);
 
                 if (player.hasWon()) {
                     final Collection<Triplet> tableTriplets = table.getTriplets(player.getName());
-                    System.out.println(player.getName() + " won with combinations " + new CombineCollection<>(List.of(player.getWinningHand().getTriplets(), tableTriplets)));
+                    out.say(player.getName() + " won with combinations " + new CombineCollection<>(List.of(player.getWinningHand().getTriplets(), tableTriplets)));
                     int points = HandCalculator.calculatePoints(player.getWinningHand(), tableTriplets, tookDiscard);
-                    return statsFor(player.getName(), points);
+                    return statsFor(player.getName(), points).withRounds(rounds);
                 }
                 final Domino discard = player.getDiscard();
                 table.add(discard);
-                System.out.println(player.getName() + " discarded " + discard);
+                out.say(player.getName() + " discarded " + discard);
             }
             currentPlayer = (currentPlayer + 1) % players.size();
+            rounds++;
         }
-        System.out.println("No one won");
-        return new Stats();
+        out.say("No one won");
+        return new Stats().deuceAdded().withRounds(rounds);
     }
 
     private static Stats statsFor(String name, int points) {

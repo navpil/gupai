@@ -20,7 +20,7 @@ public class KolYeSi {
     public static void main(String[] args) {
 
         int sim = 100000;
-        int minStake = 5;
+        int minStake = 2;
         int maxStake = 10;
         final int money = 1000;
 
@@ -35,12 +35,11 @@ public class KolYeSi {
 
         runManySimulations(sim, minStake, maxStake,
                 new ArrayList<>(List.of(
-//                        new SimplestComputerPlayer("F1", money),
-//                        new SimplestComputerPlayer("S1", money),
-                        new ComputerKolYeSiPlayer("R3", money, 5, 0),
-                        new ComputerKolYeSiPlayer("R4", money, 5, 0)
+                        new ComputerKolYeSiWeightedPlayer("F1", money),
+                        new SimplestComputerPlayer("Simple", money),
+                        new ComputerKolYeSiPlayer("R5", money, 5, 0)
                 ))
-                , 0, false);
+                , 0, true);
 //        runManySimulations(sim, minStake, maxStake, new ArrayList<>(List.of(
 //                new ComputerKolYeSiPlayer("C5-1", money, 5, 0),
 //                new ComputerKolYeSiPlayer("C5-2", money, 5, 5),

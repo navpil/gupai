@@ -29,6 +29,8 @@ public class ComputerKolYeSiPlayer extends PlayerSkeletal {
 /*
 These are the expected values for every mod10 value domino has, sorted from low to high
 
+Double-checked - calculated correctly, takes pair/triplet best combination into an account
+
  6 : 4.451612903225806
  8 : 4.451612903225806
  4 : 4.473118279569892
@@ -90,8 +92,8 @@ These are the expected values for every mod10 value domino has, sorted from low 
         return (1.0 * acceptablePairs / pairsSum) > (1.0 * acceptableTriplets / tripletsSum) ? 1 : 2;
     }
 
+    //Should always be the same, actually
     private int sum(int[] ints) {
-        //Should always be the same, actually
         int total = 0;
         for (int anInt : ints) {
             total += anInt;

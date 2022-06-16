@@ -66,6 +66,13 @@ public class KapShapRuleset {
         return new KapShapRuleset(Offer.LAST, true, 1, 8, false);
     }
 
+    public static KapShapRuleset ginKapShap() {
+        return new KapShapRuleset(Offer.LAST, false, 1, 8, false);
+    }
+    public static KapShapRuleset ginKapTaiShap(int setCount) {
+        return new KapShapRuleset(Offer.LAST, false, setCount, 10, false);
+    }
+
     public KapShapRuleset(Offer offerType, boolean takeAfterOffer, int setCount, int winningHandSize, boolean continueAfterDominoesEnd) {
         this.offerType = offerType;
         this.takeAfterOffer = takeAfterOffer;
