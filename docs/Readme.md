@@ -1,6 +1,8 @@
 # Games played with Chinese dominoes
 
-Please visit the website where most of the games are collected and analyzed: [GuPai Fun page](https://gupai.wordpress.com/)
+Please visit the website where most of the games are collected and analyzed: 
+[GuPai Fun page](https://gupai.wordpress.com/),
+or a [Backup of GuPai Fun Page](https://navpil.github.io/gupai/index.html)
 
 Chinese dominoes are called GuPai 骨牌, Korean dominoes are called GolPae 골패.
 
